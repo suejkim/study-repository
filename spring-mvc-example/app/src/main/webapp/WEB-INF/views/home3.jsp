@@ -4,6 +4,6 @@
         <title>${title}</title>
     </head>
     <body>
-    ${today}
+    ${now}
     </body>
 </html>
