@@ -1,5 +1,15 @@
 ### Spring MVC
 
+- Servlet에서 사용하는 HttpServletRequest, HttpServletResponse 등을 사용하지 않아도 Spring MVC로 프로젝트 구현 가능. 
+
+- web.xml
+- servlet-context.xml(dispatcher-servlet.xml)
+    - Web
+    - Spring MVC
+- root-context.xml(applicationContext.xml)
+    - POJO
+    - Spring Core, Mybatis
+
 - @Controller, @RequestMapping, Model
     - @Controller
     - @RequestMapping : 요청 경로 설정
