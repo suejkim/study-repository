@@ -1,5 +1,6 @@
-### Spring MVC
+### Spring MVC (작업중)
 
+#### Spring MVC 구조
 - Servlet에서 사용하는 HttpServletRequest, HttpServletResponse 등을 사용하지 않아도 Spring MVC로 프로젝트 구현 가능. 
 
 - web.xml
@@ -11,18 +12,27 @@
     - Spring Core, Mybatis
     - 정의된 Bean들은 스프링 Context안에서 생성됨
 
+#### 동작방식
 
-- @Controller, @RequestMapping, Model
-    - @Controller
-    - @RequestMapping : 요청 경로 설정
-        - return String : view name 
-    - Model : 컨트롤러 파라미터에 Model을 추가하여 데이터를 담을 수 있다.
+#### 컨트롤러 구현
+- Return Type
+    - ModelAndView
+    - String : VIEW name 
+- Request Parameter
+    - Model(= ModelMap) : 컨트롤러 파라미터에 Model을 추가하여 데이터를 담을 수 있다.
         - model.addAttribute("model key", "value");
-        - = ModelMap
+    - HttpServletRequest
+    - @RequestParam     
 
-- 동작과정
-
-
+- Annotation
+    - @Controller
+    - @RequestMapping: 요청 경로 설정(url)
+        - 요청/응답 content type이 다른 경우
+            - consumes(consumes = MediaType.APPLICATION_JSON_VALUE): 요청 헤더 Content-Type가 application/json일 떄만 처리
+            - produces(produces = MediaType.APPLICATION_JSON_VALUE): 요청 헤더 Accept가 application/json일 때만 처리
+        - HTTP Method 지정: RequestMethod.GET, RequestMethod.POST ...
+    - @PathVariable: 경로 변수
+    
 ---
 - Gradle Project
 ``` bash
