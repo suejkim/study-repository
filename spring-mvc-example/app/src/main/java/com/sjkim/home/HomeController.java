@@ -8,6 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -103,5 +104,28 @@ public class HomeController {
         model.addAttribute("requestURI", requestURI);
         model.addAttribute("requestURL", requestURL);
         return "home6";
+    }
+
+    // 요청 파라미터 필수 여부 @RequestParam(required = false)
+    // @RequestParam(defaultValue = "1") null 체크 생략 가능. 요청 파라미터가 존재하지 않을 경우 기본값
+    @RequestMapping("/home7")
+    public String home7(@RequestParam(required = false, defaultValue = "1") Long id, Model model) {
+        model.addAttribute("id", id);
+        return "home7";
+    }
+
+    @RequestMapping(value = "/guest", method = RequestMethod.GET)
+    public String guest() {
+        return "guestForm";
+    }
+
+    // GuestDto 객체를 파라미터에 추가하면 그 객체의 setter을 호출하여 파라미터를 전달
+    // View에 전달할 Model에 포함됨
+    // @ModelAttribute와 동일 (왜?)
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String registerGuest(GuestDto guestDto) {
+        log.info("name {}", guestDto.getName());
+        log.info("memo {}", guestDto.getMemo());
+        return "registeredGuest";
     }
 }
