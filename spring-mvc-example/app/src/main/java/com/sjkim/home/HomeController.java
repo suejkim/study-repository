@@ -1,5 +1,6 @@
 package com.sjkim.home;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Controller
-public class HomeController {
+public class HomeController { // 컨트롤러 구현 테스트
 
     /**
      * @return ModelAndView
@@ -148,5 +150,12 @@ public class HomeController {
     @RequestMapping(value = "/main")
     public String mainTest() {
         return "mainPage";
+    }
+
+    // HttpServletResponse을 이용한 리다이렉트 테스트
+    @RequestMapping(value = "/registered")
+    @SneakyThrows
+    public void redirectTest(HttpServletResponse response) {
+        response.sendRedirect("main");
     }
 }
