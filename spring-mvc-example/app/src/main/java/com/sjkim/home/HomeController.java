@@ -5,10 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,10 +21,10 @@ public class HomeController {
     /**
      * @return ModelAndView
      */
-    @RequestMapping("/home1")
-    public ModelAndView home1() {
-        ModelAndView modelAndView = new ModelAndView("home1");
-        modelAndView.addObject("title", "HOME1");
+    @RequestMapping("/modelandview-return-type")
+    public ModelAndView modelAndViewReturnType() {
+        ModelAndView modelAndView = new ModelAndView("modelAndViewReturnPage");
+        modelAndView.addObject("title", "ModelAndView 테스트");
         modelAndView.addObject("today", LocalDate.now());
         // Log test
         log.trace(">>TRACE title: {}, today: {}", modelAndView.getModel().get("title"), modelAndView.getModel().get("today"));
@@ -38,16 +35,16 @@ public class HomeController {
     }
 
     /**
-     * home2.jsp 페이지 호출
+     * stringReturnPage.jsp 페이지 호출
      *
      * @return String
      */
-//    @RequestMapping("/home2")
+//    @RequestMapping("/string-return-type")
     // HTTP method 방식 지정
     // 배열 이용: 여러 경로를 한 메소드에 처리
-    @RequestMapping(value = {"/home2", "/index"}, method = RequestMethod.GET)
-    public String home2() {
-        return "home2";
+    @RequestMapping(value = {"/string-return-type", "/index"}, method = RequestMethod.GET)
+    public String stringReturnType() {
+        return "stringReturnPage";
     }
 
     /**
@@ -56,11 +53,11 @@ public class HomeController {
      * @param model
      * @return String
      */
-    @RequestMapping("/home3")
-    public String home3(Model model) {
-        model.addAttribute("title", "HOME3")
+    @RequestMapping("/model-parameter")
+    public String modelParameter(Model model) {
+        model.addAttribute("title", "Model Parameter 테스트")
                 .addAttribute("now", LocalDateTime.now());
-        return "home3";
+        return "modelParameterPage";
     }
 
     /**
@@ -69,11 +66,11 @@ public class HomeController {
      * @param modelMap
      * @return String
      */
-    @RequestMapping("/home4")
-    public String home4(ModelMap modelMap) {
-        modelMap.addAttribute("title", "HOME4")
+    @RequestMapping("/modelmap-parameter")
+    public String modelMapParameter(ModelMap modelMap) {
+        modelMap.addAttribute("title", "ModelMap Parameter 테스트")
                 .addAttribute("now", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        return "home4";
+        return "modelMapParameterPage";
     }
 
     /**
@@ -82,14 +79,14 @@ public class HomeController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "/home5/{id}")
-    public String home5(@PathVariable Long id, Model model) {
+    @RequestMapping(value = "/pathvariable-parameter/{id}")
+    public String pathVariableParameter(@PathVariable Long id, Model model) {
         model.addAttribute("id", id);
-        return "home5";
+        return "pathVariablePage";
     }
 
-    @RequestMapping(value = "/home6", produces = MediaType.TEXT_HTML_VALUE)
-    public String home6(HttpServletRequest request, Model model) {
+    @RequestMapping(value = "/httpservletrequest-parameter", produces = MediaType.TEXT_HTML_VALUE)
+    public String httpServletRequestParameter(HttpServletRequest request, Model model) {
         String title = request.getParameter("title"); // 파라미터를 통해 값을 받아 옴
         String method = request.getMethod();
         String queryString = request.getQueryString();
@@ -103,15 +100,15 @@ public class HomeController {
         model.addAttribute("attribute", attribute);
         model.addAttribute("requestURI", requestURI);
         model.addAttribute("requestURL", requestURL);
-        return "home6";
+        return "httpServletRequestParameterPage";
     }
 
     // 요청 파라미터 필수 여부 @RequestParam(required = false)
     // @RequestParam(defaultValue = "1") null 체크 생략 가능. 요청 파라미터가 존재하지 않을 경우 기본값
-    @RequestMapping("/home7")
-    public String home7(@RequestParam(required = false, defaultValue = "1") Long id, Model model) {
+    @RequestMapping("/requestparam-parameter")
+    public String requestParamParameter(@RequestParam(required = false, defaultValue = "1") Long id, Model model) {
         model.addAttribute("id", id);
-        return "home7";
+        return "requestParamParameterPage";
     }
 
     @RequestMapping(value = "/guest", method = RequestMethod.GET)
@@ -121,11 +118,35 @@ public class HomeController {
 
     // GuestDto 객체를 파라미터에 추가하면 그 객체의 setter을 호출하여 파라미터를 전달
     // View에 전달할 Model에 포함됨
-    // @ModelAttribute와 동일 (왜?)
+    // @ModelAttribute와 동일
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String registerGuest(GuestDto guestDto) {
         log.info("name {}", guestDto.getName());
         log.info("memo {}", guestDto.getMemo());
         return "registeredGuest";
+    }
+
+    @RequestMapping(value = "/guest2", method = RequestMethod.GET)
+    public String guest2() {
+        return "guestForm2";
+    }
+
+    // @ModelAttribute 객체의 이름을 지정하고 싶을 때 사용
+    @RequestMapping(value = "/register2", method = RequestMethod.POST)
+    public String registerGuest2(@ModelAttribute("guest") GuestDto guestDto) {
+        return "registeredGuest2";
+    }
+
+    // 리다이렉트: 클라이언트의 요청을 처리한 후 다른 페이지로 이동
+    // redirect 뒤에 경로는 웹 애플리케이션 URL 경로
+    // /로 시작하지 않으면 @RequestMapping 경로를 기준 상대경로로 리다이렉트
+    @RequestMapping(value = "/completed")
+    public String redirectTest() {
+        return "redirect:main";
+    }
+
+    @RequestMapping(value = "/main")
+    public String mainTest() {
+        return "mainPage";
     }
 }
