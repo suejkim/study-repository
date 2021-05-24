@@ -57,12 +57,16 @@
 #### 컨트롤러 구현
 - Return Type
     - ModelAndView
-    - String : VIEW name 
+    - String: View name (jsp 이용시 jsp 파일 이름)
+    - void
+    - VO, DTO: 주로 Json 타입
+    - ResponseEntity: 결과 데이터, HttpHeader 가공 
 - Request Parameter
-    - Model(= ModelMap) : 컨트롤러 파라미터에 Model을 추가하여 데이터를 담을 수 있다.
+    - Model(= ModelMap): 주로 파라미터로 추가적인 데이터를 담을 경우 사용(페이지 번호를 파라미터로 받고 결과 데이터를 View로 전달 시)
         - model.addAttribute("model key", "value");
     - HttpServletRequest
-    - @RequestParam     
+    - @RequestParam
+    - @ModelAttribute: 어노테이션이 적용된 파라미터는 무조건 Model에 담아서 전달됨    
 
 - Annotation
     - @Controller
