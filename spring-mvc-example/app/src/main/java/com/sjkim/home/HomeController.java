@@ -2,7 +2,10 @@ package com.sjkim.home;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -87,6 +90,11 @@ public class HomeController { // 컨트롤러 구현 테스트
         return "pathVariablePage";
     }
 
+    /**
+     * @param request HttpServletRequest 파라미터
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/httpservletrequest-parameter", produces = MediaType.TEXT_HTML_VALUE)
     public String httpServletRequestParameter(HttpServletRequest request, Model model) {
         String title = request.getParameter("title"); // 파라미터를 통해 값을 받아 옴
@@ -107,6 +115,13 @@ public class HomeController { // 컨트롤러 구현 테스트
 
     // 요청 파라미터 필수 여부 @RequestParam(required = false)
     // @RequestParam(defaultValue = "1") null 체크 생략 가능. 요청 파라미터가 존재하지 않을 경우 기본값
+
+    /**
+     * @param id
+     * @param model
+     * @return
+     * @RequestParam
+     */
     @RequestMapping("/requestparam-parameter")
     public String requestParamParameter(@RequestParam(required = false, defaultValue = "1") Long id, Model model) {
         model.addAttribute("id", id);
@@ -157,5 +172,36 @@ public class HomeController { // 컨트롤러 구현 테스트
     @SneakyThrows
     public void redirectTest(HttpServletResponse response) {
         response.sendRedirect("main");
+    }
+
+    /**
+     *
+     * @return ResponseEntity
+     */
+    @RequestMapping(value = "/response-entity-return-type")
+    public ResponseEntity<String> responseEntityReturnType() {
+        String jsonData = "{\"title\":\"Spring\"}";
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+        return new ResponseEntity<>(jsonData, httpHeaders, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/guest3", method = RequestMethod.GET)
+    public String guest3() {
+        return "guestForm3";
+    }
+
+    /**
+     *
+     * @ResponseBody 요청 데이터가 그대로 응답 데이터로 전송
+     * @RequestBody
+     *
+     * @param body
+     * @return
+     */
+    @PostMapping("/register3")
+    @ResponseBody
+    public String register(@RequestBody String body) {
+        return body;
     }
 }
