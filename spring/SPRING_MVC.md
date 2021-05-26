@@ -4,6 +4,10 @@
 
 #### Spring MVC
 - Servlet에서 사용하는 HttpServletRequest, HttpServletResponse 등을 사용하지 않아도 Spring MVC로 프로젝트 구현 가능
+- 3-tier
+    - Presentation Tier(화면 계층)
+    - Business Tier(비즈니스 계층)
+    - Persistence Tier(영속 계층 혹은 데이터 계층)s
 
 #### 동작방식
 <img src="https://www.egovframe.go.kr/wiki/lib/exe/fetch.php?media=egovframework:rte:ptl:springmvcstructure.jpg" width="70%" height="30%" title="spring_mvc" alt="spring_mvc"></img>
@@ -59,14 +63,15 @@
     - ModelAndView
     - String: View name (jsp 이용시 jsp 파일 이름)
     - void
-    - VO, DTO: 주로 Json 타입
+    - VO, DTO: 주로 JSON 타입
     - ResponseEntity: 결과 데이터, HttpHeader 가공 
 - Request Parameter
     - Model(= ModelMap): 주로 파라미터로 추가적인 데이터를 담을 경우 사용(페이지 번호를 파라미터로 받고 결과 데이터를 View로 전달 시)
         - model.addAttribute("model key", "value");
     - HttpServletRequest
     - @RequestParam
-    - @ModelAttribute: 어노테이션이 적용된 파라미터는 무조건 Model에 담아서 전달됨    
+    - @ModelAttribute: 어노테이션이 적용된 파라미터는 무조건 Model에 담아서 전달됨
+    - @RequestBody: Request Body -> 자바객체    
 
 - Annotation
     - @Controller
@@ -75,9 +80,10 @@
             - consumes(consumes = MediaType.APPLICATION_JSON_VALUE): 요청 헤더 Content-Type가 application/json일 떄만 처리
             - produces(produces = MediaType.APPLICATION_JSON_VALUE): 요청 헤더 Accept가 application/json일 때만 처리
         - HTTP Method 지정: RequestMethod.GET, RequestMethod.POST ...
-        - GetMapping
-        - PostMapping
+        - @GetMapping
+        - @PostMapping
     - @PathVariable: 경로 변수
+    - @ResponseBody: 자바객체 -> Response Body (주로 XML, JSON으로 변환 시)
     
 ---
 - Gradle Project
