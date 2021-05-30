@@ -7,7 +7,7 @@
 - 3-tier
     - Presentation Tier(화면 계층)
     - Business Tier(비즈니스 계층)
-    - Persistence Tier(영속 계층 혹은 데이터 계층)s
+    - Persistence Tier(영속 계층 혹은 데이터 계층)
 
 #### 동작방식
 <img src="https://www.egovframe.go.kr/wiki/lib/exe/fetch.php?media=egovframework:rte:ptl:springmvcstructure.jpg" width="70%" height="30%" title="spring_mvc" alt="spring_mvc"></img>
