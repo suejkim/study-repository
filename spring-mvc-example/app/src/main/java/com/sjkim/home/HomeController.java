@@ -183,9 +183,10 @@ public class HomeController { // 컨트롤러 구현 테스트
     @RequestMapping(value = "/response-entity-return-type")
     public ResponseEntity<String> responseEntityReturnType() {
         String jsonData = "{\"title\":\"Spring\"}";
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
-        return new ResponseEntity<>(jsonData, httpHeaders, HttpStatus.OK);
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+//        return new ResponseEntity<>(jsonData, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(jsonData, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/guest3", method = RequestMethod.GET)
