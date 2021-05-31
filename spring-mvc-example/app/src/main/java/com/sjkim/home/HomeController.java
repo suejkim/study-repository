@@ -14,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -203,5 +205,18 @@ public class HomeController { // 컨트롤러 구현 테스트
     @ResponseBody
     public String register(@RequestBody String body) {
         return body;
+    }
+
+    /**
+     * void Return Type
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping("/void-return-type")
+    public void voidReturnType(HttpServletResponse response) throws IOException {
+        response.setContentType(MediaType.TEXT_HTML_VALUE);
+        PrintWriter writer = response.getWriter();
+        writer.write("안녕");
+        writer.flush();
     }
 }
