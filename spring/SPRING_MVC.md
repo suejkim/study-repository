@@ -23,6 +23,7 @@ Spring MVC (작업중)
     - View와 Model의 결합을 분리시켜 유연하게 함
 - → 사용자는 View에 요청을 하게 되면 Controller는 Model로 사용자의 요청을 처리한다. Model을 통해 비즈니스 로직 처리가 이루어진 데이터는 Controller가 결과 데이터를 View에 전달하여 사용자가 볼 수 있게 한다.
 </br>
+
 #### 2. Spring MVC
 - Servlet에서 사용하는 HttpServletRequest, HttpServletResponse 등을 사용하지 않아도 Spring MVC로 프로젝트 구현 가능
 ##### 동작방식
@@ -38,6 +39,7 @@ Spring MVC (작업중)
 4. ViewResolver는 Controller가 반환한 결과를 어떤 View로 처리할지 결정
 5. 결과 데이터는 View를 통해 Response로 만들어져 DispatcherServlet을 통해 Client로 전송됨
 </br>
+
 #### 3. Spring MVC 설정
 ##### 내부구조
 - web.xml[WebConfig.java]
