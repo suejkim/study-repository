@@ -117,7 +117,6 @@ public class HomeController { // 컨트롤러 구현 테스트
 
     // 요청 파라미터 필수 여부 @RequestParam(required = false)
     // @RequestParam(defaultValue = "1") null 체크 생략 가능. 요청 파라미터가 존재하지 않을 경우 기본값
-
     /**
      * @param id
      * @param model
@@ -137,7 +136,6 @@ public class HomeController { // 컨트롤러 구현 테스트
 
     // GuestDto 객체를 파라미터에 추가하면 그 객체의 setter을 호출하여 파라미터를 전달
     // View에 전달할 Model에 포함됨
-    // @ModelAttribute와 동일
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public String registerGuest(GuestDto guestDto) {
         log.info("name {}", guestDto.getName());
@@ -150,7 +148,7 @@ public class HomeController { // 컨트롤러 구현 테스트
         return "guestForm2";
     }
 
-    // @ModelAttribute 객체의 이름을 지정하고 싶을 때 사용
+    // @ModelAttribute 객체의 이름을 지정하고 싶을 때 사용, 파라미터를 무조건 Model에 넣을 경우 사용
     @RequestMapping(value = "/register2", method = RequestMethod.POST)
     public String registerGuest2(@ModelAttribute("guest") GuestDto guestDto) {
         return "registeredGuest2";
