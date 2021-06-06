@@ -24,7 +24,6 @@ public class ExampleFilter implements Filter {
 
         logger.info("필터 동작 전");
         servletRequest.setCharacterEncoding("UTF-8"); // 파라미터 인코딩
-        // TODO 예상과 다름.. 다시 알아볼 것
         servletResponse.setContentType("text/html;charset=utf-8"); // 브라우저에 보일 데이터 인코딩
 //        servletResponse.setCharacterEncoding("UTF-8");
         filterChain.doFilter(servletRequest, servletResponse);
