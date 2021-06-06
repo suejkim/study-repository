@@ -30,14 +30,17 @@ Spring MVC (작업중)
 <img src="https://www.egovframe.go.kr/wiki/lib/exe/fetch.php?media=egovframework:rte:ptl:springmvcstructure.jpg" width="70%" height="30%" title="spring_mvc" alt="spring_mvc"></img>
 1. Client의 Request를 DispatcherServlet이 받음 (web.xml)
     ``` text
-    Front-Controller Pattern
+    * Front-Controller Pattern
     : DispatcherServlet
+    모든 요청을 하나의 Handler로 처리
     ```
 2. HandlerMapping이 요청된 URL과 매핑된 컨트롤러를 찾고 HandlerAdapter로 컨트롤러 동작시킴
-    > DispatcherServlet의 처리 요청을 변환하여 컨트롤러에 전달하고, 그 결과를 DispatcherServlet이 요구하는 형식으로 변환. 웹 브라우저 캐시 등 설정
+    > HandlerAdapter: DispatcherServlet의 처리 요청을 변환하여 컨트롤러에 전달하고, 그 결과를 DispatcherServlet이 요구하는 형식으로 변환
 3. Controller에서 Request를 처리하는 로직을 타고 다양한 타입으로 결과를 반환
 4. ViewResolver는 Controller가 반환한 결과를 어떤 View로 처리할지 결정
 5. 결과 데이터는 View를 통해 Response로 만들어져 DispatcherServlet을 통해 Client로 전송됨
+
+
 </br>
 
 #### 3. Spring MVC 설정
@@ -264,8 +267,16 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
 
 </beans>
 ```
+``` text
+* <mvc:annotation-driven/>
+    - RequestMappingHandlerMapping, RequestMappingHanderAdater를 Bean으로 등록
+    - 위 태그를 적용하지 않아도 <context:component-scan/>가 정의되어있다면 MVC 애플리케이션은 동작함
+* <context:component-scan/>
+    - @Component가 있는 클래스의 인스턴스를 Bean으로 등록
+```
+
 ``` java
-@EnableWebMvc
+@EnableWebMvc // = <mvc:annotation-driven/>
 @ComponentScan(basePackages = {"com.sjkim.home"})
 public class ServletConfig implements WebMvcConfigurer {
     @Override
@@ -533,3 +544,9 @@ public class HomeController { // 컨트롤러 구현 테스트
     }
 }
 ```
+
+---
+> 코드로 배우는 스프링 웹 프로젝트
+> Spring 4.0 프로그래밍
+> https://gmlwjd9405.github.io/2018/12/18/spring-annotation-enable.html
+> https://www.tutorialspoint.com/design_pattern/front_controller_pattern.htm
