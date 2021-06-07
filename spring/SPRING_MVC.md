@@ -1,4 +1,4 @@
-Spring MVC (작업중)
+Spring MVC
 ====
 ---
 1. MVC Pattern(Model-View-Controller)
@@ -547,6 +547,8 @@ public class HomeController { // 컨트롤러 구현 테스트
 
 ---
 > 코드로 배우는 스프링 웹 프로젝트
-> Spring 4.0 프로그래밍
-> https://gmlwjd9405.github.io/2018/12/18/spring-annotation-enable.html
-> https://www.tutorialspoint.com/design_pattern/front_controller_pattern.htm
+Spring 4.0 프로그래밍
+https://gmlwjd9405.github.io/2018/12/18/spring-annotation-enable.html
+https://www.tutorialspoint.com/design_pattern/front_controller_pattern.htm
+https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/MVC-Process.svg/400px-MVC-Process.svg.png
+https://www.egovframe.go.kr/wiki/lib/exe/fetch.php?media=egovframework:rte:ptl:springmvcstructure.jpg
