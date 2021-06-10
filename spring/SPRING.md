@@ -1,4 +1,4 @@
-Spring (작업중)
+Spring
 ===
 ---
 1. Framework
@@ -23,7 +23,7 @@ Spring (작업중)
 
 #### 3. 특징
 <img src="https://www.tutorialandexample.com/wp-content/uploads/2019/10/Spring-Modules.png
-" width="50%" title="spring_modules" alt="spring_modules"></img>
+" title="spring_modules" alt="spring_modules"></img>
 - 제공하는 기능에 따라 별도의 모듈로 분리되어있음
 - POJO(Plain Old Java Object)의 구성으로 제작 (Java Beans) 
     - 일반 Java Code를 이용해서 객체를 만드는 방식 그대로 사용할 수 있음
@@ -44,7 +44,7 @@ Spring (작업중)
 https://khj93.tistory.com/entry/Spring-Spring-Framework란-기본-개념-핵심-정리
 https://gmlwjd9405.github.io/2018/10/26/spring-framework.html
 https://laptrinhx.com/spring-framework-tutorial-442539211/
-https://gmlwjd9405.github.io/2018/12/25/difference-dao-dto-entity.html
+https://gmlwjd9405.github.io/2018/12/25/difßference-dao-dto-entity.html
 https://multifrontgarden.tistory.com/186
 https://velog.io/@outstandingboy/Spring-%EC%99%9C-%EC%8A%A4%ED%94%84%EB%A7%81-%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%A0%EA%B9%8C-Spring-vs-EJB-JavaEE
 코드로 배우는 스프링 웹 프로젝트
