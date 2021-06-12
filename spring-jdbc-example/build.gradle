@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'jacoco'
+    id "org.sonarqube" version "3.3"
 }
 
 group 'com.sjkim'
@@ -48,5 +49,14 @@ test {
     jacoco {
         destinationFile = layout.buildDirectory.file('jacoco/jacocoTest.exec').get().asFile
         classDumpDir = layout.buildDirectory.dir('jacoco/classpathdumps').get().asFile
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.sourceEncoding", "UTF-8"
+        property "sonar.host.url", "http://localhost:9000"
+        property "sonar.language", "java"
+        property "sonar.login", "cbb2cca03f69cac6bea892228129433bb0240bb6"
     }
 }
