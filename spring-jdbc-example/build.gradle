@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id "org.sonarqube" version "3.3"
+//    id "eu.xenit.docker-compose" version "5.3.0"
 }
 
 group 'com.sjkim'
@@ -20,6 +21,8 @@ ext {
 dependencies {
     implementation ("org.springframework:spring-jdbc:${springVersion}")
     implementation ("org.mariadb.jdbc:mariadb-java-client:2.7.3")
+    implementation ("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.2.0")
+
 
     implementation ("org.projectlombok:lombok:${lombokVersion}")
     implementation ("org.slf4j:slf4j-api:${slf4jVersion}")
@@ -54,9 +57,6 @@ test {
 
 sonarqube {
     properties {
-        property "sonar.sourceEncoding", "UTF-8"
         property "sonar.host.url", "http://localhost:9000"
-        property "sonar.language", "java"
-        property "sonar.login", "cbb2cca03f69cac6bea892228129433bb0240bb6"
     }
 }
