@@ -102,4 +102,7 @@ gradle-app.setting
 ### Gradle Patch ###
 **/build/
 
+# docker-compose
+datadir/
+
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,intellij,macos
