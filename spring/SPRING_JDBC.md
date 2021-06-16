@@ -15,6 +15,14 @@ Spring JDBC (작업중)
     brew install sonarqube
     brew install sonar-scanner
     ```
+- DB: mariadb
+    - docker-compose.yml
+    ``` yml
+    ```
+    ``` bash
+    gradle :composeUp
+    docker exec -it mariadb-study bash
+    ```
 
 
 
