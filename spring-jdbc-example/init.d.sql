@@ -3,8 +3,7 @@ grant all privileges on *.* to sjkim@'%';
 flush privileges;
 create database school;
 use school;
-create table Student
-(
+create table student (
 	id bigint auto_increment,
 	name varchar(255) null,
 	age int null,

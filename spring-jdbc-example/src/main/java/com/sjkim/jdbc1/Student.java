@@ -1,3 +1,5 @@
+package com.sjkim.jdbc1;
+
 import java.time.LocalDate;
 
 public class Student {
@@ -7,6 +9,13 @@ public class Student {
     private int age;
     private LocalDate birth;
     private String phone;
+
+    public Student(String name, int age, LocalDate birth, String phone) {
+        this.name = name;
+        this.age = age;
+        this.birth = birth;
+        this.phone = phone;
+    }
 
     public long getId() {
         return id;
