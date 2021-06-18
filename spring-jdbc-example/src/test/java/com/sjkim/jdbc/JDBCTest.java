@@ -2,6 +2,7 @@ package com.sjkim.jdbc;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mariadb.jdbc.Driver;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,7 +14,8 @@ public class JDBCTest {
 
     @BeforeAll
     static void setUp() throws Exception {
-        Class.forName("org.mariadb.jdbc.Driver").getDeclaredConstructor().newInstance();
+//        Class.forName("org.mariadb.jdbc.Driver").getDeclaredConstructor().newInstance();
+        Driver.class.getDeclaredConstructor().newInstance();
     }
 
     @Test
