@@ -33,7 +33,21 @@ public class StudentService {
         return true;
     }
 
-    public boolean update(Student student) {
+    public boolean update(Student student) throws Exception {
+        Class.forName("org.mariadb.jdbc.Driver").getDeclaredConstructor().newInstance();
+
+        String url = "jdbc:mariadb://localhost:3306/school";
+        String user = "sjkim";
+        String password = "password";
+        Connection conn = DriverManager.getConnection(url, user, password); // Driver 연결
+
+        PreparedStatement psm = conn.prepareStatement("update student set birth = ? where id = ?");
+        psm.setDate(1, Date.valueOf(student.getBirth()));
+        psm.setLong(2, student.getId());
+        psm.execute();
+
+        psm.close();
+        conn.close();
         return true;
     }
 

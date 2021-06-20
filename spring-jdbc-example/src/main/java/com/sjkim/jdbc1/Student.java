@@ -10,6 +10,10 @@ public class Student {
     private LocalDate birth;
     private String phone;
 
+    public Student() {
+
+    }
+
     public Student(String name, int age, LocalDate birth, String phone) {
         this.name = name;
         this.age = age;
