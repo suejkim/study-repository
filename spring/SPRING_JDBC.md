@@ -11,10 +11,18 @@ Spring JDBC (작업중)
     - jacoco: java code에 대한 code coverage 제공
     - sonarqube: 정적 분석 기술을 사용하여 code의 품질을 향상시키는 것을 목적으로 하는 툴
         - SonarQube 로컬 인스턴스 설치 https://docs.sonarqube.org/latest/setup/get-started-2-minutes/
-    ``` bash
-    brew install sonarqube
-    brew install sonar-scanner
-    ```
+        ``` bash
+        brew install sonarqube
+        brew install sonar-scanner
+        brew services start sonarqube
+        ```
+        ``` text
+        http://localhost:9000
+        id: admin, pwd: admin
+        ```
+        ``` bash
+        
+        ``` 
 - DB: mariadb
     - docker-compose.yml
     ``` yml
@@ -34,3 +42,4 @@ Spring JDBC (작업중)
 https://plugins.gradle.org/plugin/org.sonarqube 
 https://tomgregory.com/how-to-measure-code-coverage-using-sonarqube-and-jacoco/
 https://kwonnam.pe.kr/wiki/gradle/sonarqube
+https://woowabros.github.io/experience/2020/02/02/jacoco-config-on-gradle-project.html
