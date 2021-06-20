@@ -37,9 +37,9 @@ jacoco {
     reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
 }
 
-jacocoTestReport {
+jacocoTestReport { // 결과를 리포트로 저장
     reports {
-        xml.enabled false
+        xml.enabled true // sonarqube version 8이상인 경우 true로 변경해야 jacoco랑 연동 가능
         csv.enabled false
         html.destination layout.buildDirectory.dir('jacocoHtml').get().asFile
     }
@@ -50,6 +50,7 @@ test {
         destinationFile = layout.buildDirectory.file('jacoco/jacocoTest.exec').get().asFile
         classDumpDir = layout.buildDirectory.dir('jacoco/classpathdumps').get().asFile
     }
+    useJUnitPlatform() // 테스트시 JUnit이 동작하도록 설정
 }
 
 sonarqube {
@@ -58,4 +59,12 @@ sonarqube {
         property "sonar.login", "admin"
         property "sonar.password", "password"
     }
+}
+
+
+task testSonarqube {
+    dependsOn(':test', ':jacocoTestReport', 'jacocoTestCoverageVerification', ':sonarqube')
+//    tasks['jacocoTestReport'].mustRunAfter(tasks['test'])
+//    tasks['jacocoTestCoverageVerification'].mustRunAfter(tasks['jacocoTestReport'])
+//    tasks['sonarqube'].mustRunAfter(tasks['jacocoTestCoverageVerification'])
 }
