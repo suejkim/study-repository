@@ -28,4 +28,10 @@ public class StudentServiceTest {
         assertEquals(Boolean.TRUE, result);
     }
 
+    @Test
+    void delete() throws Exception {
+        boolean result = studentService.delete(1L);
+        assertEquals(Boolean.TRUE, result);
+    }
+
 }

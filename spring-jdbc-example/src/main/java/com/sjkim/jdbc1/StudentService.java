@@ -51,7 +51,20 @@ public class StudentService {
         return true;
     }
 
-    public boolean delete(long id) {
+    public boolean delete(long id) throws Exception {
+        Class.forName("org.mariadb.jdbc.Driver").getDeclaredConstructor().newInstance();
+
+        String url = "jdbc:mariadb://localhost:3306/school";
+        String user = "sjkim";
+        String password = "password";
+        Connection conn = DriverManager.getConnection(url, user, password);
+
+        PreparedStatement psm = conn.prepareStatement("delete from student where id = ?");
+        psm.setLong(1, id);
+        psm.execute();
+
+        psm.close();
+        conn.close();
         return true;
     }
 
