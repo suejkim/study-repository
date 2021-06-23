@@ -1,7 +1,5 @@
 package com.sjkim.jdbc1;
 
-import org.mariadb.jdbc.Driver;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,13 +77,17 @@ public class StudentService {
 
         ResultSet resultSet = psm.executeQuery();
         Student student = null;
-        if(resultSet.next()) {
+        if (resultSet.next()) {
             student = new Student();
             student.setId(resultSet.getLong("id"));
             student.setName(resultSet.getString("name"));
             student.setAge(resultSet.getInt("age"));
             student.setBirth(resultSet.getDate("birth").toLocalDate());
         }
+
+        resultSet.close();
+        psm.close();
+        conn.close();
         return student;
     }
 
@@ -108,10 +110,30 @@ public class StudentService {
             student.setBirth(resultSet.getDate("birth").toLocalDate());
             students.add(student);
         }
+
+        resultSet.close();
+        psm.close();
+        conn.close();
         return students;
     }
 
-    public int countAll() {
-        return 0;
+    public int countAll() throws Exception {
+        Class.forName("org.mariadb.jdbc.Driver").getDeclaredConstructor().newInstance();
+
+        String url = "jdbc:mariadb://localhost:3306/school";
+        String user = "sjkim";
+        String password = "password";
+        Connection conn = DriverManager.getConnection(url, user, password);
+
+        PreparedStatement psm = conn.prepareStatement("select count(*) from student");
+        ResultSet resultSet = psm.executeQuery();
+        int count = 0;
+        if (resultSet.next()) {
+            count = resultSet.getInt(1);
+        }
+        resultSet.close();
+        psm.close();
+        conn.close();
+        return count;
     }
 }

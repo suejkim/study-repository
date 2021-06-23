@@ -47,4 +47,11 @@ public class StudentServiceTest {
 //        assertThat(student, nullValue());
         assertThat(student.getId(), is(2L));
     }
+
+    @Test
+    void countAllTest() throws Exception {
+        int count = studentService.countAll();
+        List<Student> students = studentService.getAll();
+        assertEquals(students.size(), count);
+    }
 }
