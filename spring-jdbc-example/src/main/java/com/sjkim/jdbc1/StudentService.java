@@ -2,10 +2,8 @@ package com.sjkim.jdbc1;
 
 import org.mariadb.jdbc.Driver;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class StudentService {
@@ -72,8 +70,26 @@ public class StudentService {
         return null;
     }
 
-    public List<Student> getAll() {
-        return null;
+    public List<Student> getAll() throws Exception {
+        Class.forName("org.mariadb.jdbc.Driver").getDeclaredConstructor().newInstance();
+
+        String url = "jdbc:mariadb://localhost:3306/school";
+        String user = "sjkim";
+        String password = "password";
+        Connection conn = DriverManager.getConnection(url, user, password);
+
+        PreparedStatement psm = conn.prepareStatement("select * from student");
+        ResultSet resultSet = psm.executeQuery();
+        List<Student> students = new ArrayList<>();
+        while (resultSet.next()) {
+            Student student = new Student();
+            student.setId(resultSet.getLong("id"));
+            student.setName(resultSet.getString("name"));
+            student.setAge(resultSet.getInt("age"));
+            student.setBirth(resultSet.getDate("birth").toLocalDate());
+            students.add(student);
+        }
+        return students;
     }
 
     public int countAll() {

@@ -3,8 +3,10 @@ package com.sjkim.jdbc1;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,8 +32,14 @@ public class StudentServiceTest {
 
     @Test
     void delete() throws Exception {
-        boolean result = studentService.delete(1L);
+        boolean result = studentService.delete(1L); // 문제
         assertEquals(Boolean.TRUE, result);
     }
 
+    @Test
+    void getAll() throws Exception {
+        List<Student> students = studentService.getAll();
+        assertThat(students.size(), equalTo(2)); // 문제
+
+    }
 }
