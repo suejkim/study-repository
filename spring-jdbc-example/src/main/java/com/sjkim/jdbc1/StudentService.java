@@ -66,8 +66,27 @@ public class StudentService {
         return true;
     }
 
-    public Student get(long id) {
-        return null;
+    public Student get(long id) throws Exception {
+        Class.forName("org.mariadb.jdbc.Driver").getDeclaredConstructor().newInstance();
+
+        String url = "jdbc:mariadb://localhost:3306/school";
+        String user = "sjkim";
+        String password = "password";
+        Connection conn = DriverManager.getConnection(url, user, password);
+
+        PreparedStatement psm = conn.prepareStatement("select * from student where id = ?");
+        psm.setLong(1, id);
+
+        ResultSet resultSet = psm.executeQuery();
+        Student student = null;
+        if(resultSet.next()) {
+            student = new Student();
+            student.setId(resultSet.getLong("id"));
+            student.setName(resultSet.getString("name"));
+            student.setAge(resultSet.getInt("age"));
+            student.setBirth(resultSet.getDate("birth").toLocalDate());
+        }
+        return student;
     }
 
     public List<Student> getAll() throws Exception {

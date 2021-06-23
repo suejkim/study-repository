@@ -6,9 +6,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class StudentServiceTest {
@@ -40,6 +39,12 @@ public class StudentServiceTest {
     void getAll() throws Exception {
         List<Student> students = studentService.getAll();
         assertThat(students.size(), equalTo(2)); // 문제
+    }
 
+    @Test
+    void getStudentTest() throws Exception {
+        Student student = studentService.get(2L);
+//        assertThat(student, nullValue());
+        assertThat(student.getId(), is(2L));
     }
 }
