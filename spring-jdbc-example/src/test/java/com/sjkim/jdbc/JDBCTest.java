@@ -23,7 +23,8 @@ public class JDBCTest {
         String url = "jdbc:mariadb://localhost:3306/school";
         String user = "sjkim";
         String password = "password";
-        Connection conn = DriverManager.getConnection(url, user, password);
-        assertThat(conn, notNullValue());
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            assertThat(conn, notNullValue());
+        }
     }
 }
