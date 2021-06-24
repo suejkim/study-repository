@@ -61,10 +61,10 @@ sonarqube {
     }
 }
 
-
 task testSonarqube {
-    dependsOn(':test', ':jacocoTestReport', 'jacocoTestCoverageVerification', ':sonarqube')
-//    tasks['jacocoTestReport'].mustRunAfter(tasks['test'])
-//    tasks['jacocoTestCoverageVerification'].mustRunAfter(tasks['jacocoTestReport'])
-//    tasks['sonarqube'].mustRunAfter(tasks['jacocoTestCoverageVerification'])
+    dependsOn(':test', ':jacocoTestReport', ':jacocoTestCoverageVerification', ':sonarqube')
+
+    jacocoTestReport.mustRunAfter test
+    jacocoTestCoverageVerification.mustRunAfter jacocoTestReport
+    tasks.sonarqube.mustRunAfter jacocoTestCoverageVerification
 }
