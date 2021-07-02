@@ -10,12 +10,11 @@ public class StudentService {
 
     private Connection conn;
 
-    public StudentService(DBConn dbConn) {
+    public StudentService() {
         conn = DBConn.getConnection();
     }
 
     public boolean add(Student student) {
-
         PreparedStatement psm = null;
         String sql = "insert into student(name, age, birth, phone) values (?, ?, ?, ?)";
 
