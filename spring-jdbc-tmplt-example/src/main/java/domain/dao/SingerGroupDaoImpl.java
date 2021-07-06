@@ -23,7 +23,8 @@ public class SingerGroupDaoImpl extends BaseQueryProcessor<SingerGroup> implemen
 
     @Override
     public boolean update(SingerGroup singerGroup) throws Exception {
-        return false;
+        String sql = "update singer_group set name = ?, debut_date = ?, agency = ? where id = ?";
+        return executeUpdatePreparedStatement(sql, singerGroup);
     }
 
     @Override
@@ -55,7 +56,10 @@ public class SingerGroupDaoImpl extends BaseQueryProcessor<SingerGroup> implemen
 
     @Override
     public void setUpdatePreparedStatement(PreparedStatement psm, SingerGroup model) throws Exception {
-
+        psm.setString(1, model.getName());
+        psm.setDate(2, Date.valueOf(model.getDebutDate()));
+        psm.setString(3, model.getAgency());
+        psm.setLong(4, model.getId());
     }
 
     @Override

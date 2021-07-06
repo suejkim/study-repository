@@ -24,4 +24,15 @@ class SingerGroupDaoImplTest {
         SingerGroup singerGroup = SingerGroup.builder().name("뚜뚜루").debutDate(LocalDate.now()).agency("기획사").build();
         commonDao.add(singerGroup);
     }
+
+    @Test
+    void update() throws Exception {
+        SingerGroup singerGroup = SingerGroup.builder()
+                .id(1L)
+                .debutDate(LocalDate.now().minusDays(1L))
+                .name("뛰뛰루")
+                .agency("기획사1")
+                .build();
+        commonDao.update(singerGroup);
+    }
 }

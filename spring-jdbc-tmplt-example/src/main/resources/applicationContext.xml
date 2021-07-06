@@ -11,11 +11,11 @@
         <constructor-arg name="password" value="password"/>
     </bean>
 
-    <bean id="baseQueryProcessort" class="util.BaseQueryProcessor" abstract="true">
+    <bean id="baseQueryProcessor" class="util.BaseQueryProcessor" abstract="true">
         <constructor-arg ref="mariadbConnection" index="0"/>
     </bean>
 
-    <bean id="singerGroupDaoImpl" class="domain.dao.SingerGroupDaoImpl" parent="baseQueryProcessort">
+    <bean id="singerGroupDaoImpl" class="domain.dao.SingerGroupDaoImpl" parent="baseQueryProcessor">
         <constructor-arg ref="mariadbConnection" index="0"/>
     </bean>
 
