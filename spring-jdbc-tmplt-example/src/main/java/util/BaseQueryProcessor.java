@@ -4,6 +4,7 @@ import db.ConnectionFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public abstract class BaseQueryProcessor<T> {
 
@@ -18,6 +19,10 @@ public abstract class BaseQueryProcessor<T> {
     public abstract void setUpdatePreparedStatement(PreparedStatement psm, T model) throws Exception;
 
     public abstract void setDeletePreparedStatement(PreparedStatement psm, long id) throws Exception;
+
+    public abstract void setGetPreparedStatement(PreparedStatement psm, long id) throws Exception;
+
+    public abstract T setResultSet(ResultSet rs) throws Exception;
 
     public boolean executeAddPreparedStatement(String sql, T model) throws Exception {
         PreparedStatement psm = conn.prepareStatement(sql);
@@ -44,5 +49,18 @@ public abstract class BaseQueryProcessor<T> {
         psm.close();
         conn.close();
         return true;
+    }
+
+    public T executeGetPreparedStatement(String sql, long id) throws Exception {
+        PreparedStatement psm = conn.prepareStatement(sql);
+        setGetPreparedStatement(psm, id);
+        ResultSet resultSet = psm.executeQuery();
+        T t = null;
+        if (resultSet.next()) {
+            t = setResultSet(resultSet);
+        }
+        psm.close();
+        conn.close();
+        return t;
     }
 }

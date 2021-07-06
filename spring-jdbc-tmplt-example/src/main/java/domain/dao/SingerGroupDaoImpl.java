@@ -7,6 +7,7 @@ import util.BaseQueryProcessor;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 public class SingerGroupDaoImpl extends BaseQueryProcessor<SingerGroup> implements CommonDao<SingerGroup> {
@@ -35,7 +36,8 @@ public class SingerGroupDaoImpl extends BaseQueryProcessor<SingerGroup> implemen
 
     @Override
     public SingerGroup get(long id) throws Exception {
-        return null;
+        String sql = "select * from singer_group where id = ?";
+        return executeGetPreparedStatement(sql, id);
     }
 
     @Override
@@ -66,5 +68,20 @@ public class SingerGroupDaoImpl extends BaseQueryProcessor<SingerGroup> implemen
     @Override
     public void setDeletePreparedStatement(PreparedStatement psm, long id) throws Exception {
         psm.setLong(1, id);
+    }
+
+    @Override
+    public void setGetPreparedStatement(PreparedStatement psm, long id) throws Exception {
+        psm.setLong(1, id);
+    }
+
+    @Override
+    public SingerGroup setResultSet(ResultSet rs) throws Exception {
+        SingerGroup singerGroup = new SingerGroup();
+        singerGroup.setId(rs.getLong("id"));
+        singerGroup.setName(rs.getString("name"));
+        singerGroup.setDebutDate(rs.getDate("debut_date").toLocalDate());
+        singerGroup.setAgency(rs.getString("agency"));
+        return singerGroup;
     }
 }

@@ -1,11 +1,13 @@
 package domain.model;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDate;
 
+@Setter
 @Getter
+@NoArgsConstructor
+@ToString
 public class SingerGroup {
 
     private long id;

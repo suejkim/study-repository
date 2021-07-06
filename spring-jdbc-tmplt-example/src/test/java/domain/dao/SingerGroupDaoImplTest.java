@@ -2,6 +2,8 @@ package domain.dao;
 
 import db.MariadbConnection;
 import domain.model.SingerGroup;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.support.GenericXmlApplicationContext;
@@ -39,5 +41,11 @@ class SingerGroupDaoImplTest {
     @Test
     void delete() throws Exception {
         commonDao.delete(1L);
+    }
+
+    @Test
+    void get() throws Exception {
+        SingerGroup singerGroup = commonDao.get(2L);
+        Assertions.assertEquals("기획사", singerGroup.getAgency());
     }
 }
