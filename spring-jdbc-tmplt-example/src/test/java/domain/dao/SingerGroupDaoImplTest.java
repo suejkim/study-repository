@@ -35,4 +35,9 @@ class SingerGroupDaoImplTest {
                 .build();
         commonDao.update(singerGroup);
     }
+
+    @Test
+    void delete() throws Exception {
+        commonDao.delete(1L);
+    }
 }

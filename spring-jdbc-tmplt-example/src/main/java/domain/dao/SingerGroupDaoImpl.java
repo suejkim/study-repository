@@ -29,7 +29,8 @@ public class SingerGroupDaoImpl extends BaseQueryProcessor<SingerGroup> implemen
 
     @Override
     public boolean delete(long id) throws Exception {
-        return false;
+        String sql = "delete from singer_group where id = ?";
+        return executeDeletePreparedStatement(sql, id);
     }
 
     @Override
@@ -64,6 +65,6 @@ public class SingerGroupDaoImpl extends BaseQueryProcessor<SingerGroup> implemen
 
     @Override
     public void setDeletePreparedStatement(PreparedStatement psm, long id) throws Exception {
-
+        psm.setLong(1, id);
     }
 }
