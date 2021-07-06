@@ -5,6 +5,8 @@ import db.ConnectionFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class BaseQueryProcessor<T> {
 
@@ -21,6 +23,8 @@ public abstract class BaseQueryProcessor<T> {
     public abstract void setDeletePreparedStatement(PreparedStatement psm, long id) throws Exception;
 
     public abstract void setGetPreparedStatement(PreparedStatement psm, long id) throws Exception;
+
+    public abstract void setGetAllPreparedStatement(PreparedStatement psm) throws Exception;
 
     public abstract T setResultSet(ResultSet rs) throws Exception;
 
@@ -54,13 +58,27 @@ public abstract class BaseQueryProcessor<T> {
     public T executeGetPreparedStatement(String sql, long id) throws Exception {
         PreparedStatement psm = conn.prepareStatement(sql);
         setGetPreparedStatement(psm, id);
-        ResultSet resultSet = psm.executeQuery();
+        ResultSet rs = psm.executeQuery();
         T t = null;
-        if (resultSet.next()) {
-            t = setResultSet(resultSet);
+        if (rs.next()) {
+            t = setResultSet(rs);
         }
+        rs.close();
         psm.close();
         conn.close();
         return t;
+    }
+
+    public List<T> executeGetAllPreparedStatement(String sql) throws Exception {
+        PreparedStatement psm = conn.prepareStatement(sql);
+        ResultSet rs = psm.executeQuery();
+        List<T> list = new ArrayList<>();
+        while (rs.next()) {
+            list.add(setResultSet(rs));
+        }
+        rs.close();
+        psm.close();
+        conn.close();
+        return list;
     }
 }

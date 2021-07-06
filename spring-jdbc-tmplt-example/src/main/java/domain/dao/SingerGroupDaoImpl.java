@@ -42,7 +42,8 @@ public class SingerGroupDaoImpl extends BaseQueryProcessor<SingerGroup> implemen
 
     @Override
     public List<SingerGroup> getAll() throws Exception {
-        return null;
+        String sql = "select * from singer_group";
+        return executeGetAllPreparedStatement(sql);
     }
 
     @Override
@@ -73,6 +74,11 @@ public class SingerGroupDaoImpl extends BaseQueryProcessor<SingerGroup> implemen
     @Override
     public void setGetPreparedStatement(PreparedStatement psm, long id) throws Exception {
         psm.setLong(1, id);
+    }
+
+    @Override
+    public void setGetAllPreparedStatement(PreparedStatement psm) throws Exception {
+
     }
 
     @Override

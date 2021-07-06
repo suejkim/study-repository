@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
 import java.time.LocalDate;
+import java.util.List;
 
 class SingerGroupDaoImplTest {
 
@@ -47,5 +48,11 @@ class SingerGroupDaoImplTest {
     void get() throws Exception {
         SingerGroup singerGroup = commonDao.get(2L);
         Assertions.assertEquals("기획사", singerGroup.getAgency());
+    }
+
+    @Test
+    void getAll() throws Exception {
+        List<SingerGroup> singerGroups = commonDao.getAll();
+        org.assertj.core.api.Assertions.assertThat(singerGroups.size()).isEqualTo(2);
     }
 }
