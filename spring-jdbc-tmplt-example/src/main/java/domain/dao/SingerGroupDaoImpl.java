@@ -48,18 +48,19 @@ public class SingerGroupDaoImpl extends BaseQueryProcessor<SingerGroup> implemen
 
     @Override
     public int countAll() throws Exception {
-        return 0;
+        String sql = "select count(*) from singer_group";
+        return executeCountAllPreparedStatement(sql);
     }
 
     @Override
-    public void setAddPreparedStatement(PreparedStatement psm, SingerGroup model) throws Exception {
+    public void addModelSetPreparedStatement(PreparedStatement psm, SingerGroup model) throws Exception {
         psm.setString(1, model.getName());
         psm.setDate(2, Date.valueOf(model.getDebutDate()));
         psm.setString(3, model.getAgency());
     }
 
     @Override
-    public void setUpdatePreparedStatement(PreparedStatement psm, SingerGroup model) throws Exception {
+    public void updateModelSetPreparedStatement(PreparedStatement psm, SingerGroup model) throws Exception {
         psm.setString(1, model.getName());
         psm.setDate(2, Date.valueOf(model.getDebutDate()));
         psm.setString(3, model.getAgency());
@@ -67,27 +68,37 @@ public class SingerGroupDaoImpl extends BaseQueryProcessor<SingerGroup> implemen
     }
 
     @Override
-    public void setDeletePreparedStatement(PreparedStatement psm, long id) throws Exception {
+    public void deleteModelSetPreparedStatement(PreparedStatement psm, long id) throws Exception {
         psm.setLong(1, id);
     }
 
     @Override
-    public void setGetPreparedStatement(PreparedStatement psm, long id) throws Exception {
+    public void getModelSetPreparedStatement(PreparedStatement psm, long id) throws Exception {
         psm.setLong(1, id);
     }
 
     @Override
-    public void setGetAllPreparedStatement(PreparedStatement psm) throws Exception {
+    public void getAllSetPreparedStatement(PreparedStatement psm) throws Exception {
 
     }
 
     @Override
-    public SingerGroup setResultSet(ResultSet rs) throws Exception {
+    public void countAllSetPreparedStatement(PreparedStatement psm) throws Exception {
+
+    }
+
+    @Override
+    public SingerGroup getModelFromResultSet(ResultSet rs) throws Exception {
         SingerGroup singerGroup = new SingerGroup();
         singerGroup.setId(rs.getLong("id"));
         singerGroup.setName(rs.getString("name"));
         singerGroup.setDebutDate(rs.getDate("debut_date").toLocalDate());
         singerGroup.setAgency(rs.getString("agency"));
         return singerGroup;
+    }
+
+    @Override
+    public int getCountFromResultSet(ResultSet rs) throws Exception {
+        return rs.getInt(1);
     }
 }

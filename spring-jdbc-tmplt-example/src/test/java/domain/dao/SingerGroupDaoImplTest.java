@@ -2,7 +2,6 @@ package domain.dao;
 
 import db.MariadbConnection;
 import domain.model.SingerGroup;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,5 +53,11 @@ class SingerGroupDaoImplTest {
     void getAll() throws Exception {
         List<SingerGroup> singerGroups = commonDao.getAll();
         org.assertj.core.api.Assertions.assertThat(singerGroups.size()).isEqualTo(2);
+    }
+
+    @Test
+    void countAll() throws Exception {
+        int count = commonDao.countAll();
+        org.assertj.core.api.Assertions.assertThat(count).isEqualTo(2);
     }
 }
