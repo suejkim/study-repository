@@ -19,5 +19,9 @@
         <constructor-arg ref="mariadbConnection" index="0"/>
     </bean>
 
+    <bean id="singerDaoImpl" class="domain.dao.SingerDaoImpl">
+        <constructor-arg ref="mariadbConnection" index="0"/>
+    </bean>
+
 
 </beans>
