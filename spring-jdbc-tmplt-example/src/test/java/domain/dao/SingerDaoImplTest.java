@@ -31,4 +31,9 @@ public class SingerDaoImplTest {
         Singer singer = Singer.builder().id(1).name("김가수").birth(LocalDate.now().minusDays(1)).sex(Sex.FEMALE).groupId(2).build();
         commonDao.update(singer);
     }
+
+    @Test
+    void delete() throws Exception {
+        commonDao.delete(1);
+    }
 }

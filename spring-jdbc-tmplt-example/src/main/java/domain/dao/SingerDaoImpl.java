@@ -51,7 +51,10 @@ public class SingerDaoImpl implements CommonDao<Singer> {
 
     @Override
     public boolean delete(long id) throws Exception {
-        return false;
+        String sql = "delete from singer where id = ?";
+        return execute(sql, psm -> {
+            psm.setLong(1, id);
+        });
     }
 
     @Override
