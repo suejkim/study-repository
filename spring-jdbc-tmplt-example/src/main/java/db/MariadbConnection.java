@@ -1,8 +1,11 @@
 package db;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+@Slf4j
 public class MariadbConnection implements ConnectionFactory {
 
     private Connection conn;
@@ -24,6 +27,7 @@ public class MariadbConnection implements ConnectionFactory {
             Class.forName(driverClassName);
             if (conn == null) {
                 conn = DriverManager.getConnection(url, user, password);
+                log.info("======== connection start");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -36,6 +40,7 @@ public class MariadbConnection implements ConnectionFactory {
         try {
             if (!conn.isClosed()) {
                 conn.close();
+                log.info("======== connection close");
             }
         } catch (Exception e) {
             e.printStackTrace();

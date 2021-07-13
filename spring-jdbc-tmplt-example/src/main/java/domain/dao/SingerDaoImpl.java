@@ -3,6 +3,7 @@ package domain.dao;
 import db.ConnectionFactory;
 import domain.model.Sex;
 import domain.model.Singer;
+import lombok.extern.slf4j.Slf4j;
 import util.PreparedStatementProcessor;
 import util.ResultSetConverter;
 
@@ -13,12 +14,13 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class SingerDaoImpl implements CommonDao<Singer> {
 
-    private final Connection conn;
+    private final ConnectionFactory connectionFactory;
 
     public SingerDaoImpl(ConnectionFactory connectionFactory) {
-        this.conn = connectionFactory.getConnection();
+        this.connectionFactory = connectionFactory;
     }
 
     @Override
@@ -82,26 +84,39 @@ public class SingerDaoImpl implements CommonDao<Singer> {
 
     @Override
     public int countAll() throws Exception {
-        return 0;
+        String sql = "select count(*) from singer";
+        return execute(sql, new PreparedStatementProcessor() {
+            @Override
+            public void setPreparedStatement(PreparedStatement psm) throws Exception {
+
+            }
+        }, new ResultSetConverter<Integer>() {
+            @Override
+            public Integer convertResultSetToModel(ResultSet rs) throws Exception {
+                return setCountAll(rs);
+            }
+        });
     }
 
     private boolean execute(String sql, PreparedStatementProcessor processor) throws Exception {
+        Connection conn = connectionFactory.getConnection();
         PreparedStatement psm = conn.prepareStatement(sql);
         processor.setPreparedStatement(psm);
         psm.execute();
         psm.close();
-        conn.close();
+        connectionFactory.close();
         return true;
     }
 
     private <T> T execute(String sql, PreparedStatementProcessor processor, ResultSetConverter<T> converter) throws Exception {
+        Connection conn = connectionFactory.getConnection();
         PreparedStatement psm = conn.prepareStatement(sql);
         processor.setPreparedStatement(psm);
         ResultSet rs = psm.executeQuery();
         T t = converter.convertResultSetToModel(rs);
         rs.close();
         psm.close();
-        conn.close();
+        connectionFactory.close();
         return t;
     }
 
@@ -130,5 +145,13 @@ public class SingerDaoImpl implements CommonDao<Singer> {
             list.add(setModelFromResultSet(rs));
         }
         return list;
+    }
+
+    private int setCountAll(ResultSet rs) throws Exception {
+        int count = 0;
+        if (rs.next()) {
+            count = rs.getInt(1);
+        }
+        return count;
     }
 }

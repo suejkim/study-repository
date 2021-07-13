@@ -50,4 +50,12 @@ public class SingerDaoImplTest {
         List<Singer> singers = commonDao.getAll();
         assertThat(singers.size()).isEqualTo(1);
     }
+
+    @Test
+    void countAll() throws Exception {
+        int count = commonDao.countAll();
+        List<Singer> singers = commonDao.getAll();
+        assertThat(count).isEqualTo(singers.size());
+//        assertThat(count).isEqualTo(1);
+    }
 }
