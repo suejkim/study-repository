@@ -10,10 +10,10 @@ import java.util.List;
 
 public abstract class BaseQueryProcessor<T> {
 
-    private final Connection conn;
+    private final ConnectionFactory connectionFactory;
 
     public BaseQueryProcessor(ConnectionFactory connectionFactory) {
-        this.conn = connectionFactory.getConnection();
+        this.connectionFactory = connectionFactory;
     }
 
     public abstract void addModelSetPreparedStatement(PreparedStatement psm, T model) throws Exception;
@@ -33,33 +33,37 @@ public abstract class BaseQueryProcessor<T> {
     public abstract int getCountFromResultSet(ResultSet rs) throws Exception;
 
     public boolean executeAddPreparedStatement(String sql, T model) throws Exception {
+        Connection conn = connectionFactory.getConnection();
         PreparedStatement psm = conn.prepareStatement(sql);
         addModelSetPreparedStatement(psm, model);
         psm.execute();
         psm.close();
-        conn.close();
+        connectionFactory.close();
         return true;
     }
 
     public boolean executeUpdatePreparedStatement(String sql, T model) throws Exception {
+        Connection conn = connectionFactory.getConnection();
         PreparedStatement psm = conn.prepareStatement(sql);
         updateModelSetPreparedStatement(psm, model);
         psm.execute();
         psm.close();
-        conn.close();
+        connectionFactory.close();
         return true;
     }
 
     public boolean executeDeletePreparedStatement(String sql, long id) throws Exception {
+        Connection conn = connectionFactory.getConnection();
         PreparedStatement psm = conn.prepareStatement(sql);
         deleteModelSetPreparedStatement(psm, id);
         psm.execute();
         psm.close();
-        conn.close();
+        connectionFactory.close();
         return true;
     }
 
     public T executeGetPreparedStatement(String sql, long id) throws Exception {
+        Connection conn = connectionFactory.getConnection();
         PreparedStatement psm = conn.prepareStatement(sql);
         getModelSetPreparedStatement(psm, id);
         ResultSet rs = psm.executeQuery();
@@ -69,11 +73,12 @@ public abstract class BaseQueryProcessor<T> {
         }
         rs.close();
         psm.close();
-        conn.close();
+        connectionFactory.close();
         return t;
     }
 
     public List<T> executeGetAllPreparedStatement(String sql) throws Exception {
+        Connection conn = connectionFactory.getConnection();
         PreparedStatement psm = conn.prepareStatement(sql);
         ResultSet rs = psm.executeQuery();
         List<T> list = new ArrayList<>();
@@ -82,11 +87,12 @@ public abstract class BaseQueryProcessor<T> {
         }
         rs.close();
         psm.close();
-        conn.close();
+        connectionFactory.close();
         return list;
     }
 
     public int executeCountAllPreparedStatement(String sql) throws Exception {
+        Connection conn = connectionFactory.getConnection();
         PreparedStatement psm = conn.prepareStatement(sql);
         ResultSet rs = psm.executeQuery();
         int count = 0;
@@ -95,7 +101,7 @@ public abstract class BaseQueryProcessor<T> {
         }
         rs.close();
         psm.close();
-        conn.close();
+        connectionFactory.close();
         return count;
     }
 }
