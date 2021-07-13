@@ -19,8 +19,12 @@
         <constructor-arg ref="mariadbConnection" index="0"/>
     </bean>
 
-    <bean id="singerDaoImpl" class="domain.dao.SingerDaoImpl">
+    <bean id="queryExecutor" class="util.QueryExecutor">
         <constructor-arg ref="mariadbConnection" index="0"/>
+    </bean>
+
+    <bean id="singerDaoImpl" class="domain.dao.SingerDaoImpl">
+        <constructor-arg ref="queryExecutor" index="0"/>
     </bean>
 
 

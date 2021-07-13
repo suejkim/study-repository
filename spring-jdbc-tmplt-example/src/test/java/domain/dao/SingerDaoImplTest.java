@@ -6,6 +6,7 @@ import domain.model.Singer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.support.GenericXmlApplicationContext;
+import util.QueryExecutor;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,7 +21,8 @@ public class SingerDaoImplTest {
     void setUp() {
         GenericXmlApplicationContext context = new GenericXmlApplicationContext("classpath:applicationContext.xml");
         MariadbConnection mariadbConnection = (MariadbConnection) context.getBean("mariadbConnection");
-        commonDao = new SingerDaoImpl(mariadbConnection);
+        QueryExecutor queryExecutor = new QueryExecutor(mariadbConnection);
+        commonDao = new SingerDaoImpl(queryExecutor);
     }
 
     @Test

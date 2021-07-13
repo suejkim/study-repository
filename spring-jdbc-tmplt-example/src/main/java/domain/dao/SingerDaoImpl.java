@@ -1,13 +1,12 @@
 package domain.dao;
 
-import db.ConnectionFactory;
 import domain.model.Sex;
 import domain.model.Singer;
 import lombok.extern.slf4j.Slf4j;
 import util.PreparedStatementProcessor;
+import util.QueryExecutor;
 import util.ResultSetConverter;
 
-import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,16 +16,16 @@ import java.util.List;
 @Slf4j
 public class SingerDaoImpl implements CommonDao<Singer> {
 
-    private final ConnectionFactory connectionFactory;
+    private final QueryExecutor queryExecutor;
 
-    public SingerDaoImpl(ConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
+    public SingerDaoImpl(QueryExecutor queryExecutor) {
+        this.queryExecutor = queryExecutor;
     }
 
     @Override
     public boolean add(Singer singer) throws Exception {
         String sql = "INSERT INTO singer(name, birth, sex, group_id) VALUES(?, ?, ?, ?)";
-        return execute(sql, new PreparedStatementProcessor() {
+        return queryExecutor.execute(sql, new PreparedStatementProcessor() {
             @Override
             public void setPreparedStatement(PreparedStatement psm) throws Exception {
                 psm.setString(1, singer.getName());
@@ -40,7 +39,7 @@ public class SingerDaoImpl implements CommonDao<Singer> {
     @Override
     public boolean update(Singer singer) throws Exception {
         String sql = "update singer set name = ?, birth = ?, sex = ?, group_id = ? where id = ?";
-        return execute(sql, psm -> {
+        return queryExecutor.execute(sql, psm -> {
             psm.setString(1, singer.getName());
             psm.setDate(2, Date.valueOf(singer.getBirth()));
             psm.setString(3, singer.getSex().name());
@@ -52,7 +51,7 @@ public class SingerDaoImpl implements CommonDao<Singer> {
     @Override
     public boolean delete(long id) throws Exception {
         String sql = "delete from singer where id = ?";
-        return execute(sql, psm -> {
+        return queryExecutor.execute(sql, psm -> {
             psm.setLong(1, id);
         });
     }
@@ -60,13 +59,13 @@ public class SingerDaoImpl implements CommonDao<Singer> {
     @Override
     public Singer get(long id) throws Exception {
         String sql = "select * from singer where id = ?";
-        return execute(sql, psm -> psm.setLong(1, id), rs -> setSinger(rs));
+        return queryExecutor.execute(sql, psm -> psm.setLong(1, id), rs -> setSinger(rs));
     }
 
     @Override
     public List<Singer> getAll() throws Exception {
         String sql = "select * from singer";
-        return execute(sql,
+        return queryExecutor.execute(sql,
                 new PreparedStatementProcessor() {
                     @Override
                     public void setPreparedStatement(PreparedStatement psm) {
@@ -85,7 +84,7 @@ public class SingerDaoImpl implements CommonDao<Singer> {
     @Override
     public int countAll() throws Exception {
         String sql = "select count(*) from singer";
-        return execute(sql, new PreparedStatementProcessor() {
+        return queryExecutor.execute(sql, new PreparedStatementProcessor() {
             @Override
             public void setPreparedStatement(PreparedStatement psm) throws Exception {
 
@@ -97,29 +96,6 @@ public class SingerDaoImpl implements CommonDao<Singer> {
             }
         });
     }
-
-    private boolean execute(String sql, PreparedStatementProcessor processor) throws Exception {
-        Connection conn = connectionFactory.getConnection();
-        PreparedStatement psm = conn.prepareStatement(sql);
-        processor.setPreparedStatement(psm);
-        psm.execute();
-        psm.close();
-        connectionFactory.close();
-        return true;
-    }
-
-    private <T> T execute(String sql, PreparedStatementProcessor processor, ResultSetConverter<T> converter) throws Exception {
-        Connection conn = connectionFactory.getConnection();
-        PreparedStatement psm = conn.prepareStatement(sql);
-        processor.setPreparedStatement(psm);
-        ResultSet rs = psm.executeQuery();
-        T t = converter.convertResultSetToModel(rs);
-        rs.close();
-        psm.close();
-        connectionFactory.close();
-        return t;
-    }
-
 
     private Singer setModelFromResultSet(ResultSet rs) throws Exception {
         Singer singer = new Singer();
