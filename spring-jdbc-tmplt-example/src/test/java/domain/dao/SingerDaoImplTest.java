@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SingerDaoImplTest {
 
@@ -35,5 +38,16 @@ public class SingerDaoImplTest {
     @Test
     void delete() throws Exception {
         commonDao.delete(1);
+    }
+
+    @Test
+    void get() throws Exception {
+        commonDao.get(2L);
+    }
+
+    @Test
+    void getAll() throws Exception {
+        List<Singer> singers = commonDao.getAll();
+        assertThat(singers.size()).isEqualTo(1);
     }
 }
