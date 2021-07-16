@@ -14,16 +14,16 @@ import java.sql.Connection;
 @ContextConfiguration(locations="/applicationContext.xml")
 class DataSourceTest {
 
-    @Autowired
-    private DataSource dataSource;
-
-    @Test
-    void hikariConfigDataSourceTest() {
-        try {
-            Connection conn = dataSource.getConnection();
-            Assertions.assertNotNull(conn);
-        } catch (Exception e) {
-            Assertions.fail();
-        }
-    }
+//    @Autowired
+//    private DataSource dataSource;
+//
+//    @Test
+//    void hikariConfigDataSourceTest() {
+//        try {
+//            Connection conn = dataSource.getConnection();
+//            Assertions.assertNotNull(conn);
+//        } catch (Exception e) {
+//            Assertions.fail();
+//        }
+//    }
 }
