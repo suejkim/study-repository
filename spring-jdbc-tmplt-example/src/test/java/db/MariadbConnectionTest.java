@@ -16,6 +16,7 @@ class MariadbConnectionTest {
         MariadbConnection mariadbConnection = (MariadbConnection) context.getBean("mariadbConnection");
         Connection conn = mariadbConnection.getConnection();
         assertNotNull(conn);
+        mariadbConnection.close();
         context.close();
     }
 }

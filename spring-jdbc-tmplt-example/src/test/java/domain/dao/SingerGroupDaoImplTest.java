@@ -2,6 +2,7 @@ package domain.dao;
 
 import db.MariadbConnection;
 import domain.model.SingerGroup;
+import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,21 +11,27 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 import java.time.LocalDate;
 import java.util.List;
 
-class SingerGroupDaoImplTest {
+import static org.hamcrest.Matchers.is;
 
-    private CommonDao<SingerGroup> commonDao;
+class SingerGroupDaoImplTest { // TODO TestCode 재작성
+
+    private CommonDao<SingerGroup> singerGroupDao;
 
     @BeforeEach
     void setUp() {
         GenericXmlApplicationContext context = new GenericXmlApplicationContext("classpath:applicationContext.xml");
         MariadbConnection mariadbConnection = (MariadbConnection) context.getBean("mariadbConnection");
-        commonDao = new SingerGroupDaoImpl(mariadbConnection);
+        singerGroupDao = new SingerGroupDaoImpl(mariadbConnection);
+    }
+
+    private SingerGroup setSingerGroup() {
+        return SingerGroup.builder().name("SINGER_GROUP").debutDate(LocalDate.now()).agency("AGENCY").build();
     }
 
     @Test
     void add() throws Exception{
-        SingerGroup singerGroup = SingerGroup.builder().name("뚜뚜루").debutDate(LocalDate.now()).agency("기획사").build();
-        commonDao.add(singerGroup);
+        boolean result = singerGroupDao.add(setSingerGroup());
+        MatcherAssert.assertThat(result, is(Boolean.TRUE));
     }
 
     @Test
@@ -35,29 +42,29 @@ class SingerGroupDaoImplTest {
                 .name("뛰뛰루")
                 .agency("기획사1")
                 .build();
-        commonDao.update(singerGroup);
+        singerGroupDao.update(singerGroup);
     }
 
     @Test
     void delete() throws Exception {
-        commonDao.delete(1L);
+        singerGroupDao.delete(1L);
     }
 
     @Test
     void get() throws Exception {
-        SingerGroup singerGroup = commonDao.get(2L);
+        SingerGroup singerGroup = singerGroupDao.get(2L);
         Assertions.assertEquals("기획사", singerGroup.getAgency());
     }
 
     @Test
     void getAll() throws Exception {
-        List<SingerGroup> singerGroups = commonDao.getAll();
+        List<SingerGroup> singerGroups = singerGroupDao.getAll();
         org.assertj.core.api.Assertions.assertThat(singerGroups.size()).isEqualTo(2);
     }
 
     @Test
     void countAll() throws Exception {
-        int count = commonDao.countAll();
+        int count = singerGroupDao.countAll();
         org.assertj.core.api.Assertions.assertThat(count).isEqualTo(2);
     }
 }
