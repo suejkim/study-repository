@@ -2,6 +2,7 @@ package config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import domain.dao.StudentDaoImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,5 +30,10 @@ public class JavaConfig {
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
+    }
+
+    @Bean
+    public StudentDaoImpl studentDaoImpl(JdbcTemplate jdbcTemplate) {
+        return new StudentDaoImpl(jdbcTemplate);
     }
 }
