@@ -1,7 +1,6 @@
 package domain.dao;
 
 import domain.model.Student;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.Date;
@@ -56,11 +55,8 @@ public class StudentDaoImpl implements CommonDao<Student> {
     @Override
     public Student get(long id) {
         String sql = "select * from student where id = ?";
-        try {
-            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> convertResultSetToStudent(rs), id);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+        List<Student> students = jdbcTemplate.query(sql, (rs, rowNum) -> convertResultSetToStudent(rs), id);
+        return students.isEmpty() ? null : students.get(0);
     }
 
     @Override
