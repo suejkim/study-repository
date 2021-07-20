@@ -3,7 +3,6 @@ package domain.dao;
 import domain.model.Student;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -58,22 +57,7 @@ public class StudentDaoImpl implements CommonDao<Student> {
     public Student get(long id) {
         String sql = "select * from student where id = ?";
         try {
-            return jdbcTemplate.queryForObject(
-                    sql,
-                    new RowMapper<Student>() {
-                        @Override
-                        public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
-                            Student student = new Student();
-                            student.setId(rs.getLong("id"));
-                            student.setName(rs.getString("name"));
-                            student.setAge(rs.getInt("age"));
-                            student.setPhone(rs.getString("phone"));
-                            student.setBirth(rs.getDate("birth").toLocalDate());
-                            return student;
-                        }
-                    },
-                    id
-            );
+            return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> convertResultSetToStudent(rs), id);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -85,12 +69,7 @@ public class StudentDaoImpl implements CommonDao<Student> {
         List<Map<String, Object>> mapList = jdbcTemplate.queryForList(sql);
         List<Student> students = new ArrayList<>();
         for (Map<String, Object> map : mapList) {
-            Student student = new Student();
-            student.setId((Long) map.get("id"));
-            student.setName((String) map.get("name"));
-            student.setAge((Integer) map.get("age"));
-            student.setPhone((String) map.get("phone"));
-            student.setBirth(((Date) map.get("birth")).toLocalDate());
+            Student student = convertMapToStudent(map);
             students.add(student);
         }
         return students;
@@ -101,5 +80,25 @@ public class StudentDaoImpl implements CommonDao<Student> {
         String sql = "select count(*) from student";
         Integer result = jdbcTemplate.queryForObject(sql, Integer.class);
         return result != null ? result : -1;
+    }
+
+    private Student convertResultSetToStudent(ResultSet rs) throws SQLException {
+        Student student = new Student();
+        student.setId(rs.getLong("id"));
+        student.setName(rs.getString("name"));
+        student.setAge(rs.getInt("age"));
+        student.setPhone(rs.getString("phone"));
+        student.setBirth(rs.getDate("birth").toLocalDate());
+        return student;
+    }
+
+    private Student convertMapToStudent(Map<String, Object> map) {
+        Student student = new Student();
+        student.setId((Long) map.get("id"));
+        student.setName((String) map.get("name"));
+        student.setAge((Integer) map.get("age"));
+        student.setPhone((String) map.get("phone"));
+        student.setBirth(((Date) map.get("birth")).toLocalDate());
+        return student;
     }
 }
