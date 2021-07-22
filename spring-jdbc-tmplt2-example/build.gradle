@@ -16,6 +16,7 @@ ext {
     lombokVersion = '1.18.20'
     slf4jVersion = '1.7.30'
     springVersion = '5.3.8'
+    log4jVersion = '2.14.1'
 }
 
 dependencies {
@@ -30,6 +31,10 @@ dependencies {
     implementation ("org.slf4j:slf4j-api:${slf4jVersion}")
     implementation ("org.slf4j:slf4j-log4j12:${slf4jVersion}")
     annotationProcessor ("org.projectlombok:lombok:${lombokVersion}")
+
+    implementation ("org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16")
+    implementation ("org.apache.logging.log4j:log4j-api:${log4jVersion}")
+    implementation ("org.apache.logging.log4j:log4j-core:${log4jVersion}")
 
     testImplementation ("org.springframework:spring-test:${springVersion}")
     testRuntimeOnly ("org.junit.jupiter:junit-jupiter-engine")

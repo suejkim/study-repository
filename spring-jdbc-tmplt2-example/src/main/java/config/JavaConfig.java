@@ -15,8 +15,10 @@ public class JavaConfig {
     @Bean
     public HikariConfig hikariConfig() {
         HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setDriverClassName("org.mariadb.jdbc.Driver");
-        hikariConfig.setJdbcUrl("jdbc:mariadb://localhost:3306/school");
+//        hikariConfig.setDriverClassName("org.mariadb.jdbc.Driver");
+//        hikariConfig.setJdbcUrl("jdbc:mariadb://localhost:3306/school");
+        hikariConfig.setDriverClassName("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
+        hikariConfig.setJdbcUrl("jdbc:log4jdbc:mariadb://localhost:3306/school");
         hikariConfig.setUsername("sjkim");
         hikariConfig.setPassword("password");
         return hikariConfig;
