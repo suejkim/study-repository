@@ -104,6 +104,7 @@ Spring JDBC (작업중)
         id: admin, pwd: admin
         ```
 ##### DB: mariadb
+- DB 벤더별 JDBC 라이브러리를 추가한다. 여기서는 MariaDB용 JDBC 라이브러리를 추가했다.
 - docker-compose.yml
     ``` yml
     version: "3"
@@ -219,11 +220,68 @@ public List<Student> getAll() {
     return students;
 }
 ```
-##### DriverManager vs DataSource
-
 #### 2. Template Method Pattern 적용하여 개발
 ##### project spring-jdbc-tmplt-example
 - DB
+    - DB Connection을 연결해 줄 인터페이스를 만들어서 각자 사용하는 DB에 맞게 개발할 수 있다.
+    - 실무에서는 아래의 ConnectionFactory와 같은 인터페이스를 만드는 건 드물고 DB Connection을 가져오는 DataSource 인터페이스를 구현한 클래스를 사용한다.
+    - 아래 코드는 매번 DB와 연결하는 방식이라 실무에서는 사용되지 않으며, 주로 대량의 데이터 처리를 하는 웹 애플리케이션에서는 미리 Connection을 연결하고 반환하는 Connection Pooling방식을 사용한다. (HikariCP 등)
+    - 스프링에서는 세 가지 DataSource 설정을 지원한다.
+        - DriverManager 이용 → 성능 문제로 테스트 목적으로 이용됨
+        - JNDI 이용
+        - Connection Pool 이용 → 스프링에서 구현 클래스를 직접 제공하지 않으므로 라이브러리를 이용함
+``` java
+public interface ConnectionFactory {
+    Connection getConnection();
+    void close();
+}
+```
+``` java
+@Slf4j
+public class MariadbConnection implements ConnectionFactory {
+
+    private Connection conn;
+    private final String driverClassName;
+    private final String url;
+    private final String user;
+    private final String password;
+
+    public MariadbConnection(String driverClassName, String url, String user, String password) {
+        this.driverClassName = driverClassName;
+        this.url = url;
+        this.user = user;
+        this.password = password;
+    }
+
+    @Override
+    public Connection getConnection() {
+        try {
+            Class.forName(driverClassName);
+            if (conn == null) {
+                conn = DriverManager.getConnection(url, user, password);
+                log.info("======== connection start");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return conn;
+    }
+
+    @Override
+    public void close() {
+        try {
+            if (!conn.isClosed()) {
+                conn.close();
+                log.info("======== connection close");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        conn = null;
+    }
+}
+```
+
 
 ##### Template Method Pattern
 <img src="https://reactiveprogramming.io/books/patterns/img/patterns-articles/templete-method-diagram.png" width="60%" alt="template_method"/>
