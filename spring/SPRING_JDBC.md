@@ -1,13 +1,13 @@
 Spring JDBC (작업중)
 ===
 ---
-1. 전통적인 JDBC 방식으로 개발 - DriverManager
-2. Template Method Pattern 적용하여 개발
-3. JdbcTemplate 사용하여 개발 - DataSource
+1. 테스트 코드 및 코드 평가
+2. 전통적인 JDBC 방식으로 개발 - DriverManager
+3. Template Method Pattern 적용하여 개발
+4. JdbcTemplate 사용하여 개발
 ---
 
-#### 1. 전통적인 JDBC 방식으로 개발
-##### 테스트 코드 및 코드 평가
+#### 1. 테스트 코드 및 코드 평가
 - 테스트 코드
     - JUnit Test
 - 코드 평가
@@ -103,8 +103,15 @@ Spring JDBC (작업중)
         http://localhost:9000
         id: admin, pwd: admin
         ```
-##### DB: mariadb
-- DB 벤더별 JDBC 라이브러리를 추가한다. 여기서는 MariaDB용 JDBC 라이브러리를 추가했다.
+
+#### 2. 전통적인 JDBC 방식으로 개발 - DriverManager
+##### JDBC(Java Database Connectivity)
+- JDBC : 다양한 DB 서버를 자바에서 공통적으로 사용하기 위한 공통 스펙(API)
+- DB 벤더별로 접속 라이브러리를 제공
+##### DB: MariaDB
+- DB 벤더별 JDBC 라이브러리를 추가. 여기서는 MariaDB용 JDBC 라이브러리를 추가함.
+- DriverManager 이용 : DB 연결을 위한 기본적인 서비스
+    > The basic service for managing a set of JDBC drivers.
 - docker-compose.yml
     ``` yml
     version: "3"
@@ -220,13 +227,13 @@ public List<Student> getAll() {
     return students;
 }
 ```
-#### 2. Template Method Pattern 적용하여 개발
+#### 3. Template Method Pattern 적용하여 개발
 ##### project spring-jdbc-tmplt-example
 - DB
-    - DB Connection을 연결해 줄 인터페이스를 만들어서 각자 사용하는 DB에 맞게 개발할 수 있다.
-    - 실무에서는 아래의 ConnectionFactory와 같은 인터페이스를 만드는 건 드물고 DB Connection을 가져오는 DataSource 인터페이스를 구현한 클래스를 사용한다.
-    - 아래 코드는 매번 DB와 연결하는 방식이라 실무에서는 사용되지 않으며, 주로 대량의 데이터 처리를 하는 웹 애플리케이션에서는 미리 Connection을 연결하고 반환하는 Connection Pooling방식을 사용한다. (HikariCP 등)
-    - 스프링에서는 세 가지 DataSource 설정을 지원한다.
+    - DB Connection을 연결해 줄 인터페이스를 만들어서 각자 사용하는 DB에 맞게 개발할 수 있음
+    - 실무에서는 아래의 ConnectionFactory와 같은 인터페이스를 만들어서 직접 클래스를 구현하여 개발하는 것은 드물고 DB Connection을 가져오는 DataSource 인터페이스를 구현한 클래스를 사용
+    - 또한 매번 DB와 연결하는 방식은 성능 문제로 인해 사용되지 않으며, 주로 대량의 데이터 처리를 하는 웹 애플리케이션에서는 미리 Connection을 연결하고 반환하는 Connection Pooling방식을 사용 (HikariCP 등)
+    - 스프링에서는 세 가지 DataSource 설정을 지원
         - DriverManager 이용 → 성능 문제로 테스트 목적으로 이용됨
         - JNDI 이용
         - Connection Pool 이용 → 스프링에서 구현 클래스를 직접 제공하지 않으므로 라이브러리를 이용함
@@ -325,20 +332,79 @@ public void addModelSetPreparedStatement(PreparedStatement psm, SingerGroup mode
     psm.setString(3, model.getAgency());
 }
 ```
-
 ##### Template/Callback Pattern
  
 
-#### 3. JdbcTemplate 사용하여 개발 
+#### 4. JdbcTemplate 사용하여 개발
 ##### project spring-jdbc-tmplt2-example 
-##### settings
+- HikariCP
+    - Connection Pool 라이브러리
+- JdbcTemplate
+    - 스프링에서 제공하는 JDBC template class. 중복되는 코드를 제거할 수 있음.
 ``` groovy
+    implementation ("org.springframework:spring-jdbc:${springVersion}")
+    implementation ("com.zaxxer:HikariCP:5.0.0")
+    implementation ("org.mariadb.jdbc:mariadb-java-client:2.7.3")
+```    
+``` java
+@Configuration
+public class JavaConfig {
+
+    @Bean
+    public HikariConfig hikariConfig() {
+        HikariConfig hikariConfig = new HikariConfig();
+//        hikariConfig.setDriverClassName("org.mariadb.jdbc.Driver");
+//        hikariConfig.setJdbcUrl("jdbc:mariadb://localhost:3306/school");
+        hikariConfig.setDriverClassName("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
+        hikariConfig.setJdbcUrl("jdbc:log4jdbc:mariadb://localhost:3306/school");
+        hikariConfig.setUsername("sjkim");
+        hikariConfig.setPassword("password");
+        return hikariConfig;
+    }
+
+    @Bean
+    public DataSource dataSource(HikariConfig hikariConfig) {
+        return new HikariDataSource(hikariConfig);
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+
+    @Bean
+    public StudentDaoImpl studentDaoImpl(JdbcTemplate jdbcTemplate) {
+        return new StudentDaoImpl(jdbcTemplate);
+    }
+}
 ```
 ``` java
-```
-- HikariCP
-- JdbcTemplate
+public class StudentDaoImpl implements CommonDao<Student> {
 
+    private final JdbcTemplate jdbcTemplate;
+
+    public StudentDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    public Student get(long id) {
+        String sql = "select * from student where id = ?";
+        List<Student> students = jdbcTemplate.query(sql, (rs, rowNum) -> convertResultSetToStudent(rs), id);
+        return students.isEmpty() ? null : students.get(0);
+    }
+
+    private Student convertResultSetToStudent(ResultSet rs) throws SQLException {
+        Student student = new Student();
+        student.setId(rs.getLong("id"));
+        student.setName(rs.getString("name"));
+        student.setAge(rs.getInt("age"));
+        student.setPhone(rs.getString("phone"));
+        student.setBirth(rs.getDate("birth").toLocalDate());
+        return student;
+    }
+}
+```
 
 ---
 > https://docs.gradle.org/current/userguide/jacoco_plugin.html 
@@ -348,3 +414,7 @@ https://kwonnam.pe.kr/wiki/gradle/sonarqube
 https://woowabros.github.io/experience/2020/02/02/jacoco-config-on-gradle-project.html
 Head First Design Pattern 
 https://reactiveprogramming.io/books/patterns/img/patterns-articles/templete-method-diagram.png
+토비의 스프링
+코드로 배우는 스프링 웹 프로젝트 개정판
+스프링 부트로 배우는 자바 웹 개발
+Spring 4.0 프로그래밍
