@@ -333,8 +333,80 @@ public void addModelSetPreparedStatement(PreparedStatement psm, SingerGroup mode
 }
 ```
 ##### Template/Callback Pattern
- 
+- 전략패턴 기본구조(템플릿)에 익명 내부 클래스(콜백) 활용
+- QueryExecutor 클래스는 템플릿 메소드
+``` java
+public class QueryExecutor {
 
+    private final ConnectionFactory connectionFactory;
+
+    public QueryExecutor(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
+    public boolean execute(String sql, PreparedStatementProcessor processor) throws Exception {
+        Connection conn = connectionFactory.getConnection();
+        PreparedStatement psm = conn.prepareStatement(sql);
+        processor.setPreparedStatement(psm);
+        psm.execute();
+        psm.close();
+        connectionFactory.close();
+        return true;
+    }
+
+    public <T> T execute(String sql, PreparedStatementProcessor processor, ResultSetConverter<T> converter) throws Exception {
+        Connection conn = connectionFactory.getConnection();
+        PreparedStatement psm = conn.prepareStatement(sql);
+        processor.setPreparedStatement(psm);
+        ResultSet rs = psm.executeQuery();
+        T t = converter.convertResultSetToModel(rs);
+        rs.close();
+        psm.close();
+        connectionFactory.close();
+        return t;
+    }
+}
+```
+``` java
+public interface PreparedStatementProcessor {
+    void setPreparedStatement(PreparedStatement psm) throws Exception;
+}
+```
+``` java
+public interface ResultSetConverter<T> {
+    T convertResultSetToModel(ResultSet rs) throws Exception;
+}
+```
+``` java
+public class SingerDaoImpl implements CommonDao<Singer> {
+
+    private final QueryExecutor queryExecutor;
+
+    public SingerDaoImpl(QueryExecutor queryExecutor) {
+        this.queryExecutor = queryExecutor;
+    }
+
+    @Override
+    public boolean add(Singer singer) throws Exception {
+        String sql = "INSERT INTO singer(name, birth, sex, group_id) VALUES(?, ?, ?, ?)";
+        return queryExecutor.execute(sql, new PreparedStatementProcessor() {
+            @Override
+            public void setPreparedStatement(PreparedStatement psm) throws Exception {
+                psm.setString(1, singer.getName());
+                psm.setDate(2, Date.valueOf(singer.getBirth()));
+                psm.setString(3, singer.getSex().name());
+                psm.setLong(4, singer.getGroupId());
+            }
+        });
+    }
+
+    @Override
+    public Singer get(long id) throws Exception {
+        String sql = "select * from singer where id = ?";
+        return queryExecutor.execute(sql, psm -> psm.setLong(1, id), rs -> setSinger(rs));
+    }
+}
+```
 #### 4. JdbcTemplate 사용하여 개발
 ##### project spring-jdbc-tmplt2-example 
 - HikariCP
