@@ -1,0 +1,5 @@
+CREATE USER sjkim WITH PASSWORD 'password';
+GRANT ALL PRIVILEGES ON DATABASE mydb TO sjkim;
+CREATE TABLE users (
+	id integer PRIMARY KEY
+);
