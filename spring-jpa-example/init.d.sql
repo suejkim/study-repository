@@ -1,5 +1,16 @@
 CREATE USER sjkim WITH PASSWORD 'password';
 GRANT ALL PRIVILEGES ON DATABASE mydb TO sjkim;
 CREATE TABLE users (
-	id integer PRIMARY KEY
+	id serial PRIMARY KEY,
+	username VARCHAR(50) NOT NULL,
+	password VARCHAR(100) NOT NULL,
+	email VARCHAR(255) UNIQUE NOT NULL,
+    enabled BOOLEAN NOT NULL,
+	created_at TIMESTAMP NOT NULL,
+	updated_at TIMESTAMP NOT NULL
+);
+CREATE TABLE roles(
+    user_id INT PRIMARY KEY,
+    role_name VARCHAR(100) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
