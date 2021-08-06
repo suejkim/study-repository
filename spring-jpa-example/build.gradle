@@ -13,14 +13,23 @@ ext {
     lombokVersion = '1.18.20'
     slf4jVersion = '1.7.30'
     springVersion = '5.3.8'
+    springSecurityVersion = '5.5.1'
 }
 
 dependencies {
     implementation ("org.springframework:spring-context:${springVersion}")
+    implementation ("org.springframework:spring-webmvc:${springVersion}")
+    implementation ("org.springframework:spring-web:${springVersion}")
     implementation ("org.springframework.data:spring-data-jpa:2.5.3")
     implementation ("org.springframework:spring-orm:${springVersion}")
     implementation ("org.hibernate:hibernate-entitymanager:5.5.5.Final")
     implementation ("org.postgresql:postgresql:42.2.23")
+
+    implementation ("org.springframework.security:spring-security-web:${springSecurityVersion}")
+    implementation ("org.springframework.security:spring-security-core:${springSecurityVersion}")
+    implementation ("org.springframework.security:spring-security-config:${springSecurityVersion}")
+
+    implementation ("javax.servlet:javax.servlet-api:4.0.1")
 
     implementation ("org.projectlombok:lombok:${lombokVersion}")
     implementation ("org.slf4j:slf4j-api:${slf4jVersion}")
