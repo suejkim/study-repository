@@ -7,5 +7,12 @@
         http://www.springframework.org/schema/security
         http://www.springframework.org/schema/security/spring-security.xsd">
 
+    <sec:http use-expressions="true">
+        <sec:intercept-url pattern="/admin/**" access="hasAuthority('ROLE-ADMIN')"/>
+        <sec:intercept-url pattern="/member/**" access="isAuthenticated()"/>
+        <sec:intercept-url pattern="/**" access="permitAll()"/>
+        <sec:form-login/>
+        <sec:logout/>
+    </sec:http>
 
 </beans>
