@@ -22,11 +22,11 @@
 
     <sec:authentication-manager>
         <!-- test -->
-        <sec:authentication-provider>
-            <sec:user-service>
-                <sec:user name="user" password="{noop}user" authorities="ROLE_USER"/>
-                <sec:user name="admin" password="{noop}admin" authorities="ROLE_ADMIN"/>
-            </sec:user-service>
-        </sec:authentication-provider>
+<!--        <sec:authentication-provider>-->
+<!--            <sec:user-service>-->
+<!--                <sec:user name="user" password="{noop}user" authorities="ROLE_USER"/>-->
+<!--                <sec:user name="admin" password="{noop}admin" authorities="ROLE_ADMIN"/>-->
+<!--            </sec:user-service>-->
+<!--        </sec:authentication-provider>-->
     </sec:authentication-manager>
 </beans>
