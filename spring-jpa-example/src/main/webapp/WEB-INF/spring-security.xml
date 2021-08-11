@@ -7,6 +7,8 @@
         http://www.springframework.org/schema/security
         http://www.springframework.org/schema/security/spring-security.xsd">
 
+    <bean id="loginSuccessHandler" class="com.sjkim.config.security.LoginSuccessHandler"/>
+
     <sec:http use-expressions="true">
         <sec:intercept-url pattern="/admin/**" access="hasAuthority('ROLE_ADMIN')"/>
         <sec:intercept-url pattern="/member/**" access="isAuthenticated()"/>
@@ -15,6 +17,8 @@
 <!--        <sec:logout/>-->
         <sec:access-denied-handler error-page="/error"/>
     </sec:http>
+
+    <sec:csrf disabled="true"/>
 
     <sec:authentication-manager>
         <!-- test -->
