@@ -20,6 +20,8 @@
 
     <sec:csrf disabled="true"/>
 
+    <sec:jdbc-user-service data-source-ref="dataSource"/>
+
     <sec:authentication-manager>
         <!-- test -->
 <!--        <sec:authentication-provider>-->
