@@ -11,24 +11,29 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class HomeController {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/")
+    public static final String HOME = "/home";
+    public static final String MEMBER = "/member";
+    public static final String ADMIN = "/admin";
+    public static final String ERROR = "/error";
+
+    @RequestMapping(method = RequestMethod.GET, value = HOME)
     public String home() {
-        return "home";
+        return "home1";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/member")
-    public void doMember() {
-//        return "member";
+    @RequestMapping(method = RequestMethod.GET, value = MEMBER)
+    public String doMember() {
+        return "member1";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/admin")
+    @RequestMapping(method = RequestMethod.GET, value = ADMIN)
     public String doAdmin() {
-        return "admin";
+        return "admin1";
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/error")
+    @RequestMapping(method = RequestMethod.GET, value = ERROR)
     public String accessDenied(Authentication auth, Model model) {
         model.addAttribute("auth", auth);
-        return "error";
+        return "error1";
     }
 }
