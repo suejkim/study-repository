@@ -16,6 +16,13 @@ public class HomeController {
     public static final String ADMIN = "/admin";
     public static final String ERROR = "/error";
 
+    @RequestMapping(method = RequestMethod.GET, value = "/")
+    public String main() {
+        log.info("main!");
+        return "views/main";
+    }
+
+
     @RequestMapping(method = RequestMethod.GET, value = HOME)
     public String home() {
         return "home1";
