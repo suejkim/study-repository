@@ -29,8 +29,8 @@ dependencies {
     implementation ("org.springframework:spring-context:${springVersion}")
     implementation ("org.springframework:spring-webmvc:${springVersion}")
     implementation ("org.springframework:spring-web:${springVersion}")
-//    implementation ("org.springframework.data:spring-data-jpa:2.5.3")
-//    implementation ("org.springframework:spring-orm:${springVersion}")
+    implementation ("org.springframework.data:spring-data-jpa:2.5.3")
+    implementation ("org.springframework:spring-orm:${springVersion}")
 //    implementation ("org.hibernate:hibernate-entitymanager:5.5.5.Final")
     implementation ("org.postgresql:postgresql:42.2.23")
     implementation ("com.zaxxer:HikariCP:5.0.0")
@@ -52,6 +52,11 @@ dependencies {
     testImplementation ('org.junit.jupiter:junit-jupiter-api:5.7.2')
     testImplementation ("org.hamcrest:hamcrest-core:2.2")
     testImplementation ('org.assertj:assertj-core:3.20.2')
+
+    implementation ("org.thymeleaf:thymeleaf:${thymeleafVersion}")
+    implementation ("org.thymeleaf:thymeleaf-spring5:${thymeleafVersion}")
+    implementation ("org.thymeleaf.extras:thymeleaf-extras-springsecurity5:3.0.4.RELEASE")
+
 }
 
 test {
