@@ -1,11 +1,10 @@
 package com.sjkim.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @Controller
@@ -19,5 +18,21 @@ public class HomeController {
     @GetMapping(value = HOME)
     public String home() {
         return "home";
+    }
+
+    @GetMapping(value = MEMBER)
+    public String doMember() {
+        return "member";
+    }
+
+    @GetMapping(value = ADMIN)
+    public String doAdmin() {
+        return "admin";
+    }
+
+    @GetMapping(value = ERROR)
+    public String accessDenied(Authentication auth, Model model) {
+        model.addAttribute("auth", auth);
+        return "error";
     }
 }

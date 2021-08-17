@@ -35,9 +35,9 @@ dependencies {
     implementation ("org.postgresql:postgresql:42.2.23")
     implementation ("com.zaxxer:HikariCP:5.0.0")
 
-//    implementation ("org.springframework.security:spring-security-web:${springSecurityVersion}")
-//    implementation ("org.springframework.security:spring-security-core:${springSecurityVersion}")
-//    implementation ("org.springframework.security:spring-security-config:${springSecurityVersion}")
+    implementation ("org.springframework.security:spring-security-web:${springSecurityVersion}")
+    implementation ("org.springframework.security:spring-security-core:${springSecurityVersion}")
+    implementation ("org.springframework.security:spring-security-config:${springSecurityVersion}")
 
     implementation ("javax.servlet:javax.servlet-api:4.0.1")
 
