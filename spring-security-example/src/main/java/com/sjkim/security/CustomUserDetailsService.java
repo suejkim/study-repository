@@ -2,8 +2,8 @@ package com.sjkim.security;
 
 import com.sjkim.model.Member;
 import com.sjkim.model.Role;
-import com.sjkim.service.MemberService;
-import com.sjkim.service.RoleService;
+import com.sjkim.repository.MemberRepository;
+import com.sjkim.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,8 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final MemberService memberService;
-    private final RoleService roleService;
+    private final MemberRepository memberRepository;
+    private final RoleRepository roleRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -31,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     private Member findMember(String loginId) {
-        Member member = memberService.getMemberByLoginId(loginId);
+        Member member = memberRepository.findByLoginId(loginId).orElse(null);
         if (member == null) {
             throw new UsernameNotFoundException(loginId);
         }
@@ -39,6 +39,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     private List<Role> findRole(String loginId) {
-        return roleService.getRoleByLoginId(loginId);
+        return roleRepository.findByMember_loginId(loginId);
     }
 }
