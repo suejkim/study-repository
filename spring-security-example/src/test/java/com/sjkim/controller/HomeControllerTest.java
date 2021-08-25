@@ -1,4 +1,4 @@
-package controller;
+package com.sjkim.controller;
 
 import com.sjkim.controller.HomeController;
 import lombok.extern.slf4j.Slf4j;

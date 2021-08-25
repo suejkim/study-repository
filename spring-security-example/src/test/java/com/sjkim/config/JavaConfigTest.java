@@ -1,4 +1,4 @@
-package config;
+package com.sjkim.config;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

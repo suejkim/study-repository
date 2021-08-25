@@ -1,4 +1,4 @@
-package security;
+package com.sjkim.security;
 
 import com.sjkim.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
