@@ -8,8 +8,8 @@
         http://www.springframework.org/schema/security/spring-security.xsd">
 
     <bean id = "bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
-    <bean id = "customerUserDetailsService" class="com.sjkim.security.CustomUserDetailsService">
-    </bean>
+    <bean id = "customUserDetailsService" class="com.sjkim.security.CustomUserDetailsService"/>
+    <bean id = "customAuthenticationProvider" class="com.sjkim.security.CustomAuthenticationProvider"/>
 
     <sec:http use-expressions="true">
         <sec:intercept-url pattern="/admin/**" access="hasAuthority('ROLE_ADMIN')"/>
@@ -32,7 +32,7 @@
 <!--            </sec:user-service>-->
 <!--        </sec:authentication-provider>-->
 
-        <sec:authentication-provider user-service-ref="customerUserDetailsService">
+        <sec:authentication-provider user-service-ref="customUserDetailsService">
             <sec:password-encoder ref="bcryptPasswordEncoder"/>
         </sec:authentication-provider>
     </sec:authentication-manager>
