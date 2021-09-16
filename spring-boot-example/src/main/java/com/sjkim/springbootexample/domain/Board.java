@@ -28,7 +28,9 @@ public class Board {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Board(String title, String writer, String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Board(Long id, String title, String writer,
+                 String content, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
         this.title = title;
         this.writer = writer;
         this.content = content;
