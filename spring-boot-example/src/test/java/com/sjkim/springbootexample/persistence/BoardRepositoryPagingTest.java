@@ -1,12 +1,16 @@
 package com.sjkim.springbootexample.persistence;
 
 import com.sjkim.springbootexample.domain.Board;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.util.Assert;
+
+import java.awt.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -53,5 +57,13 @@ class BoardRepositoryPagingTest {
     void findByWriterTest() {
         var list = boardRepository.findByWriter("WRITER");
         assertThat(list.size()).isEqualTo(1);
+    }
+
+    @Test
+    void findTitleAndContentByWriterTest() {
+        Pageable pageable = PageRequest.of(0, 10);
+        var list = boardRepository.findTitleAndContentByWriter("WRI", pageable);
+        var obj = list.get(0);
+        Matchers.contains(obj[0]).matches("TITLE");
     }
 }

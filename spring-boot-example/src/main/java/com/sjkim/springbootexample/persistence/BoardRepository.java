@@ -24,4 +24,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Query("select b from #{#entityName} b where b.writer = ?1 order by b.id desc")
     List<Board> findByWriter(String writer);
+
+    @Query(value = "select b.title, b.content from Board b where b.writer like %?1% order by b.id desc",
+    nativeQuery = true)
+    List<Object[]> findTitleAndContentByWriter(String writer, Pageable pageable);
 }
