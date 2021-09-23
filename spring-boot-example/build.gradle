@@ -25,10 +25,32 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'mysql:mysql-connector-java:8.0.26'
+	implementation group: 'com.querydsl', name: 'querydsl-jpa', version: '5.0.0'
+	implementation group: 'com.querydsl', name: 'querydsl-apt', version: '5.0.0'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mockito:mockito-core:3.12.4'
+
+	// for QClass
+	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jpa'
+	annotationProcessor 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+
 }
 
 test {
 	useJUnitPlatform()
+}
+
+def generated='src/main/generated'
+sourceSets {
+	main.java.srcDirs += [ generated ]
+}
+
+tasks.withType(JavaCompile) {
+	options.annotationProcessorGeneratedSourcesDirectory = file(generated)
+}
+
+clean.doLast {
+	file(generated).delete()
 }

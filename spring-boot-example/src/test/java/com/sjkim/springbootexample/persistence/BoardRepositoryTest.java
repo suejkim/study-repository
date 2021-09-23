@@ -1,6 +1,7 @@
 package com.sjkim.springbootexample.persistence;
 
 import com.sjkim.springbootexample.domain.Board;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.AdditionalAnswers;
@@ -12,7 +13,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.util.AssertionErrors;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,7 +33,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class BoardRepositoryTest {
 
-//    @Autowired
+    //    @Autowired
     @Mock
     private BoardRepository boardRepository;
 
@@ -92,7 +97,7 @@ class BoardRepositoryTest {
     }
 
     @Test
-    void findBoardMockitoTest(){
+    void findBoardMockitoTest() {
         var board = buildBoardForFindId();
         Optional<Board> optionalBoard = Optional.of(board);
         given(this.boardRepository.findById(anyLong()))
@@ -102,5 +107,16 @@ class BoardRepositoryTest {
         var expected = optionalBoard.get();
 
         assertEquals(expected.getContent(), actual.getContent());
+    }
+
+    @Test
+    void findBySearchTitleTest() {
+        var predicate = boardRepository.findBySearchTitle("TITLE");
+        var iterable = boardRepository.findAll(predicate);
+        List<Board> boards = new ArrayList<>();
+        iterable.forEach(boards::add);
+        if (!boards.isEmpty()) {
+            Assertions.assertEquals("TITLE", boards.get(0).getTitle());
+        }
     }
 }

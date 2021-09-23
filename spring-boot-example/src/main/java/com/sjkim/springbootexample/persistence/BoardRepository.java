@@ -1,17 +1,22 @@
 package com.sjkim.springbootexample.persistence;
 
+import com.google.common.base.Strings;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import com.sjkim.springbootexample.domain.Board;
+import com.sjkim.springbootexample.domain.QBoard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface BoardRepository extends JpaRepository<Board, Long> {
+public interface BoardRepository extends JpaRepository<Board, Long>, QuerydslPredicateExecutor<Board> {
 
     List<Board> findByIdGreaterThan(Long id, Pageable pageable);
 
@@ -28,4 +33,12 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query(value = "select b.title, b.content from Board b where b.writer like %?1% order by b.id desc",
     nativeQuery = true)
     List<Object[]> findTitleAndContentByWriter(String writer, Pageable pageable);
+
+    default Predicate findBySearchTitle(String title) {
+        QBoard board = QBoard.board;
+        if(Strings.isNullOrEmpty(title)) {
+            return null;
+        }
+        return board.title.eq(title);
+    }
 }
