@@ -52,5 +52,5 @@ tasks.withType(JavaCompile) {
 }
 
 clean.doLast {
-	file(generated).delete()
+	delete file(generated)
 }
