@@ -1,6 +1,7 @@
-package com.sjkim.springbootexample.persistence;
+package com.sjkim.springbootexample.persistence.board;
 
 import com.sjkim.springbootexample.domain.Board;
+import com.sjkim.springbootexample.persistence.BoardRepository;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
