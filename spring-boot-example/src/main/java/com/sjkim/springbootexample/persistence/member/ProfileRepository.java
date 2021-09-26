@@ -1,4 +1,4 @@
-package com.sjkim.springbootexample.persistence;
+package com.sjkim.springbootexample.persistence.member;
 
 import com.sjkim.springbootexample.domain.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package com.sjkim.springbootexample.persistence;
+package com.sjkim.springbootexample.persistence.board;
 
 import com.sjkim.springbootexample.domain.BoardFile;
 import org.springframework.data.jpa.repository.JpaRepository;

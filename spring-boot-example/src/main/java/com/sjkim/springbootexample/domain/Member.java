@@ -1,5 +1,6 @@
 package com.sjkim.springbootexample.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,4 +20,11 @@ public class Member {
     private String password;
     private String username;
 
+    @Builder
+    public Member(Long id, String loginId, String password, String username) {
+        this.id = id;
+        this.loginId = loginId;
+        this.password = password;
+        this.username = username;
+    }
 }

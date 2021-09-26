@@ -1,7 +1,6 @@
 package com.sjkim.springbootexample.persistence.board;
 
 import com.sjkim.springbootexample.domain.Board;
-import com.sjkim.springbootexample.persistence.BoardRepository;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.util.Assert;
-
-import java.awt.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
