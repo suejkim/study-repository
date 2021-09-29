@@ -1,5 +1,6 @@
 package com.sjkim.springbootexample.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -25,6 +26,16 @@ public class FreeBoardReply {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @ManyToOne
-    private FreeBoardReply freeBoardReply;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private FreeBoard freeBoard;
+
+    @Builder
+    public FreeBoardReply(Long id, String reply, String replyer, LocalDateTime createdAt, LocalDateTime updatedAt, FreeBoard freeBoard) {
+        this.id = id;
+        this.reply = reply;
+        this.replyer = replyer;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.freeBoard = freeBoard;
+    }
 }
