@@ -2,11 +2,11 @@ package com.sjkim.springbootexample.persistence.free_board;
 
 import com.sjkim.springbootexample.domain.FreeBoard;
 import com.sjkim.springbootexample.domain.FreeBoardReply;
-import com.sjkim.springbootexample.persistence.FreeBoardReplyRepository;
-import com.sjkim.springbootexample.persistence.FreeBoardRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 class FreeBoardRepositoryTest {
@@ -30,5 +30,24 @@ class FreeBoardRepositoryTest {
                     .freeBoard(freeBoard).build();
             freeBoardReplyRepository.save(reply);
         }
+    }
+
+    @Test
+    @DisplayName("Query 체크용")
+    void findFreeBoard() {
+        var freeBoards = freeBoardReplyRepository.findAll();
+        freeBoards.forEach(
+                freeBoardReply -> System.out.println(freeBoardReply.getId())
+        );
+    }
+
+    @Test
+    @DisplayName("Query 체크용")
+    @Transactional
+    void findFreeBoardReply() {
+        var freeBoardReplys = freeBoardRepository.findAll();
+        freeBoardReplys.forEach(
+                freeBoardReply -> System.out.println(freeBoardReply.getFreeBoardReplies())
+        );
     }
 }

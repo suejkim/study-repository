@@ -26,7 +26,7 @@ public class FreeBoardReply {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private FreeBoard freeBoard;
 
     @Builder
