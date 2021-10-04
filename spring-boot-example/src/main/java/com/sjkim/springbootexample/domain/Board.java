@@ -43,5 +43,10 @@ public class Board {
         this.title = title;
         return this;
     }
+
+    public Board updateContent(String content) {
+        this.content = content;
+        return this;
+    }
 }
 

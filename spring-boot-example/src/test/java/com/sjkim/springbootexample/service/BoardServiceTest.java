@@ -27,4 +27,14 @@ class BoardServiceTest {
         }
     }
 
+    @Test
+    void updateBoard() {
+        var boards = boardRepository.findAll();
+        var boardOptional = boards.stream().findAny();
+        if (boardOptional.isPresent()) {
+            var board = boardOptional.get();
+            var result = boardService.updateBoard(board.getId(), "UPDATE_CONTENT_NEW");
+            assertThat(result).isTrue();
+        }
+    }
 }
