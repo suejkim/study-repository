@@ -7,4 +7,6 @@ import java.util.List;
 public interface BoardCustomRepository {
 
     List<Board> findBySearchContent(String content);
+
+    List<Board> findBySearchTitleAndContentAndWriter(String title, String content, String writer);
 }

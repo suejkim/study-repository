@@ -48,4 +48,15 @@ class BoardServiceTest {
         var result = boardService.addBoard(boardSaveDto);
         assertThat(result).isTrue();
     }
+
+    @Test
+    void getBoardList() {
+        String title = UUID.randomUUID().toString();
+        var boardSaveDto = BoardSaveDto.builder().title(title)
+                .content(UUID.randomUUID().toString()).writer("TEST").build();
+        boardService.addBoard(boardSaveDto);
+
+        var boards = boardService.getBoardList(title, null, null);
+        assertThat(boards.size()).isEqualTo(1);
+    }
 }
