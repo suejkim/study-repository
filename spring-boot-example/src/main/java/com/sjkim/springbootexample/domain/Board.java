@@ -28,9 +28,6 @@ public class Board {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany
-    private List<BoardFile> boardFiles;
-
     @Builder
     public Board(Long id, String title, String writer,
                  String content, LocalDateTime createdAt, LocalDateTime updatedAt) {

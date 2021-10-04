@@ -10,7 +10,9 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-
-
-
+    public boolean deleteBoard(long id) {
+        var boardOptional = boardRepository.findById(id);
+        boardOptional.ifPresent(boardRepository::delete);
+        return true;
+    }
 }
