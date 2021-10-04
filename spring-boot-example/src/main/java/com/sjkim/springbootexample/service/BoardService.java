@@ -1,5 +1,7 @@
 package com.sjkim.springbootexample.service;
 
+import com.sjkim.springbootexample.domain.Board;
+import com.sjkim.springbootexample.dto.BoardSaveDto;
 import com.sjkim.springbootexample.persistence.board.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,15 @@ public class BoardService {
             board.updateContent(content);
             boardRepository.save(board);
         }
+        return true;
+    }
+
+    public boolean addBoard(BoardSaveDto saveDto) {
+        Board board = Board.builder()
+                .title(saveDto.getTitle())
+                .content(saveDto.getContent())
+                .writer(saveDto.getWriter()).build();
+        boardRepository.save(board);
         return true;
     }
 }

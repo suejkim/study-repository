@@ -1,9 +1,12 @@
 package com.sjkim.springbootexample.service;
 
+import com.sjkim.springbootexample.dto.BoardSaveDto;
 import com.sjkim.springbootexample.persistence.board.BoardRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -36,5 +39,13 @@ class BoardServiceTest {
             var result = boardService.updateBoard(board.getId(), "UPDATE_CONTENT_NEW");
             assertThat(result).isTrue();
         }
+    }
+
+    @Test
+    void addBoard() {
+        var boardSaveDto = BoardSaveDto.builder().title(UUID.randomUUID().toString())
+                .content(UUID.randomUUID().toString()).writer("TEST").build();
+        var result = boardService.addBoard(boardSaveDto);
+        assertThat(result).isTrue();
     }
 }
