@@ -112,7 +112,11 @@ Spring JDBC (작업중)
 - DB 벤더별 JDBC 라이브러리를 추가. 여기서는 MariaDB용 JDBC 라이브러리를 추가함.
 - DriverManager 이용 : DB 연결을 위한 기본적인 서비스
     > The basic service for managing a set of JDBC drivers.
-- docker-compose.yml
+- cli
+    ``` bash
+    docker run -p 127.0.0.1:3306:3306 -v ./datadir:/var/lib/mysql --name mariadb-study -e MARIADB_ROOT_PASSWORD=1234 -d mariadb
+    ```
+- (또는) docker-compose.yml
     ``` yml
     version: "3"
     services:
