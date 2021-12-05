@@ -29,7 +29,7 @@ subprojects {
     }
 
     configurations {
-//        developmentOnly
+        developmentOnly
         runtimeClasspath {
             extendsFrom developmentOnly
         }
@@ -52,4 +52,26 @@ subprojects {
     test {
         useJUnitPlatform()
     }
+
+    ["comp", "web"].each {
+        def subProjectDir = new File(rootDir, it)
+        subProjectDir.eachDir {dir->
+            def projectName = ":${it}-${dir.name}"
+            project(projectName){
+                bootJar.enabled(false)
+                jar.enabled(true)
+            }
+        }
+    }
+    ["server"].each {
+        def subProjectDir = new File(rootDir, it)
+        subProjectDir.eachDir {dir->
+            def projectName = ":${it}-${dir.name}"
+            project(projectName){
+
+            }
+        }
+    }
+
+    help.enabled(false)
 }
