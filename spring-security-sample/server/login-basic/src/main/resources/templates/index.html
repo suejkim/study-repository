@@ -21,8 +21,9 @@
         <div class="link" sec:authorize="authenticated">
             <a href="/user-page"> 유저 페이지 </a>
         </div>
-        <div class="link" sec:authorize="authenticated">
-            <a href="/admin-page"> 관리자 로그인 </a>
+<!--        <div class="link" sec:authorize="authenticated">-->
+        <div sec:authorize="hasRole('ROLE_ADMIN')"> <!-- ROLE_ADMIN만 보임 -->
+            <a href="/admin-page"> 관리자 페이지 </a>
         </div>
         <div class="link" sec:authorize="authenticated">
             <form th:action="@{/logout}" method="post">

@@ -36,6 +36,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return roleHierarchy;
     }
 
+    @Bean
+    public CustomAuthDetail customAuthDetail() {
+        return new CustomAuthDetail();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests(request -> {
@@ -45,8 +50,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin(login ->
                         login.loginPage("/login").permitAll()
                                 .defaultSuccessUrl("/", false)
+                                // alwaysUse가 false인 경우, 로그인 후 defualtUrl이 아닌 원래 들어가려고 했던 url로 이동
                                 .failureUrl("/login-error")
-                )
+                                .authenticationDetailsSource(customAuthDetail()))
                 .logout(logout ->
                         logout.logoutSuccessUrl("/"))
                 .exceptionHandling(error ->
