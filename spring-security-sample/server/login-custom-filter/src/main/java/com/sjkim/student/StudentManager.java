@@ -19,9 +19,9 @@ public class StudentManager implements AuthenticationProvider, InitializingBean 
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
-        if (this.studentDB.containsKey(token.getName())) {
-            Student student = this.studentDB.get(token.getName());
+        StudentAuthenticationToken token = (StudentAuthenticationToken) authentication;
+        if (this.studentDB.containsKey(token.getCredentials())) {
+            Student student = this.studentDB.get(token.getCredentials());
             return StudentAuthenticationToken.builder()
                     .principal(student) // 인증대상 (OUTPUT)
                     .details(student.getUsername()) // 딱히 의미 없음
@@ -33,15 +33,15 @@ public class StudentManager implements AuthenticationProvider, InitializingBean 
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return authentication == UsernamePasswordAuthenticationToken.class;
+        return authentication == StudentAuthenticationToken.class;
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         Set.of(
-                new Student("KIM", "김", Set.of(new SimpleGrantedAuthority("USER_ROLE"))),
-                new Student("LEE", "이", Set.of(new SimpleGrantedAuthority("USER_ROLE"))),
-                new Student("PARK", "박", Set.of(new SimpleGrantedAuthority("USER_ROLE")))
+                new Student("KIM", "김", Set.of(new SimpleGrantedAuthority("ROLE_STUDENT"))),
+                new Student("LEE", "이", Set.of(new SimpleGrantedAuthority("ROLE_STUDENT"))),
+                new Student("PARK", "박", Set.of(new SimpleGrantedAuthority("ROLE_STUDENT")))
         ).forEach(student -> this.studentDB.put(student.getId(), student));
     }
 }
