@@ -23,6 +23,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         // SPA -> csrf().disable()
         // Server가 동시에 웹페이지 서비스 -> csrf를 enable
-        // 서로 다른 인증 정책이 적용될 것
+        // 서로 다른 인증 정책이 적용될 것 -> module server-login-multi-chain 참고
     }
 }
