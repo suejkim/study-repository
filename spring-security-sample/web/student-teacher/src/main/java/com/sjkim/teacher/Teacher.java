@@ -1,5 +1,6 @@
 package com.sjkim.teacher;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sjkim.student.Student;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,8 @@ import java.util.Set;
 public class Teacher { // domain principal
     private String id;
     private String username;
+
+    @JsonIgnore
     private Set<GrantedAuthority> role;
 
     private List<Student> studentList;

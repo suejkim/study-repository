@@ -2,6 +2,7 @@ package com.sjkim.teacher;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,21 +19,34 @@ public class TeacherManager implements AuthenticationProvider, InitializingBean 
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        if (authentication instanceof UsernamePasswordAuthenticationToken) {
+            UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
+            if (teacherDB.containsKey(token.getName())) {
+                return getAuthenticationToken(token.getName());
+            }
+            return null;  // 핸들링 할 수 없는 토큰일 경우 반드시 null로 리턴
+        }
+
         TeacherAuthenticationToken token = (TeacherAuthenticationToken) authentication;
         if (this.teacherDB.containsKey(token.getCredentials())) {
-            Teacher teacher = this.teacherDB.get(token.getCredentials());
-            return TeacherAuthenticationToken.builder()
-                    .principal(teacher) // 인증대상 (OUTPUT)
-                    .details(teacher.getUsername()) // 딱히 의미 없음
-                    .authenticated(true)
-                    .build(); // 인증 토큰 발급
+            return getAuthenticationToken(token.getCredentials());
         }
         return null;
     }
 
+    private TeacherAuthenticationToken getAuthenticationToken(String id) {
+        Teacher teacher = this.teacherDB.get(id);
+        return TeacherAuthenticationToken.builder()
+                .principal(teacher) // 인증대상 (OUTPUT)
+                .details(teacher.getUsername()) // 딱히 의미 없음
+                .authenticated(true)
+                .build(); // 인증 토큰 발급
+    }
+
     @Override
     public boolean supports(Class<?> authentication) {
-        return authentication == TeacherAuthenticationToken.class;
+        return authentication == TeacherAuthenticationToken.class ||
+                authentication == UsernamePasswordAuthenticationToken.class;
     }
 
     @Override
