@@ -6,10 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Builder
 @AllArgsConstructor
@@ -20,6 +17,7 @@ import javax.persistence.Table;
 @IdClass(SpAuthority.class)
 public class SpAuthority implements GrantedAuthority {
     @Id
+    @Column(name = "user_id")
     private Long userId;
     @Id
     private String authority;

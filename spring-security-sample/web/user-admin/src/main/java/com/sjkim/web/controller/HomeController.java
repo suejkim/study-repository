@@ -1,4 +1,4 @@
-package com.sjkim.controller;
+package com.sjkim.web.controller;
 
 
 import org.springframework.security.access.prepost.PreAuthorize;
