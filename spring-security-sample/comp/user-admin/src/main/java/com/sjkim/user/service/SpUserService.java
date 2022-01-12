@@ -36,7 +36,9 @@ public class SpUserService implements UserDetailsService {
     }
 
     public boolean addAuthority(Long userId, String authority) {
-        spUserRepository.findById(userId).ifPresent(user -> {
+        var userOptional = spUserRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            var user = userOptional.get();
             SpAuthority newRole = new SpAuthority(user.getUserId(), authority);
             if (user.getAuthorities() == null) {
                 HashSet<SpAuthority> authorities = new HashSet<>();
@@ -50,7 +52,18 @@ public class SpUserService implements UserDetailsService {
                 user.setAuthorities(authorities);
                 save(user);
             }
-        });
+        }
+        return true;
+    }
+
+    public boolean addAuthority(SpUser user, String authority) {
+        SpAuthority newRole = new SpAuthority(user.getUserId(), authority);
+        if (user.getAuthorities() == null) {
+            HashSet<SpAuthority> authorities = new HashSet<>();
+            authorities.add(newRole);
+            user.setAuthorities(authorities);
+            save(user);
+        }
         return true;
     }
 
