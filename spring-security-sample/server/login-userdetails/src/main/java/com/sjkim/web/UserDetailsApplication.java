@@ -5,15 +5,21 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+//@SpringBootApplication(scanBasePackages = {
+//        "com.sjkim.user",
+//        "com.sjkim.web"
+//})
+//@EntityScan(basePackages = {
+//        "com.sjkim.user.domain"
+//})
+//@EnableJpaRepositories(basePackages = {
+//        "com.sjkim.user.repository"
+//})
+
+// 위의 설정과 동일함. config(UserAdminModule)에 몰아넣기
 @SpringBootApplication(scanBasePackages = {
-        "com.sjkim.user",
+        "com.sjkim.config",
         "com.sjkim.web"
-})
-@EntityScan(basePackages = {
-        "com.sjkim.user.domain"
-})
-@EnableJpaRepositories(basePackages = {
-        "com.sjkim.user.repository"
 })
 public class UserDetailsApplication {
 
