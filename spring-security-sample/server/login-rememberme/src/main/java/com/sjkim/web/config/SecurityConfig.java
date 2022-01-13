@@ -6,6 +6,7 @@ import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,19 +15,31 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.*;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import javax.servlet.http.HttpSessionEvent;
+import javax.sql.DataSource;
 import java.time.LocalDateTime;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final SpUserService spUserService;
+    SecurityContextPersistenceFilter securityContextPersistenceFilter;
+    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken;
+    RememberMeAuthenticationFilter rememberMeAuthenticationFilter;
+    TokenBasedRememberMeServices tokenBasedRememberMeServices;
+    PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices;
 
-    public SecurityConfig(SpUserService spUserService) {
+
+    private final SpUserService spUserService;
+    private final DataSource dataSource;
+
+    public SecurityConfig(SpUserService spUserService, DataSource dataSource) {
         this.spUserService = spUserService;
+        this.dataSource = dataSource;
     }
 
     @Override
@@ -61,7 +74,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         logout.logoutSuccessUrl("/"))
                 .exceptionHandling(error ->
                         error.accessDeniedPage("/access-denied")) // 없으면 Whitelabel Error Page (403 error)
-                .rememberMe()
+//                .rememberMe() // TokenBasedRememberMe
+                 .rememberMe(remember -> remember.rememberMeServices(rememberMeServices())) // PersistenceTokenBasedRememberMe
         ;
     }
 
@@ -95,5 +109,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 System.out.printf("===>> [%s] 세션 아이디 변경  %s:%s \n", LocalDateTime.now(), oldSessionId, event.getSession().getId());
             }
         });
+    }
+
+    @Bean
+    PersistentTokenRepository tokenRepository() {
+        JdbcTokenRepositoryImpl repository = new JdbcTokenRepositoryImpl();
+        repository.setDataSource(dataSource);
+        try {
+            repository.removeUserTokens("1");
+        } catch (Exception e) {
+            repository.setCreateTableOnStartup(true);
+        }
+        return repository;
+    }
+
+    @Bean
+    PersistentTokenBasedRememberMeServices rememberMeServices() {
+        return new PersistentTokenBasedRememberMeServices("sjkim", spUserService, tokenRepository());
     }
 }
