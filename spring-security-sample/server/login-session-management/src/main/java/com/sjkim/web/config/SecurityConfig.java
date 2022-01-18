@@ -81,6 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
+                .antMatchers("/sessions", "/session/expire", "/session-expired")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()) // CSS 깨짐현상 해결
                 .requestMatchers(PathRequest.toH2Console()) // H2 DB 사용시
         ;
@@ -124,7 +125,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     PersistentTokenBasedRememberMeServices rememberMeServices() {
-        return new PersistentTokenBasedRememberMeServices("sjkim", spUserService, tokenRepository());
+        var service = new PersistentTokenBasedRememberMeServices("sjkim", spUserService, tokenRepository());
+        service.setAlwaysRemember(true);
+        return service;
     }
 
     @Bean

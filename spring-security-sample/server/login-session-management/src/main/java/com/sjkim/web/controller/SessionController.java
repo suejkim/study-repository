@@ -6,6 +6,8 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.stream.Collectors;
 
@@ -31,8 +33,17 @@ public class SessionController { // 세션 모니터링
         return "/sessionList";
     }
 
-    @GetMapping("/session/expire")
-    public String expireSession(String sessionId) {
+    @PostMapping("/session/expire")
+    public String expireSession(@RequestParam String sessionId) {
+        var sessionInformation = sessionRegistry.getSessionInformation(sessionId);
+        if (!sessionInformation.isExpired()) {
+            sessionInformation.expireNow();
+        }
         return "redirect:/sessions";
+    }
+
+    @GetMapping("/session-expired")
+    public String sessionExpired() {
+        return "/sessionExpired";
     }
 }
