@@ -72,7 +72,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .rememberMe() // TokenBasedRememberMe
                 .rememberMe(remember -> remember.rememberMeServices(rememberMeServices())) // PersistenceTokenBasedRememberMe
                 .sessionManagement(s ->
-                        s.maximumSessions(1)
+//                        s.sessionFixation().none() // .none()으로 로그인 후에도 세션을 동일하게 유지하면 세션탈취시 위험함
+                        s.sessionFixation().changeSessionId()
+                                .maximumSessions(1)
                                 .maxSessionsPreventsLogin(false)
                                 .expiredUrl("/session-expired"))
         ;
