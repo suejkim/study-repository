@@ -70,4 +70,9 @@ public class HomeController {
     public Authentication auth() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
+
+    @GetMapping("/login-required")
+    public String loginRequired() {
+        return "LoginRequired";
+    }
 }

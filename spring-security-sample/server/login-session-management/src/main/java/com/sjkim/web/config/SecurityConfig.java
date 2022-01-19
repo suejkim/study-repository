@@ -69,7 +69,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         logout.logoutSuccessUrl("/"))
                 .exceptionHandling(error ->
 //                        error.accessDeniedPage("/access-denied")
-                        error.accessDeniedHandler(new CustomDeniedHandler()) // .accessDeniedPage 대신에 CustomDeniedHandler
+                                error.accessDeniedHandler(new CustomDeniedHandler()) // .accessDeniedPage 대신에 CustomDeniedHandler
+                                        .authenticationEntryPoint(new CustomEntryPoint())
                 )
 //                .rememberMe() // TokenBasedRememberMe
                 .rememberMe(remember -> remember.rememberMeServices(rememberMeServices())) // PersistenceTokenBasedRememberMe
