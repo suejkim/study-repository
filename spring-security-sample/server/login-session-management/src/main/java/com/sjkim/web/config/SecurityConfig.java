@@ -68,7 +68,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout(logout ->
                         logout.logoutSuccessUrl("/"))
                 .exceptionHandling(error ->
-                        error.accessDeniedPage("/access-denied")) // 없으면 Whitelabel Error Page (403 error)
+//                        error.accessDeniedPage("/access-denied")
+                        error.accessDeniedHandler(new CustomDeniedHandler()) // .accessDeniedPage 대신에 CustomDeniedHandler
+                )
 //                .rememberMe() // TokenBasedRememberMe
                 .rememberMe(remember -> remember.rememberMeServices(rememberMeServices())) // PersistenceTokenBasedRememberMe
                 .sessionManagement(s ->

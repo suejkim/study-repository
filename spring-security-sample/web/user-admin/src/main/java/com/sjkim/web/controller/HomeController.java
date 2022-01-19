@@ -36,12 +36,26 @@ public class HomeController {
         return "AccessDenied";
     }
 
+    @GetMapping("/access-denied2")
+    public String accessDenied2() {
+        return "AccessDenied2";
+    }
+
     // SecurityConfig에 RoleHierarchy 클래스로 ROLE 우선순위 설정해도 되고,
     // 아니면 아래 ROLE_USER, ROLE_ADMIN 설정하면 해당 API는 둘 다 접근이 가능하다.
 //    @PreAuthorize(value = "hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @PreAuthorize("hasAnyAuthority('ROLE_USER')")
     @GetMapping("/user-page")
     public String userPage() {
+        return "UserPage";
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_USER')")
+    @GetMapping("/user-page/error") // CannotAccessUserPageException Test
+    public String userPageOccurError() {
+        if(true) {
+            throw new CannotAccessUserPageException();
+        }
         return "UserPage";
     }
 
