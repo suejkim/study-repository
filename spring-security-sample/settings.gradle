@@ -9,7 +9,7 @@
 
 rootProject.name = 'spring-security-sample'
 
-["comp", "web", "server"].each {
+["comp", "web", "test", "server"].each {
 
     def compDir = new File(rootDir, it)
     if(!compDir.exists()){
