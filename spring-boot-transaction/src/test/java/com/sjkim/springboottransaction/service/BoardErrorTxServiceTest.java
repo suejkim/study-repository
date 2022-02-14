@@ -71,4 +71,16 @@ class BoardErrorTxServiceTest {
         assertThat(boardRepository.count()).isZero();
         assertThat(historyRepository.count()).isZero();
     }
+
+    @Test
+    @DisplayName("RuntimeException발생. 같은 클래스 내 @Transactional 적용된 메소드 호출")
+    void beforeSave() {
+        var board = initData.buildBoard();
+        var history = initData.buildHistory();
+        assertThrows(RuntimeException.class, () -> {
+            boardErrorTxService.beforeSave(board, history);
+        });
+        assertThat(boardRepository.count()).isEqualTo(1);
+        assertThat(historyRepository.count()).isEqualTo(1);
+    }
 }

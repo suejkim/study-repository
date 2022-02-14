@@ -20,15 +20,13 @@ public class BoardErrorTxService {
     public boolean save(Board board, History history) {
         boardRepository.save(board); // 데이터 저장
         historyRepository.save(history);
-
         throw new RuntimeException("RuntimeException발생");
-    } // 롤백 발생하지 않음
+    } // 커밋됨
 
     @Transactional
     public boolean saveWithTransactional(Board board, History history) {
         boardRepository.save(board);
         historyRepository.save(history);
-
         throw new RuntimeException("RuntimeException발생");
     } // 롤백 발생
 
@@ -46,4 +44,8 @@ public class BoardErrorTxService {
         historyRepository.save(history);
         throw new Exception("Exception발생");
     } // 롤백 발생
+
+    public boolean beforeSave(Board board, History history) {
+        return this.saveWithTransactional(board, history);
+    } // RuntimeException이라 롤백이 되어야하는데 커밋됨
 }

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @SpringBootTest
 class BoardBasicTxServiceTest {
 
@@ -21,7 +23,7 @@ class BoardBasicTxServiceTest {
 
     @Test
     @DisplayName("@Transactional 미적용")
-    void saveBoard() {
+    void saveBoardAndHistory() {
         var board = initData.buildBoard();
         var history = initData.buildHistory();
         boardBasicTxService.saveBoardAndHistory(board, history);
@@ -29,7 +31,7 @@ class BoardBasicTxServiceTest {
 
     @Test
     @DisplayName("@Transactional 적용")
-    void saveBoardWithTransactional() {
+    void saveBoardAndHistoryWithTransactional() {
         var board = initData.buildBoard();
         var history = initData.buildHistory();
         boardBasicTxService.saveBoardAndHistoryWithTransactional(board, history);
