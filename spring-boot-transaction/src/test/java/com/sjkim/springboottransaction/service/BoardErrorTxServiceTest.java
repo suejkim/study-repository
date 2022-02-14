@@ -47,4 +47,28 @@ class BoardErrorTxServiceTest {
         assertThat(boardRepository.count()).isZero();
         assertThat(historyRepository.count()).isZero();
     }
+
+    @Test
+    @DisplayName("Exception발생. @Transacional 적용")
+    void occurException() {
+        var board = initData.buildBoard();
+        var history = initData.buildHistory();
+        assertThrows(Exception.class, () -> {
+            boardErrorTxService.occurException(board, history);
+        });
+        assertThat(boardRepository.count()).isEqualTo(1);
+        assertThat(historyRepository.count()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("Exception발생. @Transacional RollbackFor 적용")
+    void occurExceptionApplyRollbackFor() {
+        var board = initData.buildBoard();
+        var history = initData.buildHistory();
+        assertThrows(Exception.class, () -> {
+            boardErrorTxService.occurExceptionApplyRollbackFor(board, history);
+        });
+        assertThat(boardRepository.count()).isZero();
+        assertThat(historyRepository.count()).isZero();
+    }
 }
