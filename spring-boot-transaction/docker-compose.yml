@@ -1,0 +1,15 @@
+version: "3"
+services:
+  db:
+    image: mariadb
+    container_name: mariadb-study
+    ports:
+      - "3306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: "1234"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./datadir:/var/lib/mysql
+      - .:/docker-entrypoint-initdb.d/

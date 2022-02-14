@@ -8,23 +8,18 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "board")
-public class Board {
+@Table(name = "history")
+public class History {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-
-    private String content;
-
-    private String writer;
+    private String action;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -32,19 +27,11 @@ public class Board {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-//    @OneToMany(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(name = "board_id"))
-//    private List<BoardFile> boardFiles;
-
     @Builder
-    public Board(Long id, String title, String content, String writer, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public History(Long id, String action, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
-        this.title = title;
-        this.content = content;
-        this.writer = writer;
+        this.action = action;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 }
-
-

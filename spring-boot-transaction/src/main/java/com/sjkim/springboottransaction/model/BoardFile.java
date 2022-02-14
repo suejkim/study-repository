@@ -12,16 +12,14 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "comment")
-public class Comment {
+@Table(name = "board_file")
+public class BoardFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String content;
-
-    private String writer;
+    private String name;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -30,10 +28,9 @@ public class Comment {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Comment(Long id, String content, String writer, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public BoardFile(Long id, String name, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
-        this.content = content;
-        this.writer = writer;
+        this.name = name;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
