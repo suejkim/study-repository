@@ -1,5 +1,7 @@
 package com.sjkim.springboottransaction.service;
 
+import com.sjkim.springboottransaction.repository.BoardRepository;
+import com.sjkim.springboottransaction.repository.HistoryRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +14,17 @@ class BoardBasicTxServiceTest {
     private BoardBasicTxService boardBasicTxService;
     @Autowired
     private InitData initData;
+    @Autowired
+    private BoardRepository boardRepository;
+    @Autowired
+    private HistoryRepository historyRepository;
 
     @Test
     @DisplayName("@Transactional 미적용")
     void saveBoard() {
         var board = initData.buildBoard();
         var history = initData.buildHistory();
-
-        boardBasicTxService.saveBoard(board, history);
+        boardBasicTxService.saveBoardAndHistory(board, history);
     }
 
     @Test
@@ -27,7 +32,6 @@ class BoardBasicTxServiceTest {
     void saveBoardWithTransactional() {
         var board = initData.buildBoard();
         var history = initData.buildHistory();
-
-        boardBasicTxService.saveBoardWithTransactional(board, history);
+        boardBasicTxService.saveBoardAndHistoryWithTransactional(board, history);
     }
 }

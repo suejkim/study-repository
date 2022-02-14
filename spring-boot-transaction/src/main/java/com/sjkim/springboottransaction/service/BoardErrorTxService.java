@@ -10,22 +10,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class BoardBasicTxService {
+public class BoardErrorTxService {
     private final BoardRepository boardRepository;
     private final HistoryRepository historyRepository;
 
-    public boolean saveBoardAndHistory(Board board, History history) {
-        boardRepository.save(board); // board 데이터 조회됨
-        historyRepository.save(history); // history 데이터 조회됨
+    public boolean save(Board board, History history) {
+        boardRepository.save(board); // 데이터 저장
+        historyRepository.save(history);
 
-        return true;
-    }
+        throw new RuntimeException("RuntimeException발생");
+    } // 롤백 발생하지 않음
 
     @Transactional
-    public boolean saveBoardAndHistoryWithTransactional(Board board, History history) {
+    public boolean saveWithTransactional(Board board, History history) {
         boardRepository.save(board);
         historyRepository.save(history);
 
-        return true;
-    } // method 호출이 완료된 후 커밋되어 데이터가 조회됨
+        throw new RuntimeException("RuntimeException발생");
+    } // 롤백 발생
+
 }
