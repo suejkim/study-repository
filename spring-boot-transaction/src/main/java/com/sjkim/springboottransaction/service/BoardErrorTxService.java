@@ -17,6 +17,19 @@ public class BoardErrorTxService {
 
     TransactionAspectSupport transactionAspectSupport;
 
+    @Transactional
+    public boolean saveBoardOccurException(Board board) throws Exception{
+        boardRepository.save(board);
+        throw new Exception("Exception발생. commit");
+    }
+
+    @Transactional
+    public boolean saveBoardOccurRuntimeException(Board board) throws Exception{
+        boardRepository.save(board);
+        throw new RuntimeException("RuntimeException발생. rollback");
+    }
+
+
     public boolean save(Board board, History history) {
         boardRepository.save(board); // 데이터 저장
         historyRepository.save(history);

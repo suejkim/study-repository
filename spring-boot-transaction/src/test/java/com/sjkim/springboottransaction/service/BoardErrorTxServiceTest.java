@@ -83,4 +83,24 @@ class BoardErrorTxServiceTest {
         assertThat(boardRepository.count()).isEqualTo(1);
         assertThat(historyRepository.count()).isEqualTo(1);
     }
+
+    @Test
+    @DisplayName("Exception. Commit")
+    void saveBoardOccurException() {
+        var board = initData.buildBoard();
+        assertThrows(Exception.class, () -> {
+            boardErrorTxService.saveBoardOccurException(board);
+        });
+        assertThat(boardRepository.count()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("RuntimeException. Rollback")
+    void saveBoardOccurRuntimeException() {
+        var board = initData.buildBoard();
+        assertThrows(RuntimeException.class, () -> {
+            boardErrorTxService.saveBoardOccurRuntimeException(board);
+        });
+        assertThat(boardRepository.count()).isZero();
+    }
 }
