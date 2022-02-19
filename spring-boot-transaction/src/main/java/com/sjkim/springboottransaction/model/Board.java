@@ -8,12 +8,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @Entity
 @Table(name = "board")
+//@DynamicUpdate
 public class Board {
 
     @Id
@@ -44,6 +44,11 @@ public class Board {
         this.writer = writer;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public Board setTitle(String title) {
+        this.title = title;
+        return this;
     }
 }
 
