@@ -19,12 +19,3 @@ create table history (
      created_at datetime not null,
      updated_at datetime not null
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table board_file (
-    id bigint auto_increment primary key,
-    name varchar(100) not null,
-    created_at datetime not null,
-    updated_at datetime not null,
-    board_id bigint,
-    foreign key (board_id) references board(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
