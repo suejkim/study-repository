@@ -32,10 +32,6 @@ public class Board {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-//    @OneToMany(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "board_id", foreignKey = @ForeignKey(name = "board_id"))
-//    private List<BoardFile> boardFiles;
-
     @Builder
     public Board(Long id, String title, String content, String writer, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
