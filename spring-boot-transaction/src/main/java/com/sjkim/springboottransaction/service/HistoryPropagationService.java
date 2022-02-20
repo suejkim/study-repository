@@ -40,18 +40,13 @@ public class HistoryPropagationService {
     }
 
     @Transactional(propagation = Propagation.NESTED)
+    public History saveHistoryPropagationNestOccureException(History history) {
+        history = historyRepository.save(history);
+        throw new RuntimeException("RuntimeException발생. rollback");
+    }
+
+    @Transactional(propagation = Propagation.NESTED)
     public History saveHistoryPropagationNest(History history) {
-        return null;
+        return historyRepository.save(history);
     }
-
-    @Transactional(propagation = Propagation.SUPPORTS)
-    public History saveHistoryPropagationSupports(History history) {
-        return null;
-    }
-
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public History saveHistoryPropagationNotSupported(History history) {
-        return null;
-    }
-
 }

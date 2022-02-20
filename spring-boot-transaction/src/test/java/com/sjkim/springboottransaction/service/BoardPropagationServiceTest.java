@@ -43,10 +43,6 @@ class BoardPropagationServiceTest {
     }
 
     @Test
-    void savePropagationSupports() {
-    }
-
-    @Test
     void savePropagationMandatory() {
         var board = initData.buildBoard();
         var history = initData.buildHistory();
@@ -54,10 +50,6 @@ class BoardPropagationServiceTest {
             boardPropagationService.savePropagationMandatory(board, history);
         });
         // No existing transaction found for transaction marked with propagation 'mandatory'
-    }
-
-    @Test
-    void savePropagationNotSupported() {
     }
 
     @Test
@@ -72,5 +64,21 @@ class BoardPropagationServiceTest {
 
     @Test
     void savePropagationNested() {
+        var board = initData.buildBoard();
+        var history = initData.buildHistory();
+        boardPropagationService.savePropagationNested(board, history);
+        assertThat(boardRepository.count()).isEqualTo(1);
+        assertThat(historyRepository.count()).isZero();
+    }
+
+    @Test
+    void savePropagationNested_2() {
+        var board = initData.buildBoard();
+        var history = initData.buildHistory();
+        assertThrows(Exception.class, () -> {
+            boardPropagationService.savePropagationNestedOccurException(board, history);
+        });
+        assertThat(boardRepository.count()).isZero();
+        assertThat(historyRepository.count()).isZero();
     }
 }
