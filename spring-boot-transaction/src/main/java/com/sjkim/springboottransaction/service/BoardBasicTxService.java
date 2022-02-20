@@ -17,7 +17,6 @@ public class BoardBasicTxService {
     public boolean saveBoardAndHistory(Board board, History history) {
         boardRepository.save(board); // board 데이터 조회됨
         historyRepository.save(history); // history 데이터 조회됨
-
         return true;
     }
 
@@ -25,7 +24,6 @@ public class BoardBasicTxService {
     public boolean saveBoardAndHistoryWithTransactional(Board board, History history) {
         boardRepository.save(board);
         historyRepository.save(history);
-
         return true;
     } // method 호출이 완료된 후 커밋되어 데이터가 조회됨
 }

@@ -67,7 +67,7 @@ class BoardPropagationServiceTest {
         var board = initData.buildBoard();
         var history = initData.buildHistory();
         boardPropagationService.savePropagationNested(board, history);
-        assertThat(boardRepository.count()).isEqualTo(1);
+        assertThat(boardRepository.count()).isEqualTo(1L);
         assertThat(historyRepository.count()).isZero();
     }
 
@@ -75,7 +75,7 @@ class BoardPropagationServiceTest {
     void savePropagationNested_2() {
         var board = initData.buildBoard();
         var history = initData.buildHistory();
-        assertThrows(Exception.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             boardPropagationService.savePropagationNestedOccurException(board, history);
         });
         assertThat(boardRepository.count()).isZero();

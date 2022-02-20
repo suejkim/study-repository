@@ -49,8 +49,8 @@ class BoardErrorTxServiceTest {
     }
 
     @Test
-    @DisplayName("Exception발생. @Transacional 적용")
-    void occurException() {
+    @DisplayName("Exception발생. @Transactional 적용")
+    void occurException() throws Exception {
         var board = initData.buildBoard();
         var history = initData.buildHistory();
         assertThrows(Exception.class, () -> {
