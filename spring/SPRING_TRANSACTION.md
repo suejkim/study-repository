@@ -10,7 +10,8 @@ Spring transaction
 ---
 
 ### 1. @Transactional
-트랜잭션은 DB 명령어의 묶음으로, 예로 `주문 → 결제` 는 순서대로 **하나의 작업**으로 진행되어 전부 성공하거나 전부 실패하도록 한다.
+트랜잭션은 DB 명령어의 묶음
+예로는 `주문 → 결제` 는 순서대로 **하나의 작업**으로 진행되어 전부 성공하거나 전부 실패
 
 Spring에서는 `@Transactional`이 사용된다. 클래스 또는 메소드에 해당 어노테이션을 붙여 트랜잭션 대상으로 설정한다. 
 
@@ -21,7 +22,7 @@ Spring에서는 `@Transactional`이 사용된다. 클래스 또는 메소드에 
 먼저 `@Transactional`이 무엇인지 `@Transactional` 을 미적용/적용하여 아래 TEST를 통해 알아본다. (각 save method마다 디버깅 브레이크 포인트를 걸어 확인해본다.)
 
 #### TEST 1. @Transactional 미적용
-save 메소드가 호출되고 난 뒤에 바로 조회가 되는 것을 확인할 수 있다.
+save method가 호출되고 난 뒤에 바로 조회가 되는 것을 확인할 수 있다.
 
 save method는 자체적으로 트랜잭션 생성한다.
 
@@ -44,7 +45,7 @@ public <S extends T> S save(S entity) {
 
 
 #### TEST 2. @Transactional 적용
-두 가지 board, history insert 쿼리문은 한꺼번에 묶여서 하나의 트랜잭션으로 동작한다. method가 시작될 때 `@Transaction`가 적용이 되며 method 호출이 완료되면 트랜잭션이 끝나 커밋되고 DB에 반영된다.
+두 가지 board, history insert 쿼리는 한꺼번에 묶여서 하나의 트랜잭션으로 동작한다. method가 시작될 때 `@Transaction`가 적용이 되며 method 호출이 완료되면 트랜잭션이 끝나 커밋되고 DB에 반영된다.
 
 
 
@@ -124,20 +125,6 @@ public boolean saveAndUpdateWithTransactional(Board board, History history) {
 } 
 ```
 `TITLE2`로 update 되지 않고 기존의 board, history 값만 save된다.
-이 경우에는 아래처럼 클래스를 따로 분리하여 호출하도록 한다.
-``` java
-public boolean beforeSaveAndUpdate(Board board, History history) {
-    return basicOtherTxService.saveAndUpdateWithTransactional(board, history);
-}
-
-@Transactional
-public boolean saveAndUpdateWithTransactional(Board board, History history) {
-    boardRepository.save(board);
-    historyRepository.save(history);
-    board.setTitle("TITLE2"); // update 성공
-    return true;
-}
-```
 
 #### TEST 2. RuntimeException이 발생했다면?
 ``` java
@@ -162,6 +149,22 @@ public boolean saveWithTransactional(Board board, History history) {
 1. Spring 내부에서 `@Transactional`이 적용된 메소드 또는 클래스들은 그 객체를 감싼 Proxy 객체를 생성한다. Proxy 객체는 대상 클래스를 상속하므로 `@Transactional`은 public method에 적용되어야한다.
 2. Proxy를 통하여 객체를 다루게 되는데, TransactionManager를 주입받아 실행 메소드 앞 뒤 과정에 트랜잭션 시작, 트랜잭션 커밋 메소드를 설정하여 트랜잭션이 동작하도록 한다. 
 3. Proxy 객체가 아닌 원 클래스의 `beforeSaveAndUpdateInSameClass` 메소드를 통해서 `saveAndUpdateWithTransactional`로 접근하게 되므로 해당 메소드에 적용된 `@Transactional`는 작동하지 않는다.
+
+##### 다른 해결방법
+아래처럼 클래스를 따로 분리하여 호출하도록 한다.
+``` java
+public boolean beforeSaveAndUpdate(Board board, History history) {
+    return basicOtherTxService.saveAndUpdateWithTransactional(board, history);
+}
+
+@Transactional
+public boolean saveAndUpdateWithTransactional(Board board, History history) {
+    boardRepository.save(board);
+    historyRepository.save(history);
+    board.setTitle("TITLE2"); // update 성공
+    return true;
+}
+```
 
 그렇다면 기존에 트랜잭션이 실행되고 있는데, 다른 클래스의 `@Transactional`이 적용된 메소드를 호출할 경우 또 무엇을 고려할 수 있을까? → `Propagation`
 ### 5. Propagation 전파
@@ -247,53 +250,6 @@ assertThat(boardRepository.count()).isZero();
 assertThat(historyRepository.count()).isZero();
 ```        
 상위 트랜잭션 내에서 RuntimeException이 발생하면 board, history 모두 롤백이 발생한다.
-
-> 의문점?
-Spring 내 NESTED 설명은 아래와 같다.
-Actual creation of a nested transaction will only work on specific transaction managers. Out of the box, this only applies to the JDBC DataSourceTransactionManager. Some JTA providers might support nested transactions as well.
-→ JpaTransacionManager로는 작동이 안되는 것 같은데 테스트는 돌아간다. 테스트가 잘못된건가?
-
-### 6. Isolation 격리
-한 트랜잭션 이외에 다른 트랜잭션이 발생하여 해당 데이터 접근을 어떻게 처리할지 다양한 방식이 존재한다.
-한 트랜잭션은 테스트 코드, 다른 트랜잭션은 직접 쿼리를 날려 테스트 해본다.
-`start transaction; → update문 → commit/rollback;`
-아래쪽으로 갈 수록 격리 강도 증가, 데이터 정합성 보장, 성능 감소
-|type|description|
-|--|--|
-|DEFAULT|기본 전략. 첫번째 트랜잭션 도중에 두번째 트랜잭션으로 데이터를 변경했지만 조회되지 않고 첫번째 트랜잭션이 완료되면 조회됨|
-|READ_UNCOMMITTED|커밋하지 않아도 데이터 조회가 됨. `dirty read` 발생|
-|READ_COMMITTED|커밋된 데이터만 조회할 수 있음. |
-|REPEATABLE_READ|동일한 값을 조회할 수 있도록 보장|
-|SERIALIZABLE|커밋이 발생하지 않은 트랜잭션은 LOCK이 걸린다. 성능 떨어짐|
-
-##### READ_UNCOMMITTED
-* `A 트랜잭션 시작 → B 트랜잭션에서 트랜잭션 시작한 후 update → A 트랜잭션 내에서 update → B 트랜잭션 롤백` 
-
-이미 Entity가 가지고 있는 (B 트랜잭션에서 발생한)데이터가 update 된다. → Entity에 `@DynamicUpdate` 추가하여 해결한다.
-```
-Hibernate:
-   update
-       board
-   set
-       content=?,
-       created_at=?,
-       title=?,
-       updated_at=?,
-       writer=?
-   where
-       id=?
-```
-
-##### READ_COMMITTED
-* @DynamicUpdate 사용하지 않아도 dirty read 현상은 발생하지 않는다.
-* `A 트랜잭션 시작 → B 트랜잭션에서 트랜잭션 시작한 후 update → A 트랜잭션 내에서 update → B 트랜잭션 커밋` 
-
-영속성 컨텍스트에서 관리하는 Entity Cache 때문에 새롭게 업데이트 된 값을 조회하지 못한다. 커밋했지만 A 트랜잭션에서 update한 값만 조회된다.
-EntityManager를 주입하여 영속성 컨텍스트를 clear 해도 트랜잭션 내에서 반복적으로 조회시 값이 변경 될 수 있는 `unRepeatableRead` 발생한다. 
-
-##### REPEATABLE_READ
-트랜잭션 시작할 때 조회 데이터를 별도로 저장해두고 트랜잭션 끝나기 전까지 그 값을 리턴해줘(스냅샷), 반복적으로 조회해도 항상 동일한 값이 나오도록 해준다. 
-`Phantom read` 현상 발생
 
 
 ----
