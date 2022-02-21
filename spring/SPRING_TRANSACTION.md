@@ -4,7 +4,7 @@ Spring transaction
 1. @Transactional
 2. 예외가 발생했을 때?
 3. Checked Exception / Unchecked Exception
-4. 같은 클래스에서 다른 메소드를 호출할 경우 예외가 발생했다면?
+4. 같은 클래스 내 `@Transactional`이 적용된 다른 메소드를 호출할 경우?
 5. Propagation
 6. Isolation 
 ---
@@ -108,7 +108,38 @@ public boolean occurExceptionApplyRollbackFor(Board board, History history) thro
 반대로 다른 경우가 발생하여 커밋을 하고자 한다면 `@Transactional` 속성 중 `noRollbackFor`을 사용한다.
 
 
-### 4. 같은 클래스 내 `@Transactional`이 적용된 다른 메소드를 호출할 경우 RuntimeException이 발생했다면?
+### 4. 같은 클래스 내 `@Transactional`이 적용된 다른 메소드를 호출할 경우?
+#### TEST 1. update할 때?
+```java
+public boolean beforeSaveAndUpdateInSameClass(Board board, History history) {
+    return this.saveAndUpdateWithTransactional(board, history);
+}
+
+@Transactional
+public boolean saveAndUpdateWithTransactional(Board board, History history) {
+    boardRepository.save(board);
+    historyRepository.save(history);
+    board.setTitle("TITLE2"); // update 되지 않음
+    return true;
+} 
+```
+`TITLE2`로 update 되지 않고 기존의 board, history 값만 save된다.
+이 경우에는 아래처럼 클래스를 따로 분리하여 호출하도록 한다.
+``` java
+public boolean beforeSaveAndUpdate(Board board, History history) {
+    return basicOtherTxService.saveAndUpdateWithTransactional(board, history);
+}
+
+@Transactional
+public boolean saveAndUpdateWithTransactional(Board board, History history) {
+    boardRepository.save(board);
+    historyRepository.save(history);
+    board.setTitle("TITLE2"); // update 성공
+    return true;
+}
+```
+
+#### TEST 2. RuntimeException이 발생했다면?
 ``` java
 public boolean beforeSave(Board board, History history) {
     return this.saveWithTransactional(board, history);
@@ -122,13 +153,17 @@ public boolean saveWithTransactional(Board board, History history) {
 }
 ```
 
-롤백이 될 것으로 예상했지만 커밋이 되었다. 같은 빈 내부에서 다른 메소드를 호출하면 그 어노테이션의 효과가 없다. 
-
-JPA @Transactional은 Proxy형태로 구성된다.
-`Proxy`
+롤백이 될 것으로 예상했지만 커밋이 되었다. 위와 같은 사례로 보면 같은 빈 내부에서 다른 메소드를 호출하면 그 어노테이션의 효과는 없다. 
 
 
-그렇다면 다른 클래스의 `@Transactional`이 적용된 메소드를 호출할 경우 무엇을 고려하면 될까? → `Propagation`
+<img src="https://static.podo-dev.com/blogs/images/2019/07/10/origin/I8ECVM190222205849.PNG" width="90%" alt="proxy"/>
+
+
+1. Spring 내부에서 `@Transactional`이 적용된 메소드 또는 클래스들은 그 객체를 감싼 Proxy 객체를 생성한다. Proxy 객체는 대상 클래스를 상속하므로 `@Transactional`은 public method에 적용되어야한다.
+2. Proxy를 통하여 객체를 다루게 되는데, TransactionManager를 주입받아 실행 메소드 앞 뒤 과정에 트랜잭션 시작, 트랜잭션 커밋 메소드를 설정하여 트랜잭션이 동작하도록 한다. 
+3. Proxy 객체가 아닌 원 클래스의 `beforeSaveAndUpdateInSameClass` 메소드를 통해서 `saveAndUpdateWithTransactional`로 접근하게 되므로 해당 메소드에 적용된 `@Transactional`는 작동하지 않는다.
+
+그렇다면 기존에 트랜잭션이 실행되고 있는데, 다른 클래스의 `@Transactional`이 적용된 메소드를 호출할 경우 또 무엇을 고려할 수 있을까? → `Propagation`
 ### 5. Propagation 전파
 트랜잭션이 실행되다가 중간에 다른 트랜잭션이 실행될 때 다양한 처리방식이 존재한다.
 |type|description|
@@ -264,3 +299,5 @@ EntityManager를 주입하여 영속성 컨텍스트를 clear 해도 트랜잭�
 ----
 > https://www.baeldung.com/transaction-configuration-with-jpa-and-spring
 https://techblog.woowahan.com/2606/
+https://mommoo.tistory.com/92
+https://www.podo-dev.com/blogs/133
