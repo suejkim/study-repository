@@ -5,8 +5,9 @@ Spring transaction
 2. 예외가 발생했을 때?
 3. Checked Exception / Unchecked Exception
 4. 같은 클래스 내 `@Transactional`이 적용된 다른 메소드를 호출할 경우?
-5. Propagation
-6. Isolation 
+5. Propagation 전파
+6. Isolation 격리
+##### `spring-boot-transaction` project 참고
 ---
 
 ### 1. @Transactional
