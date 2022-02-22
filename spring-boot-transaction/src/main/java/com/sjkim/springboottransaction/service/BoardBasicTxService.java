@@ -44,4 +44,26 @@ public class BoardBasicTxService {
     public boolean beforeSaveAndUpdate(Board board, History history) {
         return basicOtherTxService.saveAndUpdateWithTransactional(board, history);
     }
+
+    // 다른 클래스로 분리
+    // RuntimeException 발생 -> board, history 모두 롤백
+    @Transactional
+    public boolean beforeSaveAndUpdateOccurException(Board board, History history) {
+        boardRepository.save(board);
+        return basicOtherTxService.saveAndUpdateWithTransactionalOccurException(board, history);
+    }
+
+    @Transactional
+    public boolean beforeSaveAndUpdateTryCatch(Board board, History history) {
+        boardRepository.save(board);
+        try {
+            basicOtherTxService.saveAndUpdateWithTransactionalOccurException(board, history);
+        } catch (Exception e) {
+            //
+        }
+        // Transaction silently rolled back because it has been marked as rollback-onlyorg.springframework.transaction.UnexpectedRollbackException: Transaction silently rolled back because it has been marked as rollback-only
+        // try-catch 문으로 예외처리를 해도 RuntimeException은 rollback 여부가 true이므로 (롤백마크)
+        // 최종커밋시 rollback-only mark 때문에 롤백이 됨
+        return true;
+    }
 }

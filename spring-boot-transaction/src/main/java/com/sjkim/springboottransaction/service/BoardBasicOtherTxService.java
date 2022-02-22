@@ -22,4 +22,11 @@ public class BoardBasicOtherTxService {
         board.setTitle("TITLE2"); // update 성공
         return true;
     }
+
+    @Transactional
+    public boolean saveAndUpdateWithTransactionalOccurException(Board board, History history) {
+        historyRepository.save(history);
+        board.setTitle("TITLE2");
+        throw new RuntimeException("RuntimeException");
+    }
 }

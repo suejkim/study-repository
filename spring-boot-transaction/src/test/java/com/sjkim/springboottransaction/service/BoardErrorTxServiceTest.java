@@ -27,11 +27,9 @@ class BoardErrorTxServiceTest {
     void saveBoardAndHistory() {
         var board = initData.buildBoard();
         var history = initData.buildHistory();
-
         assertThrows(RuntimeException.class, () -> {
             boardErrorTxService.save(board, history);
         });
-
         assertThat(boardRepository.count()).isEqualTo(1);
         assertThat(historyRepository.count()).isEqualTo(1);
     }

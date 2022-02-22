@@ -10,8 +10,8 @@ Spring transaction
 ---
 
 ### 1. @Transactional
-트랜잭션은 DB 명령어의 묶음으로, 예로 `주문 → 결제` 는 순서대로 **하나의 작업**으로 진행되어 전부 성공하거나 전부 실패하도록 한다.
-
+트랜잭션은 DB 명령어의 묶음
+예로, `주문 → 결제` 는 순서대로 **하나의 작업**으로 진행되어 전부 성공하거나 전부 실패
 Spring에서는 `@Transactional`이 사용된다. 클래스 또는 메소드에 해당 어노테이션을 붙여 트랜잭션 대상으로 설정한다. 
 
 ##### 적용범위 
@@ -21,9 +21,14 @@ Spring에서는 `@Transactional`이 사용된다. 클래스 또는 메소드에 
 먼저 `@Transactional`이 무엇인지 `@Transactional` 을 미적용/적용하여 아래 TEST를 통해 알아본다. (각 save method마다 디버깅 브레이크 포인트를 걸어 확인해본다.)
 
 #### TEST 1. @Transactional 미적용
-save 메소드가 호출되고 난 뒤에 바로 조회가 되는 것을 확인할 수 있다.
-
-save method는 자체적으로 트랜잭션 생성한다.
+```java
+public boolean saveBoardAndHistory(Board board, History history) {
+    boardRepository.save(board); // board 데이터 조회됨
+    historyRepository.save(history); // history 데이터 조회됨
+    return true;
+}
+```
+save method가 호출되고 난 뒤에 바로 조회가 되는 것을 확인할 수 있는데, save method는 아래처럼 `@Transactional`이 적용되어 자체적으로 트랜잭션 생성하기 때문이다.
 
 ``` java
 @Transactional
@@ -40,23 +45,28 @@ public <S extends T> S save(S entity) {
     }
 }
 ```    
-트랜잭션이 걸려있지만 않으면 각각 save method마다 트랜잭션이 동작하게 된다.
-
+즉, **트랜잭션이 걸려있지만 않으면 각각 save method마다 트랜잭션이 동작**하게 된다.
 
 #### TEST 2. @Transactional 적용
-두 가지 board, history insert 쿼리문은 한꺼번에 묶여서 하나의 트랜잭션으로 동작한다. method가 시작될 때 `@Transaction`가 적용이 되며 method 호출이 완료되면 트랜잭션이 끝나 커밋되고 DB에 반영된다.
-
-
+두 가지 board, history insert 쿼리는 한꺼번에 묶여서 하나의 트랜잭션으로 동작한다. **method가 시작될 때 `@Transaction`가 적용이 되며 method 호출이 완료되면 트랜잭션이 끝나 커밋되고 DB에 반영**된다.
+```java
+@Transactional
+public boolean saveBoardAndHistoryWithTransactional(Board board, History history) {
+    boardRepository.save(board);
+    historyRepository.save(history);
+    return true;
+} // method 호출이 완료된 후 커밋되어 데이터가 조회됨
+```
 
 ### 2. 예외가 발생했을 때?
 #### TEST 1. @Transactional 미적용
-당연하게도 트랜잭션이 잡혀있지 않아서 각 save method 마다 커밋이 발생하여 최종적으로 모든 테이블에 데이터가 insert된 걸 확인할 수 있다.
+당연히 트랜잭션이 잡혀있지 않아서 각 save method 마다 커밋이 발생하여 최종적으로 모든 테이블에 데이터가 insert된 걸 확인할 수 있다.
 ``` java
 public boolean save(Board board, History history) {
     boardRepository.save(board); // 데이터 저장
     historyRepository.save(history);  // 데이터 저장
     throw new RuntimeException("RuntimeException발생");
-} // 커밋됨
+} // 최종적으로 커밋됨
 ```       
 #### TEST 2. @Transactional 적용
 어노테이션 적용시 save 되지 않고 롤백 발생한다. 
@@ -68,12 +78,11 @@ public boolean saveWithTransactional(Board board, History history) {
     throw new RuntimeException("RuntimeException발생");
 } // 롤백 발생
 ```
-
 그렇다면 RuntimeException이 아닌 Checked Exception이 발생할 땐 어떻게 될까?
 
 ### 3. Checked Exception / Unchecked Exception 
-- Checked Exception: RuntimeException 하위 클래스를 제외한 Exception 하위 클래스 → 예외 처리 해야함
-- Unchecked Exception: RuntimeException 하위 클래스 → 예외 처리 강제하지 않음
+- Checked Exception(Expected): RuntimeException 하위 클래스를 제외한 Exception 하위 클래스 → 예외 처리 해야함
+- Unchecked Exception(Unexpected): RuntimeException 하위 클래스 → 예외 처리 강제하지 않음
 
 #### TEST 1. Checked Exception
 ``` java
@@ -104,9 +113,10 @@ public boolean occurExceptionApplyRollbackFor(Board board, History history) thro
     throw new FileNotFoundException("Exception발생");
 } // 롤백 발생
 ```
-
 반대로 다른 경우가 발생하여 커밋을 하고자 한다면 `@Transactional` 속성 중 `noRollbackFor`을 사용한다.
 
+즉,
+**Checked Exception인 Expected Exception은 예상된 예외이므로 커밋이 발생하고, Unchecked Exception인 Unexpected Exception은 예상하지 못한 예외이므로 롤백이 발생한다.**
 
 ### 4. 같은 클래스 내 `@Transactional`이 적용된 다른 메소드를 호출할 경우?
 #### TEST 1. update할 때?
@@ -124,7 +134,34 @@ public boolean saveAndUpdateWithTransactional(Board board, History history) {
 } 
 ```
 `TITLE2`로 update 되지 않고 기존의 board, history 값만 save된다.
-이 경우에는 아래처럼 클래스를 따로 분리하여 호출하도록 한다.
+
+
+
+#### TEST 2. RuntimeException이 발생했다면?
+``` java
+public boolean beforeSave(Board board, History history) {
+    return this.saveWithTransactional(board, history);
+} // 커밋됨
+
+@Transactional
+public boolean saveWithTransactional(Board board, History history) {
+    boardRepository.save(board);
+    historyRepository.save(history);
+    throw new RuntimeException("RuntimeException발생");
+}
+```
+롤백이 될 것으로 예상했지만 커밋이 되었다. 위와 같은 사례로 보면 **같은 빈 내부에서 다른 메소드를 호출하면 그 어노테이션의 효과는 없다.**
+
+<img src="https://static.podo-dev.com/blogs/images/2019/07/10/origin/I8ECVM190222205849.PNG" width="70%" alt="proxy"/>
+
+
+1. Spring 내부에서 `@Transactional`이 적용된 메소드 또는 클래스들은 그 객체를 감싼 Proxy 객체를 생성한다. Proxy 객체는 대상 클래스를 상속하므로 `@Transactional`은 public method에 적용되어야한다.
+2. Proxy를 통하여 객체를 다루게 되는데, TransactionManager를 주입받아 실행 메소드 앞 뒤 과정에 트랜잭션 시작, 트랜잭션 커밋 메소드를 설정하여 트랜잭션이 동작하도록 한다. 
+3. Proxy 객체로 접근하는 게 아닌 원 클래스의 `beforeSaveAndUpdateInSameClass` 메소드를 통해서 `saveAndUpdateWithTransactional`로 접근하게 되므로 해당 메소드에 적용된 `@Transactional`는 작동하지 않는다.
+
+
+##### 해결방법
+이 경우에는 아래처럼 **클래스를 따로 분리하여 호출**하도록 한다.
 ``` java
 public boolean beforeSaveAndUpdate(Board board, History history) {
     return basicOtherTxService.saveAndUpdateWithTransactional(board, history);
@@ -139,29 +176,41 @@ public boolean saveAndUpdateWithTransactional(Board board, History history) {
 }
 ```
 
-#### TEST 2. RuntimeException이 발생했다면?
-``` java
-public boolean beforeSave(Board board, History history) {
-    return this.saveWithTransactional(board, history);
-} // RuntimeException이라 롤백이 되어야하는데 커밋됨
+#### TEST 3. 두 트랜잭션 실행 중 RuntimeException 발생. 예외처리도 했다면?
+##### 예외처리X
+```java
+// 다른 클래스로 분리
+// RuntimeException 발생 -> board, history 모두 롤백
+@Transactional
+public boolean beforeSaveAndUpdateOccurException(Board board, History history) {
+    boardRepository.save(board);
+    return basicOtherTxService.saveAndUpdateWithTransactionalOccurException(board, history);
+}
 
 @Transactional
-public boolean saveWithTransactional(Board board, History history) {
-    boardRepository.save(board);
+public boolean saveAndUpdateWithTransactionalOccurException(Board board, History history) {
     historyRepository.save(history);
-    throw new RuntimeException("RuntimeException발생");
+    board.setTitle("TITLE2");
+    throw new RuntimeException("RuntimeException");
 }
 ```
+RuntimeException이 발생하여 종료되며, **전부 롤백**된다.
+##### 예외처리O
+``` java
+@Transactional
+public boolean beforeSaveAndUpdateTryCatch(Board board, History history) {
+    boardRepository.save(board);
+    try {
+        basicOtherTxService.saveAndUpdateWithTransactionalOccurException(board, history);
+    } catch (Exception e) {
+        //
+    }
+    return true;
+}
+```
+`Transaction silently rolled back because it has been marked as rollback-onlyorg.springframework.transaction.UnexpectedRollbackException: Transaction silently rolled back because it has been marked as rollback-only`
+RuntimeException 발생시 rollback-only로 마크된다. try-catch문으로 예외를 핸들링하여 트랜잭션 완료 로직을 타도 최종커밋할 때는 앞서 마크된 rollback-only 때문에 **전부 롤백이 발생**한다.
 
-롤백이 될 것으로 예상했지만 커밋이 되었다. 위와 같은 사례로 보면 같은 빈 내부에서 다른 메소드를 호출하면 그 어노테이션의 효과는 없다. 
-
-
-<img src="https://static.podo-dev.com/blogs/images/2019/07/10/origin/I8ECVM190222205849.PNG" width="90%" alt="proxy"/>
-
-
-1. Spring 내부에서 `@Transactional`이 적용된 메소드 또는 클래스들은 그 객체를 감싼 Proxy 객체를 생성한다. Proxy 객체는 대상 클래스를 상속하므로 `@Transactional`은 public method에 적용되어야한다.
-2. Proxy를 통하여 객체를 다루게 되는데, TransactionManager를 주입받아 실행 메소드 앞 뒤 과정에 트랜잭션 시작, 트랜잭션 커밋 메소드를 설정하여 트랜잭션이 동작하도록 한다. 
-3. Proxy 객체가 아닌 원 클래스의 `beforeSaveAndUpdateInSameClass` 메소드를 통해서 `saveAndUpdateWithTransactional`로 접근하게 되므로 해당 메소드에 적용된 `@Transactional`는 작동하지 않는다.
 
 그렇다면 기존에 트랜잭션이 실행되고 있는데, 다른 클래스의 `@Transactional`이 적용된 메소드를 호출할 경우 또 무엇을 고려할 수 있을까? → `Propagation`
 ### 5. Propagation 전파

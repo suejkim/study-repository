@@ -31,7 +31,6 @@ public class BoardErrorTxService {
         throw new RuntimeException("RuntimeException발생. rollback");
     }
 
-
     public boolean save(Board board, History history) {
         boardRepository.save(board); // 데이터 저장
         historyRepository.save(history);  // 데이터 저장
