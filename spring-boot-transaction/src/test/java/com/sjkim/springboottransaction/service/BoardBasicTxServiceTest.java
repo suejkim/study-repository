@@ -83,4 +83,32 @@ class BoardBasicTxServiceTest {
         var targetHistory = historyRepository.findById(1L).orElse(null);
         assertThat(targetHistory).isNull();
     }
+
+    @Test
+    @DisplayName("다른 클래스 내 @Transactional 적용되지 않은 메소드 호출. RuntimeException 발생.")
+    void beforeSaveAndUpdateWithTransactional() {
+        var board = initData.buildBoard();
+        var history = initData.buildHistory();
+        assertThrows(Exception.class, () -> {
+            boardBasicTxService.beforeSaveAndUpdateWithTransactional(board, history);
+        });
+        var targetBoard = boardRepository.findById(1L).orElse(null);
+        assertThat(targetBoard).isNull();
+        var targetHistory = historyRepository.findById(1L).orElse(null);
+        assertThat(targetHistory).isNull();
+    } // 한 트랜잭션내에서 RuntimeException 발생하였으므로 롤백
+
+    @Test
+    @DisplayName("다른 클래스 내 @Transactional 적용된 메소드 호출. RuntimeException 발생.")
+    void beforeSaveAndUpdateWithoutTransactional() {
+        var board = initData.buildBoard();
+        var history = initData.buildHistory();
+        assertThrows(Exception.class, () -> {
+            boardBasicTxService.beforeSaveAndUpdateWithoutTransactional(board, history);
+        });
+        var targetBoard = boardRepository.findById(1L).orElse(null);
+        assertThat(targetBoard.getTitle()).isEqualTo("TITLE");
+        var targetHistory = historyRepository.findById(1L).orElse(null);
+        assertThat(targetHistory).isNull();
+    }
 }

@@ -66,4 +66,17 @@ public class BoardBasicTxService {
         // 최종커밋시 rollback-only mark 때문에 롤백이 됨
         return true;
     }
+
+    @Transactional
+    public boolean beforeSaveAndUpdateWithTransactional(Board board, History history) {
+        boardRepository.save(board);
+        basicOtherTxService.saveAndUpdateOccurException(board, history);
+        return true;
+    }
+
+    public boolean beforeSaveAndUpdateWithoutTransactional(Board board, History history) {
+        boardRepository.save(board);
+        basicOtherTxService.saveAndUpdateWithTransactionalOccurException(board, history);
+        return true;
+    }
 }

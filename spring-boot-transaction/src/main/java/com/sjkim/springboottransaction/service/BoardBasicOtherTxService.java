@@ -29,4 +29,10 @@ public class BoardBasicOtherTxService {
         board.setTitle("TITLE2");
         throw new RuntimeException("RuntimeException");
     }
+
+    public boolean saveAndUpdateOccurException(Board board, History history) {
+        historyRepository.save(history);
+        board.setTitle("TITLE2");
+        throw new RuntimeException("RuntimeException");
+    }
 }
