@@ -5,8 +5,9 @@ Spring transaction
 2. 예외가 발생했을 때?
 3. Checked Exception / Unchecked Exception
 4. 같은 클래스 내 `@Transactional`이 적용된 다른 메소드를 호출할 경우?
-5. Propagation 전파
-6. Isolation 격리
+5. 다른 클래스 내에서 한쪽 메소드에만 `@Transactional`이 없는 경우
+6. Propagation 전파
+7. Isolation 격리
 ##### `spring-boot-transaction` project 참고
 ---
 
@@ -212,9 +213,43 @@ public boolean beforeSaveAndUpdateTryCatch(Board board, History history) {
 `Transaction silently rolled back because it has been marked as rollback-onlyorg.springframework.transaction.UnexpectedRollbackException: Transaction silently rolled back because it has been marked as rollback-only`
 RuntimeException 발생시 rollback-only로 마크된다. try-catch문으로 예외를 핸들링하여 트랜잭션 완료 로직을 타도 최종커밋할 때는 앞서 마크된 rollback-only 때문에 **전부 롤백이 발생**한다.
 
+### 5. 다른 클래스 내에서 한쪽 메소드에만 `@Transactional`이 없는 경우
+#### TEST 1.
+``` java
+@Transactional
+public boolean beforeSaveAndUpdateWithTransactional(Board board, History history) {
+    boardRepository.save(board);
+    basicOtherTxService.saveAndUpdateOccurException(board, history);
+    return true;
+}
+
+public boolean saveAndUpdateOccurException(Board board, History history) {
+    historyRepository.save(history);
+    board.setTitle("TITLE2");
+    throw new RuntimeException("RuntimeException");
+}
+```
+한 트랜잭션 내에서 RuntimeException 발생하였으므로 롤백 발생
+
+#### TEST 2.
+``` java
+public boolean beforeSaveAndUpdateWithoutTransactional(Board board, History history) {
+    boardRepository.save(board);
+    basicOtherTxService.saveAndUpdateWithTransactionalOccurException(board, history);
+    return true;
+}
+
+@Transactional
+public boolean saveAndUpdateWithTransactionalOccurException(Board board, History history) {
+    historyRepository.save(history);
+    board.setTitle("TITLE2");
+    throw new RuntimeException("RuntimeException");
+}
+```
+history는 롤백되나 board는 커밋된다. (단, `saveAndUpdateWithTransactionalOccurException`에서 RuntimeException이 발생하였으므로 롤백되어 `TITLE2`로 update 되지 않는다.)
 
 그렇다면 기존에 트랜잭션이 실행되고 있는데, 다른 클래스의 `@Transactional`이 적용된 메소드를 호출할 경우 또 무엇을 고려할 수 있을까? → `Propagation`
-### 5. Propagation 전파
+### 6. Propagation 전파
 트랜잭션이 실행되다가 중간에 다른 트랜잭션이 실행될 때 다양한 처리방식이 존재한다.
 |type|description|
 |--|--|
@@ -303,7 +338,7 @@ Spring 내 NESTED 설명은 아래와 같다.
 Actual creation of a nested transaction will only work on specific transaction managers. Out of the box, this only applies to the JDBC DataSourceTransactionManager. Some JTA providers might support nested transactions as well.
 → JpaTransacionManager로는 작동이 안되는 것 같은데 테스트는 돌아간다. 테스트가 잘못된건가?
 
-### 6. Isolation 격리
+### 7. Isolation 격리
 한 트랜잭션 이외에 다른 트랜잭션이 발생하여 해당 데이터 접근을 어떻게 처리할지 다양한 방식이 존재한다.
 한 트랜잭션은 테스트 코드, 다른 트랜잭션은 직접 쿼리를 날려 테스트 해본다.
 `start transaction; → update문 → commit/rollback;`
