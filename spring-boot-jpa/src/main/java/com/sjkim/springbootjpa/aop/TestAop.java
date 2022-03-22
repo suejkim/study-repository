@@ -8,8 +8,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
-@Aspect
-@Component
+//@Aspect
+//@Component
 public class TestAop {
 
     @Pointcut("execution(* com.sjkim.springbootjpa.controller.PingController*.*(..))")
@@ -31,6 +31,6 @@ public class TestAop {
 
     @AfterReturning(value = "testPointcut()", returning = "returnObj")
     public void afterReturn(JoinPoint joinPoint, Object returnObj) {
-        System.out.println(returnObj);
+        System.out.println("returnObj: " + returnObj);
     }
 }
