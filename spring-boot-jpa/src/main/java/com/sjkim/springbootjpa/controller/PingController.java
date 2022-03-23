@@ -1,7 +1,7 @@
 package com.sjkim.springbootjpa.controller;
 
 import com.sjkim.springbootjpa.aop.Timer;
-import com.sjkim.springbootjpa.domain.PingRequest;
+import com.sjkim.springbootjpa.dto.PingRequest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

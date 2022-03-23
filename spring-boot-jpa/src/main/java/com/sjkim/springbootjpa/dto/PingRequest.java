@@ -1,4 +1,4 @@
-package com.sjkim.springbootjpa.domain;
+package com.sjkim.springbootjpa.dto;
 
 import lombok.*;
 
