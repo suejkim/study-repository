@@ -25,7 +25,7 @@ public class TimerAdvisor {
         var result = joinPoint.proceed();
 
         stopWatch.stop();
-        System.out.println("timer: " + stopWatch.getTotalTimeSeconds());
+        System.out.println("Timer ========== timer: " + stopWatch.getTotalTimeSeconds());
 
         return result; // Object를 Return 하지 않으면 @Timer가 적용된 메서드에서는 null을 반환함.
     }
