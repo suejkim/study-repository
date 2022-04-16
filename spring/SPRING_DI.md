@@ -41,9 +41,31 @@
    - Bean간 의존관계가 내부가 아닌 외부 설정파일을 통해 정의
    - 외부 설정 정보에 등록된 Bean 간의 의존관계를 컨테이너가 자동적으로 연결
    - Spring의 IoC container의 역할
-2. 의존성 주입 방법 - Setter Injection (setter 메소드를 이용한 주입)
-   `java public class WorkService { private Worker worker; public void setWorker(Worker worker){ this.worker = worker; } public void ask() { System.out.println(worker.getRole()); } } ` - Constructor Injection (생성자를 이용한 주입)
-   `java public class WorkService { private Worker worker; public WorkService(Worker worker) { this.worker = worker; } public void ask() { System.out.println(worker.getRole()); } } `
+2. 의존성 주입 방법 
+    - Setter Injection (setter 메소드를 이용한 주입)
+   ```java 
+   public class WorkService { 
+       private Worker worker; 
+       public void setWorker(Worker worker){ 
+           this.worker = worker; 
+        } 
+        public void ask() { 
+            System.out.println(worker.getRole()); 
+        } 
+    } 
+    ``` 
+    - Constructor Injection (생성자를 이용한 주입)
+   ```java 
+   public class WorkService { 
+       private Worker worker; 
+       public WorkService(Worker worker) { 
+           this.worker = worker; 
+        } 
+        public void ask() { 
+            System.out.println(worker.getRole()); 
+        } 
+   } 
+   ```
    <br>
 
 #### 3. BeanFactory, ApplicationContext
@@ -132,17 +154,14 @@
 
 3.  Annotation : Component Scanning - @ Component - @Repository, @Service, @Controller : 레이어에 따라서 지정
 
-    ````java
+    ```java
     @Configuration
     @ComponentScan(basePackages = "com.sjkim.zoo3")
     public class BeanConfig {
 
-        }
-        ```
-
+    }
+    ```
     <br>
-    ````
-
 #### 5. DI를 통한 Bean 사용
 
 1.  Setter Injection
@@ -172,20 +191,38 @@
 4.  @Autowired, @Qualifier
     - Bean 객체가 증가하면서 의존관계를 관리하는 것이 어려워지므로 자동으로 연결해주는 기능 제공
     - @Qualifier는 Bean 충돌 해결
-5.  ApplicationContext에서 getBean()으로 꺼내어 사용 → 우리 프로젝트에서는 cengold-batch-cmd의 경우 사용됨. - 설정정보가 xml 파일인 경우
-    `java public class XmlCompanyApp { public static void main(String[] args) { GenericXmlApplicationContext context = new GenericXmlApplicationContext( "classpath:applicationContext.xml" ); WorkService workService = context.getBean(WorkService.class); workService.ask(); context.close(); } } ` - 설정정보가 java code인 경우
-    `java public class JavaConfigCompanyApp { public static void main(String[] args) { AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(); context.register(BeanConfig.class); context.refresh(); // config 외부에서 추가시 꼭 필요 -> 재정립 WorkService workService = context.getBean("workService", WorkService.class); workService.ask(); context.close(); } } `
+5.  ApplicationContext에서 getBean()으로 꺼내어 사용 → 우리 프로젝트에서는 cengold-batch-cmd의 경우 사용됨. 
+    - 설정정보가 xml 파일인 경우
+    ``` java 
+    public class XmlCompanyApp { 
+        public static void main(String[] args) { 
+            GenericXmlApplicationContext context = new GenericXmlApplicationContext( "classpath:applicationContext.xml" ); 
+            WorkService workService = context.getBean(WorkService.class); 
+            workService.ask(); context.close(); \
+        } 
+    } 
+    ``` 
+    - 설정정보가 java code인 경우
+    ```java 
+    public class JavaConfigCompanyApp {
+        public static void main(String[] args) { 
+            AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(); 
+            context.register(BeanConfig.class); context.refresh(); // config 외부에서 추가시 꼭 필요 -> 재정립 
+            WorkService workService = context.getBean("workService", WorkService.class); workService.ask(); context.close(); 
+        } 
+    } 
+    ```
 
     <img src="./images/di_ioc-container.png" width="40%" alt="ApplicationContext"/>
 
-        ``` text
-        - Spring framework 시작 → ApplicationContext 객체 생성 (Spring IoC Container)
-        - ApplicationContext는 메타정보를 통해 Bean을 등록, 그 Bean간의 의존관계를 설정
-        - 메타정보에 있는 클래스의 인스턴스 생성
-            - xml 파일의 <context:component-scan> 태그나 @ComponentScan을 통해 설정된 패키지 내에 빈으로 등록될 클래스를 스캔함
-            - 맨 처음 생성자가 없는 클래스의 인스턴스 생성
-            - 생성자가 있는 클래스의 인스턴스 생성(인수의 개수가 적은 것부터 생성)
-        ```
+    ```text
+    - Spring framework 시작 → ApplicationContext 객체 생성 (Spring IoC Container)
+    - ApplicationContext는 메타정보를 통해 Bean을 등록, 그 Bean간의 의존관계를 설정
+    - 메타정보에 있는 클래스의 인스턴스 생성
+        - xml 파일의 <context:component-scan> 태그나 @ComponentScan을 통해 설정된 패키지 내에 빈으로 등록될 클래스를 스캔함
+        - 맨 처음 생성자가 없는 클래스의 인스턴스 생성
+        - 생성자가 있는 클래스의 인스턴스 생성(인수의 개수가 적은 것부터 생성)
+    ```
 
     <br>
 
