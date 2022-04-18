@@ -55,6 +55,189 @@ XxxService처럼 각각의 비즈니스 로직마다 공통적인 기능이 요�
 
 ### 5. TEST CASE
 
+#### (TestAdvisor) Before, After, AfterReturning, AfterThrowing
+``` java
+@Aspect
+@Component
+@Order(1)
+public class TestAdvisor {
+
+    @Pointcut("execution(* com.sjkim.springbootjpa.service.SomethingService.*(..))")
+    private void testPointcut() {
+    }
+
+    @Before(value = "testPointcut()")
+    public void before(JoinPoint joinPoint) throws IOException {
+        var methodSignature = (MethodSignature) joinPoint.getSignature();
+        System.out.println("====== Before Advice ============");
+        var method = methodSignature.getMethod();
+        System.out.println("method : " + method);
+
+        for (var param : methodSignature.getParameterNames()) {
+            System.out.println("methodSignature paramName : " + param);
+        }
+
+        for (var param : method.getParameters()) {
+            System.out.println("method paramName : " + param.getName());
+            System.out.println("method paramType : " + param.getType());
+        }
+
+        var args = joinPoint.getArgs();
+        for (var arg : args) {
+            System.out.println("joinPoint arg : " + arg); // 인자값으로 어떤 처리를 할 때 사용
+            System.out.println("joinPoint arg className : " + arg.getClass().getSimpleName());
+        }
+    }
+
+    @After(value = "testPointcut()")
+    public void after(JoinPoint joinPoint) {
+        System.out.println("====== After Advice ============");
+        System.out.println("예외가 발생하든 하지 않든 반드시 실행됨");
+    }
+
+    @AfterReturning(value = "testPointcut()", returning = "returnObj")
+    public void afterReturn(JoinPoint joinPoint, Object returnObj) {
+        System.out.println("====== After Returning Advice ============");
+        System.out.println("예외가 발생하면 실행되지 않음");
+        System.out.println("returnObj: " + returnObj);
+    }
+
+    @AfterThrowing(value = "testPointcut()", throwing = "throwable")
+    public void afterThrowing(JoinPoint joinPoint, Throwable throwable) {
+        System.out.println("====== After Throwing Advice ============");
+        System.out.println("예외가 발생하면 실행됨");
+        System.out.println("throwable class: " + throwable.getClass());
+        System.out.println("throwable message: " + throwable.getMessage());
+        System.out.println("throwable cause: " + throwable.getCause());
+    }
+}
+```
+#### (TimerAdvisor) Around Advice
+``` java
+@Target({ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Timer {
+    String message() default "";
+}
+```
+
+``` java
+@Aspect
+@Component
+public class TimerAdvisor {
+
+    @Pointcut(value = "@annotation(com.sjkim.springbootjpa.aop.Timer)")
+    private void timerPointcut() {
+    }
+
+    @Around("timerPointcut()")
+    public Object timerAround(ProceedingJoinPoint pjp) throws Throwable {
+        System.out.println("====== Around Advice ============");
+        var stopWatch = new StopWatch();
+        stopWatch.start();
+        var result = pjp.proceed();
+        stopWatch.stop();
+        System.out.println("==============> [Timer] " + stopWatch.getTotalTimeSeconds());
+
+        // Annotation Timer에서 element 가져오기
+        var methodSignature = (MethodSignature) pjp.getSignature();
+        var method = methodSignature.getMethod();
+        var annotation = method.getAnnotation(Timer.class);
+        System.out.println(annotation.message());
+
+        return result; // Object를 Return 하지 않으면 @Timer가 적용된 메서드에서는 null을 반환함.
+    }
+}
+```
+
+##### 예외 발생하지 않음
+- 예외가 발생하지 않는 method 작성한다고 가정
+``` java
+@Timer(message = "Timer Test")
+public String getSomething(int intValue, String stringValue, SomethingRequest request) throws InterruptedException {
+    System.out.println("==============> start getSomething");
+    Thread.sleep(2000);
+    System.out.println("==============> end getSomething");
+    return request.getMessage();
+}
+```
+- test code
+``` java
+@Test
+@SneakyThrows
+void getSomething() {
+    var value = "MESSAGE";
+    SomethingRequest request = new SomethingRequest(value);
+    var result = somethingService.getSomething(10, "TEST", request);
+    assertThat(result).isEqualTo(value);
+}
+```
+- 결과
+    - Before → Around → After Returning → After 순으로 동작
+``` text
+====== Before Advice ============
+method : public java.lang.String com.sjkim.springbootjpa.service.SomethingService.getSomething(int,java.lang.String,com.sjkim.springbootjpa.dto.SomethingRequest) throws java.lang.InterruptedException
+methodSignature paramName : intValue
+methodSignature paramName : stringValue
+methodSignature paramName : request
+method paramName : intValue
+method paramType : int
+method paramName : stringValue
+method paramType : class java.lang.String
+method paramName : request
+method paramType : class com.sjkim.springbootjpa.dto.SomethingRequest
+joinPoint arg : 10
+joinPoint arg className : Integer
+joinPoint arg : TEST
+joinPoint arg className : String
+joinPoint arg : SomethingRequest(message=MESSAGE, timeStamp=2022-04-19T00:02:13.854357)
+joinPoint arg className : SomethingRequest
+====== Around Advice ============
+==============> start getSomething
+==============> end getSomething
+==============> [Timer] 2.032024125
+Timer Test
+====== After Returning Advice ============
+예외가 발생하면 실행되지 않음
+returnObj: MESSAGE
+====== After Advice ============
+예외가 발생하든 하지 않든 반드시 실행됨
+```
+
+##### 예외 발생
+#### 
+- 예외가 발생하는 method 작성한다고 가정
+``` java
+public void occurException() {
+    throw new RuntimeException("TestAdvisor Test 위한 예외 발생");
+}
+```
+- test code
+``` java
+@Test
+void occurException() {
+    assertThrows(RuntimeException.class, () -> {
+        somethingService.occurException();
+    });
+}
+```
+- 결과
+    - Before → After Throwing → After 순으로 동작
+    - After Throwing Advice: `throwing` 옵션을 통해 예외 발생시 공통된 처리를 할 수 있음
+    - After Advice: 예외가 발생하든 발생하지 않든 반드시 실행됨
+``` text
+====== Before Advice ============
+method : public void com.sjkim.springbootjpa.service.SomethingService.occurException()
+====== After Throwing Advice ============
+예외가 발생하면 실행됨
+throwable class: class java.lang.RuntimeException
+throwable message: TestAdvisor Test 위한 예외 발생
+throwable cause: null
+====== After Advice ============
+예외가 발생하든 하지 않든 반드시 실행됨
+```
+
+
 ---
 > https://programmer.group/simple-spring-aop-steps.html 
 > 코드로 배우는 스프링 웹 프로젝트

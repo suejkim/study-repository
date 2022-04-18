@@ -3,12 +3,14 @@ package com.sjkim.springbootjpa.aop;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @Aspect
 @Component
+@Order(1)
 public class TestAdvisor {
 
     @Pointcut("execution(* com.sjkim.springbootjpa.service.SomethingService.*(..))")
@@ -52,7 +54,7 @@ public class TestAdvisor {
     }
 
     @AfterThrowing(value = "testPointcut()", throwing = "throwable")
-    public void afterThrowing(JoinPoint joinPoint, Throwable throwable) {
+    public void afterThrowing(JoinPoint joinPoint,  Throwable throwable) {
         System.out.println("====== After Throwing Advice ============");
         System.out.println("예외가 발생하면 실행됨");
         System.out.println("throwable class: " + throwable.getClass());

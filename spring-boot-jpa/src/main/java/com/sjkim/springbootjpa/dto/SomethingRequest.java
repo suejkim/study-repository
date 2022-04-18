@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
-public class PingRequest {
+public class SomethingRequest {
     private String message;
     private LocalDateTime timeStamp;
 
     @Builder
-    public PingRequest(String message) {
+    public SomethingRequest(String message) {
         this.message = message;
         this.timeStamp = LocalDateTime.now();
     }
