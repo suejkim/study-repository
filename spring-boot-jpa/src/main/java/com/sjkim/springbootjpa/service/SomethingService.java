@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SomethingService {
 
-    @Timer
+    @Timer(message = "Timer Test")
     public String getSomething(int intValue, String stringValue, PingRequest request) throws InterruptedException {
         System.out.println("==============> start getSomething");
         Thread.sleep(2000);

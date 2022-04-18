@@ -17,7 +17,7 @@ public class TestAdvisor {
 
     @Before(value = "testPointcut()")
     public void before(JoinPoint joinPoint) throws IOException {
-        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        var methodSignature = (MethodSignature) joinPoint.getSignature();
         System.out.println("====== Before Advice ============");
         var method = methodSignature.getMethod();
         System.out.println("method : " + method);
@@ -55,7 +55,6 @@ public class TestAdvisor {
     public void afterThrowing(JoinPoint joinPoint, Throwable throwable) {
         System.out.println("====== After Throwing Advice ============");
         System.out.println("예외가 발생하면 실행됨");
-
         System.out.println("throwable class: " + throwable.getClass());
         System.out.println("throwable message: " + throwable.getMessage());
         System.out.println("throwable cause: " + throwable.getCause());
