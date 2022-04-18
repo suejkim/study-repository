@@ -35,21 +35,27 @@ XxxService처럼 각각의 비즈니스 로직마다 공통적인 기능이 요�
 |Weaving|Advice를 핵심 로직에 적용하는 것|
 
 ### 3. Spring의 AOP
-
-핵심 코드에서 공통 관심사(공통 모듈)을 직접적으로 호출하지 않으며, 핵심 비즈니스 로직(개발자의 코드)와 공통 관심사를 구현한 코드를 컴파일 시점 또는 실행 시점에 결합시킨다. 핵심 비즈니스 로직을 감싸는 것을 Proxy라고 하며 Proxy는 자동으로 생성되는 auto-proxy 방식을 이용한다. Proxy를 이용하므로 메서드 호출에서만 AOP를 사용할 수 있다.
-
-<img src="./images/aop_spring-proxy.png" title="proxy" alt="proxy"></img>
+<img src="./images/aop_process.jpeg" title="proxy" alt="proxy"></img>
+1. Spring 설정 파일에서 Bean으로 등록된 Target의 Proxy 객체를 만든다. (핵심 코드(Target)을 감싸는 것을 Proxy라고 하며 Proxy는 자동으로 생성되는 auto-proxy 방식을 이용)
+2. 핵심 코드에서 공통 관심사(공통 모듈)을 직접적으로 호출하지 않으며, Proxy로 간접적으로 접근하여 호출 (Proxy를 이용하므로 메서드 호출에서만 AOP를 사용할 수 있다.)
+3. 공통 기능을 실행한 뒤 Target의 메서드를 실행하거나 Target의 메서드를 호출한 뒤 공통 기능을 실행한다.
+4. 핵심 코드(개발자의 코드)와 공통 관심사를 구현한 코드를 실행 시점에 결합시킨다. (Spring AOP의 경우 런타임 시에 Weaving)
+ 
 
 ### 4. Advice 종류
 
 |종류|설명|
 |--|--|
 |Before Advice|Target의 메서드 실행 전에 공통 기능 실행|
-|After Advice| Target의 메서드 실행 도중 예외가 발생해도 공통 기능 실행|
+|After Advice| Target의 메서드 실행 도중 예외가 발생하든 하지않든 공통 기능 실행|
 |After Returning Advice| Target의 메서드 예외 발생없이 실행 이후 공통 기능 실행|
 |After Throwing Advice| Target의 메서드 실행 도중 예외가 발생한 경우 공통 기능 실행|
 |Around Advice|Target의 메서드 실행 전, 후, 예외 발생 시 공통 기능 실행 → 메서드 실행 제어가 가능|
 
+
+### 5. TEST CASE
+
 ---
 > https://programmer.group/simple-spring-aop-steps.html 
 > 코드로 배우는 스프링 웹 프로젝트
+> Spring 4.0 프로그래밍
