@@ -6,8 +6,8 @@
 2. 용어
 3. Spring의 AOP
 4. Advice 종류
-5. TEST CASE
-6. 실무적용 TEST
+5. TEST CASE 1
+6. TEST CASE 2
 ##### `spring-boot-jpa` project 참고
 
 ---
@@ -17,6 +17,7 @@
 <img src="./images/aop_cross-cutting-concern.jpeg" title="cross-cutting concern" alt="aop"/>
 
 위의 그림을 살펴보면 각각의 비즈니스 로직마다 Logging, Security 등 **공통적인 기능이 요구**되는 경우가 있다. **로깅, 권한, 캐싱, 공통 예외처리, 메서드 실행시간 체크, 메서드 파라미터 validate check, 보안, 트랜잭션** 등 애플리케이션 전반적으로 필요한 경우가 대부분이다. 하지만 공통 기능을 해당 로직에 계속 추가하는 건 중복 코드를 양산할 수 있는데 이를 해결하기 위해 AOP가 나타났다.
+
 위의 공통적 기능들은 핵심 비즈니스 로직은 아니지만 **공통 관심사 cross-cutting concern**으로 분리하여 작성할 수 있다. 또는 위의 그림처럼 횡으로 분리하였다고 하여 횡단 관심사라고도 한다.
 즉, **공통 관심사를 모듈로 분리하는 것이 AOP**이다. AOP 장점으로 아래와 같다.
 
@@ -215,9 +216,7 @@ returnObj: MESSAGE
 ====== After Advice ============
 예외가 발생하든 하지 않든 반드시 실행됨
 ```
-
-##### 예외 발생
-#### 
+##### 예외 발생 
 - 예외가 발생하는 method 작성한다고 가정
 ``` java
 public void occurException() {
@@ -311,7 +310,7 @@ public UserInfo registerUser(UserInfo userInfo) {
 - Before Advice에서 Arguments(사용자 정보)를 복호화한 뒤, 핵심 로직에서 가입 절차를 거치고 정상적으로 실행이 되었을 때 리턴된 데이터를 After Returning Advice에서 다시 암호화하여 보내는 방식으로 구현할 수 있다.
 ---
 > https://programmer.group/simple-spring-aop-steps.html 
-> https://docs.spring.io/spring-framework/docs/current/reference/html/core.htm
-> https://engkimbs.tistory.com/746
-> 코드로 배우는 스프링 웹 프로젝트
-> Spring 4.0 프로그래밍
+https://docs.spring.io/spring-framework/docs/current/reference/html/core.htm
+https://engkimbs.tistory.com/746
+코드로 배우는 스프링 웹 프로젝트
+Spring 4.0 프로그래밍
