@@ -31,6 +31,7 @@ public class JpaMain {
     private static void logic(EntityManager entityManager) {
         // 비영속
         Board board = Board.builder()
+                .id(1L)
                 .title("TITLE")
                 .content("CONTENT")
                 .writer("WRITER")
