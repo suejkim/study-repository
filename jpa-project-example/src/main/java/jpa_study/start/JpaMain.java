@@ -4,7 +4,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -31,16 +30,15 @@ public class JpaMain {
     private static void logic(EntityManager entityManager) {
         // 비영속
         Board board = Board.builder()
-//                .id(1L) // id 빼지 않으면 detached 상태로 인식
                 .title("TITLE")
                 .content("CONTENT")
                 .writer("WRITER")
                 .build();
 
         // 영속
-        entityManager.persist(board);
-        Board findBoard = entityManager.find(Board.class, 1L);
-        System.out.println(findBoard);
+        entityManager.persist(board); // ERROR(detached entity passed to persist): 비영속인 상태에서 id를 추가하여 persist 할 경우 detached 로 인식
+//        Board findBoard = entityManager.find(Board.class, 1L);
+//        System.out.println(findBoard.getTitle());
 
 
 //        board.changeTitle("UPDATED_TITLE");
