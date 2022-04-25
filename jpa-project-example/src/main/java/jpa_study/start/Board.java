@@ -17,10 +17,14 @@ import java.time.LocalDateTime;
 public class Board {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "title")
     private String title;
+    @Column(name = "writer")
     private String writer;
+    @Column(name = "content")
     private String content;
 
     @CreationTimestamp

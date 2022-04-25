@@ -8,12 +8,12 @@
 - 연결시험아닌 바로 '연결' (db파일 생성)
 4. DDL
 ```sql
-   create table board (
-    id integer not null primary key,
-    title varchar(50),
-    writer varchar(50),
-    content varchar(500),
-    created_at timestamp,
-    updated_at timestamp
+create table board (
+   id bigint auto_increment not null primary key,
+   title varchar(50),
+   writer varchar(50),
+   content varchar(500),
+   created_at timestamp,
+   updated_at timestamp
 );
 ```

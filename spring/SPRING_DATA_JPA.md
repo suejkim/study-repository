@@ -3,6 +3,8 @@
 1. ORM(Object Relational Mapping)
 2. JPA(Java Persistence API)
 3. Spring Data JPA
+4. 영속성 관리
+5. Entity Life Cycle
 ##### `spring-boot-jpa` project 참고
 ---
 
@@ -29,6 +31,10 @@ JPA는 자바 애플리케이션과 JDBC 사이에서 동작한다. (그림추�
 
 
 #### Spring Data JPA의 Repository 구조
+
+
+
+
 
 
 

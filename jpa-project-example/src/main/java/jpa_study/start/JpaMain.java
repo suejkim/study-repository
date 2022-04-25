@@ -31,7 +31,7 @@ public class JpaMain {
     private static void logic(EntityManager entityManager) {
         // 비영속
         Board board = Board.builder()
-                .id(1L)
+//                .id(1L) // id 빼지 않으면 detached 상태로 인식
                 .title("TITLE")
                 .content("CONTENT")
                 .writer("WRITER")
@@ -39,17 +39,20 @@ public class JpaMain {
 
         // 영속
         entityManager.persist(board);
-
-        board.changeTitle("UPDATED_TITLE");
-
         Board findBoard = entityManager.find(Board.class, 1L);
-        System.out.println(">>>>> title: " + findBoard.getTitle());
+        System.out.println(findBoard);
 
-        List<Board> findBoardList = entityManager.createQuery("select b from Board b", Board.class).getResultList();
-        System.out.println(">>>>> list size: " + findBoardList.size());
+
+//        board.changeTitle("UPDATED_TITLE");
+//
+//        Board findBoard = entityManager.find(Board.class, 1L);
+//        System.out.println(">>>>> title: " + findBoard.getTitle());
+//
+//        List<Board> findBoardList = entityManager.createQuery("select b from Board b", Board.class).getResultList();
+//        System.out.println(">>>>> list size: " + findBoardList.size());
 
         // 삭제
-        entityManager.remove(board);
+//        entityManager.remove(board);
 
     }
 }
