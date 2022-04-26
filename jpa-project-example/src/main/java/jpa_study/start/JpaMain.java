@@ -1,9 +1,12 @@
 package jpa_study.start;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -37,20 +40,26 @@ public class JpaMain {
 
         // 영속
         entityManager.persist(board); // ERROR(detached entity passed to persist): 비영속인 상태에서 id를 추가하여 persist 할 경우 detached 로 인식
-//        Board findBoard = entityManager.find(Board.class, 1L);
-//        System.out.println(findBoard.getTitle());
+        Board findBoard = entityManager.find(Board.class, 1L);
+        System.out.println(findBoard.getTitle());
 
+        board.changeTitle("UPDATED_TITLE");
 
-//        board.changeTitle("UPDATED_TITLE");
-//
-//        Board findBoard = entityManager.find(Board.class, 1L);
-//        System.out.println(">>>>> title: " + findBoard.getTitle());
-//
-//        List<Board> findBoardList = entityManager.createQuery("select b from Board b", Board.class).getResultList();
-//        System.out.println(">>>>> list size: " + findBoardList.size());
+        // 1차 캐시에서 조회
+        findBoard = entityManager.find(Board.class, 1L);
+        System.out.println(">>>>> title: " + findBoard.getTitle());
+
+        List<Board> findBoardList = entityManager.createQuery("select b from Board b", Board.class).getResultList();
+        System.out.println(">>>>> list size: " + findBoardList.size());
+
+        // 동일성 비교
+        var board1 = entityManager.find(Board.class, 1L);
+        var board2 = entityManager.find(Board.class, 1L);
+        // 1차 캐시에 있는 같은 인스턴스를 반환
+        System.out.println(board1 == board2);
+        System.out.println("result: " + board1.equals(board2));
 
         // 삭제
-//        entityManager.remove(board);
-
+        entityManager.remove(board);
     }
 }
