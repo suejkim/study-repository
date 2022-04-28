@@ -1,0 +1,2 @@
+insert into board (id, title, writer, content, created_at, updated_at) values (1000, '1000_TITLE', '1000_WRITER', '1000_CONTENT', now(), now());
+insert into board (id, title, writer, content, created_at, updated_at) values (2000, '2000_TITLE', '2000_WRITER', '2000_CONTENT', now(), now());
