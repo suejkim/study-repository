@@ -15,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 class EntityLifeCycleTest {
-
     private EntityManager entityManager;
     private EntityTransaction entityTransaction;
 
@@ -79,5 +78,25 @@ class EntityLifeCycleTest {
 
         // commit -> DB 저장
         entityTransaction.commit();
+    }
+
+
+    @Test
+    @DisplayName("변경감지")
+    void dirtyChecking() {
+//        entityTransaction.begin();
+        Board resultBoard = entityManager.find(Board.class, 1000L); // 스냅샷 & 캐싱
+        assertThat(resultBoard.getTitle()).isEqualTo("1000_TITLE");
+
+        String changedTitle = "UPDATED_TITLE";
+        resultBoard.changeTitle(changedTitle);
+
+        Board resultBoard2 = entityManager.find(Board.class, 1000L); // 1차 캐시에 들어있는 엔티티
+        assertThat(resultBoard2.getTitle()).isEqualTo(changedTitle);
+
+        log.info(">>>> tx begin");
+        entityTransaction.begin();
+        log.info(">>>> tx commit");
+        entityTransaction.commit(); // 기본은 entity 모든 필드 업데이트. @DynamicUpdate로 동적 쿼리 실행: 변경 감지된 필드만 업데이트 된다.
     }
 }
