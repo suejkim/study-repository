@@ -107,11 +107,13 @@ class EntityLifeCycleTest {
         Board resultBoard = entityManager.find(Board.class, 1000L);
         entityManager.clear();
         resultBoard.changeTitle("UPDATE");
+        var resultAfterClear = entityManager.contains(resultBoard);
+        assertThat(resultAfterClear).isFalse();
         entityTransaction.commit();
     }
 
     @Test
-    @DisplayName("준영속. detached()")
+    @DisplayName("준영속. detached()") // TODO 재확인 필요
     void detachedState_2() {
         entityTransaction.begin();
         Board board = Board.builder()
@@ -121,13 +123,34 @@ class EntityLifeCycleTest {
                 .build();
 
         entityManager.persist(board); // managed.
-        var resultAfterPersist = entityManager.contains(board);
-        assertThat(resultAfterPersist).isTrue();
+//        var resultAfterPersist = entityManager.contains(board);
+//        assertThat(resultAfterPersist).isTrue();
 
         entityManager.detach(board); // detached
-        var resultAfterDetach = entityManager.contains(board);
-        assertThat(resultAfterDetach).isFalse();
+//        var resultAfterDetach = entityManager.contains(board);
+//        assertThat(resultAfterDetach).isFalse();
 
+        entityTransaction.commit();
+    }
+
+    @Test
+    @DisplayName("준영속. close()")
+    void detachedState_3() {
+        Board resultBoard = entityManager.find(Board.class, 1000L);
+        entityManager.close(); // Session/EntityManager is closed
+        var resultAfterClose = entityManager.isOpen();
+        assertThat(resultAfterClose).isFalse();
+    }
+
+    @Test
+    void detachedState_4() {
+        entityTransaction.begin();
+        Board resultBoard = entityManager.find(Board.class, 1000L);
+        resultBoard.changeTitle("UDPATE");
+        entityManager.detach(resultBoard); // detached
+
+        var resultAfterDetach = entityManager.contains(resultBoard);
+        assertThat(resultAfterDetach).isFalse();
         entityTransaction.commit();
     }
 }
