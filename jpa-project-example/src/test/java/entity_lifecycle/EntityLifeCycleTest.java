@@ -99,4 +99,35 @@ class EntityLifeCycleTest {
         log.info(">>>> tx commit");
         entityTransaction.commit(); // 기본은 entity 모든 필드 업데이트. @DynamicUpdate로 동적 쿼리 실행: 변경 감지된 필드만 업데이트 된다.
     }
+
+    @Test
+    @DisplayName("준영속. clear()")
+    void detachedState_1() {
+        entityTransaction.begin();
+        Board resultBoard = entityManager.find(Board.class, 1000L);
+        entityManager.clear();
+        resultBoard.changeTitle("UPDATE");
+        entityTransaction.commit();
+    }
+
+    @Test
+    @DisplayName("준영속. detached()")
+    void detachedState_2() {
+        entityTransaction.begin();
+        Board board = Board.builder()
+                .title("TITLE")
+                .content("CONTENT")
+                .writer("WRITER")
+                .build();
+
+        entityManager.persist(board); // managed.
+        var resultAfterPersist = entityManager.contains(board);
+        assertThat(resultAfterPersist).isTrue();
+
+        entityManager.detach(board); // detached
+        var resultAfterDetach = entityManager.contains(board);
+        assertThat(resultAfterDetach).isFalse();
+
+        entityTransaction.commit();
+    }
 }
