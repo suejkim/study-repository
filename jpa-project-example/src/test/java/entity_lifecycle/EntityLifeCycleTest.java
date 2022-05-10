@@ -2,9 +2,7 @@ package entity_lifecycle;
 
 import jpa_study.start.Board;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -15,18 +13,33 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 class EntityLifeCycleTest {
+    private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
     private EntityTransaction entityTransaction;
 
     @BeforeEach
     void setup() {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("jpa_study");
+        entityManagerFactory = Persistence.createEntityManagerFactory("jpa_study");
         entityManager = entityManagerFactory.createEntityManager();
         entityTransaction = entityManager.getTransaction();
     }
 
+    @AfterEach
+    void tearDown(TestInfo info) {
+        var tags = info.getTags();
+        boolean containTag = tags.contains("skipAfterEach");
+        if (containTag) {
+            log.info("skip @AfterEach");
+        } else {
+            log.info("em, emf close");
+            entityManager.close();
+            entityManagerFactory.close();
+        }
+    }
+
     @Test
     @DisplayName("비영속")
+    @Tag("skipAfterEach")
     void newState() {
         entityTransaction.begin();
         Board board = Board.builder()
@@ -40,6 +53,7 @@ class EntityLifeCycleTest {
 
     @Test
     @DisplayName("영속. 커밋하지 않을 경우")
+    @Tag("skipAfterEach")
     void managedStateNotCommit() {
         String title = "TITLE";
         entityTransaction.begin();
@@ -113,7 +127,8 @@ class EntityLifeCycleTest {
     }
 
     @Test
-    @DisplayName("준영속. detached()") // TODO 재확인 필요
+    @DisplayName("준영속. detached()")
+        // TODO 재확인 필요
     void detachedState_2() {
         entityTransaction.begin();
         Board board = Board.builder()
@@ -135,6 +150,7 @@ class EntityLifeCycleTest {
 
     @Test
     @DisplayName("준영속. close()")
+    @Tag("skipAfterEach")
     void detachedState_3() {
         Board resultBoard = entityManager.find(Board.class, 1000L);
         entityManager.close(); // Session/EntityManager is closed
