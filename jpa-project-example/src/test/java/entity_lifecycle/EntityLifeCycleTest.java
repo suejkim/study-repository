@@ -53,7 +53,7 @@ class EntityLifeCycleTest {
         assertThat(result).isTrue();
 
         // 영속 엔티티 조회
-        Board resultBoard = entityManager.find(Board.class, 1L);
+        Board resultBoard = entityManager.find(Board.class, 2001L); // NOTE: data.sql 마지막 레코드에 저장된 id가 2000번이므로
         assertThat(resultBoard.getTitle()).isEqualTo(title);
         // commit 하지 않아서 DB에는 데이터 없는 상태
     }
@@ -73,7 +73,7 @@ class EntityLifeCycleTest {
         assertThat(result).isTrue();
 
         // 영속 엔티티 조회
-        Board resultBoard = entityManager.find(Board.class, 1L);
+        Board resultBoard = entityManager.find(Board.class, 2001L);
         assertThat(resultBoard.getTitle()).isEqualTo(title);
 
         // commit -> DB 저장
