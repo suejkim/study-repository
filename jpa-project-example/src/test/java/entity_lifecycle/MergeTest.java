@@ -50,4 +50,35 @@ class MergeTest {
         board.changeTitle("UPDATE_TITLE");
         mergeForManaged(board);
     }
+
+    private Board mergeForDetached2() {
+        var entityManager = entityManagerFactory.createEntityManager();
+        var entityTransaction = entityManager.getTransaction();
+        entityTransaction.begin();
+        var board = entityManager.find(Board.class, 1000L);
+        entityManager.detach(board);
+        entityTransaction.commit();
+        log.info("board isContains {}", entityManager.contains(board));
+        entityManager.close();
+        return board;
+    }
+
+    private Board mergeForManaged2(Board board) {
+        var entityManager = entityManagerFactory.createEntityManager();
+        var entityTransaction = entityManager.getTransaction();
+        entityTransaction.begin();
+        var mergedBoard = entityManager.merge(board); // 영속상태로 변경
+        log.info("board isContains {}, {}", entityManager.contains(board), board.getTitle());
+        log.info("mergedBoard isContains {}, {}", entityManager.contains(mergedBoard), board.getTitle()); // 다른 board로써 새로운 영속상태의 entity
+        entityTransaction.commit(); // dirtyCheck
+        entityManager.close();
+        return mergedBoard;
+    }
+
+    @Test
+    void mergeTest2() {
+        var board = mergeForDetached2();
+        board.changeTitle("UPDATE_TITLE");
+        mergeForManaged2(board);
+    }
 }
