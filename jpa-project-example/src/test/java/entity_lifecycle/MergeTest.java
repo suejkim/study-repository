@@ -68,6 +68,7 @@ class MergeTest {
         var entityTransaction = entityManager.getTransaction();
         entityTransaction.begin();
         var mergedBoard = entityManager.merge(board); // 영속상태로 변경
+        log.info("merge()");
         log.info("board isContains {}, {}", entityManager.contains(board), board.getTitle());
         log.info("mergedBoard isContains {}, {}", entityManager.contains(mergedBoard), board.getTitle()); // 다른 board로써 새로운 영속상태의 entity
         entityTransaction.commit(); // dirtyCheck

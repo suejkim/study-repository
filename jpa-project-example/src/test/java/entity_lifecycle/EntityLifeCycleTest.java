@@ -73,6 +73,15 @@ class EntityLifeCycleTest {
     }
 
     @Test
+    @DisplayName("영속. find()")
+    void managedStateWhenFind() {
+        entityTransaction.begin();
+        Board resultBoard = entityManager.find(Board.class, 1000L);
+        var result = entityManager.contains(resultBoard);
+        assertThat(result).isTrue();
+    }
+
+    @Test
     @DisplayName("영속. 커밋할 경우")
     void managedStateCommit() {
         String title = "TITLE";
@@ -110,8 +119,8 @@ class EntityLifeCycleTest {
 
         log.info(">>>> tx begin");
         entityTransaction.begin();
-        log.info(">>>> tx commit");
-        entityTransaction.commit(); // 기본은 entity 모든 필드 업데이트. @DynamicUpdate로 동적 쿼리 실행: 변경 감지된 필드만 업데이트 된다.
+//        log.info(">>>> tx commit");
+//        entityTransaction.commit(); // 기본은 entity 모든 필드 업데이트. @DynamicUpdate로 동적 쿼리 실행: 변경 감지된 필드만 업데이트 된다.
     }
 
     @Test
@@ -137,12 +146,12 @@ class EntityLifeCycleTest {
                 .build();
 
         entityManager.persist(board); // managed.
-//        var resultAfterPersist = entityManager.contains(board);
-//        assertThat(resultAfterPersist).isTrue();
+        var resultAfterPersist = entityManager.contains(board);
+        assertThat(resultAfterPersist).isTrue();
 
         entityManager.detach(board); // detached
-//        var resultAfterDetach = entityManager.contains(board);
-//        assertThat(resultAfterDetach).isFalse();
+        var resultAfterDetach = entityManager.contains(board);
+        assertThat(resultAfterDetach).isFalse();
 
         entityTransaction.commit();
     }
@@ -162,11 +171,23 @@ class EntityLifeCycleTest {
     void detachedState_4() {
         entityTransaction.begin();
         Board resultBoard = entityManager.find(Board.class, 1000L);
-        resultBoard.changeTitle("UDPATE");
+        resultBoard.changeTitle("UPDATE");
         entityManager.detach(resultBoard); // detached
 
         var resultAfterDetach = entityManager.contains(resultBoard);
         assertThat(resultAfterDetach).isFalse();
         entityTransaction.commit();
+    }
+
+    @Test
+    @DisplayName("삭제")
+    void removedState() {
+        entityTransaction.begin();
+        Board resultBoard = entityManager.find(Board.class, 1000L);
+        entityManager.remove(resultBoard);
+        var result = entityManager.contains(resultBoard);
+        assertThat(result).isFalse();
+        entityTransaction.commit();
+        // DB 조회하면 해당 레코드가 delete 된 걸 확인할 수 있음
     }
 }
