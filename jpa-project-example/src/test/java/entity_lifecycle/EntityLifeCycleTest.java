@@ -128,8 +128,7 @@ class EntityLifeCycleTest {
 
     @Test
     @DisplayName("준영속. detached()")
-        // TODO 재확인 필요
-    void detachedState_2() {
+    void detachedState_2() { // TODO 재확인 필요
         entityTransaction.begin();
         Board board = Board.builder()
                 .title("TITLE")
@@ -159,6 +158,7 @@ class EntityLifeCycleTest {
     }
 
     @Test
+    @DisplayName("준영속. 변경감지 되지 않음")
     void detachedState_4() {
         entityTransaction.begin();
         Board resultBoard = entityManager.find(Board.class, 1000L);

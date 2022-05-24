@@ -35,10 +35,14 @@ JPA는 자바 애플리케이션과 JDBC 사이에서 동작한다. (그림추�
 
 
 
+### 4. 영속성 관리
+
+### 5. Entity Life Cycle
 
 
 
 ---
+> https://www.baeldung.com/hibernate-entitymanager
 > 자바 ORM 표준 JPA 프로그래밍
 
 
