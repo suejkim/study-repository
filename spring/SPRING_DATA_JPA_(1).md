@@ -356,6 +356,4 @@ void removedState() {
 > https://thorben-janssen.com/entity-lifecycle-model/
 > https://www.baeldung.com/hibernate-entitymanager
 > 자바 ORM 표준 JPA 프로그래밍
-
-
- 
+> 스프링부트로 배우는 자바웹개발
