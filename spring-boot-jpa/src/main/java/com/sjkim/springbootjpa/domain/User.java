@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@Table(uniqueConstraints = {
+@Table(name = "user", uniqueConstraints = {
         @UniqueConstraint(
                 name = "MOBILE_UNIQUE",
                 columnNames = {"mobile"}
@@ -25,13 +25,12 @@ public class User {
     @Column(name = "mobile", nullable = false, length = 20)
     private String mobile;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "gender", nullable = false, length = 10)
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "gender", nullable = false, length = 5)
     private Gender gender;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
     @Column(name = "updated_at")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date updatedAt;
