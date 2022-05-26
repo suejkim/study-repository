@@ -14,7 +14,7 @@ public class User {
 
     @Id
     @Column(name = "id")
-    private long id;
+    private Long id; // Wrapper Type
 
     @Column(name = "login_id", nullable = false, length = 30)
     private String loginId;
