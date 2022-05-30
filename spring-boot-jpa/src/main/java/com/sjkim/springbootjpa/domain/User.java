@@ -18,10 +18,13 @@ public class User {
 
     @Column(name = "login_id", nullable = false, length = 30)
     private String loginId;
+
     @Column(name = "password", nullable = false, length = 32)
     private String password;
+
     @Column(name = "name", nullable = false, length = 20)
     private String name;
+
     @Column(name = "mobile", nullable = false, length = 20)
     private String mobile;
 
