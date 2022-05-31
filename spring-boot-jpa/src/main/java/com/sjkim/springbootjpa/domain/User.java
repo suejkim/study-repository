@@ -10,10 +10,12 @@ import java.util.Date;
                 name = "MOBILE_UNIQUE",
                 columnNames = {"mobile"}
         )})
+//@NoArgsConstructor
 public class User {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // Wrapper Type
 
     @Column(name = "login_id", nullable = false, length = 30)
@@ -38,4 +40,14 @@ public class User {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date updatedAt;
 
+//    @Builder
+//    public User(String loginId, String password, String name, String mobile, Gender gender) {
+//        this.loginId = loginId;
+//        this.password = password;
+//        this.name = name;
+//        this.mobile = mobile;
+//        this.gender = gender;
+//        this.createdAt = LocalDateTime.now();
+//        this.updatedAt = new Date();
+//    }
 }

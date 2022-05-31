@@ -1,0 +1,1 @@
+insert into user (login_id, password, gender, mobile, name, created_at, updated_at) values ('TEST', 'test', 0, '01011112222', 'NAME', now(), now());
