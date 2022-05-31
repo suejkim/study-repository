@@ -25,7 +25,8 @@ import static org.mockito.Mockito.when;
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 
 @ExtendWith(MockitoExtension.class)
-class BoardRepositoryTest {
+class
+BoardRepositoryTest {
 
     //    @Autowired
     @Mock

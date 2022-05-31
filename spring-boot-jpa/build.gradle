@@ -35,6 +35,9 @@ dependencies {
     testImplementation "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
     testImplementation "org.projectlombok:lombok:$lombokVersion"
     testAnnotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    testImplementation 'net.andreinc:mockneat:0.4.7'
+    testImplementation 'org.mockito:mockito-core:4.6.0'
 }
 
 tasks.named('test') {
