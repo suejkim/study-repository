@@ -1,17 +1,22 @@
 package com.sjkim.springbootjpa.domain;
 
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "user", uniqueConstraints = {
         @UniqueConstraint(
                 name = "MOBILE_UNIQUE",
                 columnNames = {"mobile"}
+        ),
+        @UniqueConstraint(
+                name = "LOGIN_ID_UNIQUE",
+                columnNames = {"login_id"}
         )})
-//@NoArgsConstructor
-public class User {
+@NoArgsConstructor
+public class User extends BaseEntity {
 
     @Id
     @Column(name = "id")
@@ -34,20 +39,12 @@ public class User {
     @Column(name = "gender", nullable = false, length = 5)
     private Gender gender;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-    @Column(name = "updated_at")
-    @Temporal(value = TemporalType.TIMESTAMP)
-    private Date updatedAt;
-
-//    @Builder
-//    public User(String loginId, String password, String name, String mobile, Gender gender) {
-//        this.loginId = loginId;
-//        this.password = password;
-//        this.name = name;
-//        this.mobile = mobile;
-//        this.gender = gender;
-//        this.createdAt = LocalDateTime.now();
-//        this.updatedAt = new Date();
-//    }
+    @Builder
+    public User(String loginId, String password, String name, String mobile, Gender gender) {
+        this.loginId = loginId;
+        this.password = password;
+        this.name = name;
+        this.mobile = mobile;
+        this.gender = gender;
+    }
 }

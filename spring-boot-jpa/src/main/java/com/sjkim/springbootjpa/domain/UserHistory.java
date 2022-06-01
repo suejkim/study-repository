@@ -1,19 +1,23 @@
 package com.sjkim.springbootjpa.domain;
 
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table
-public class UserHistory {
+@NoArgsConstructor
+public class UserHistory extends BaseEntity {
 
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(targetEntity = User.class,
             optional = false // not null
+//            , cascade = CascadeType.ALL
     )
     @JoinColumn(name = "user_id",
             referencedColumnName = "id",
@@ -25,11 +29,9 @@ public class UserHistory {
     @Column(name = "type", nullable = false, updatable = false)
     private ActionType type;
 
-    // 중복되어 리팩토링 필요
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-    @Column(name = "updated_at")
-    @Temporal(value = TemporalType.TIMESTAMP)
-    private Date updatedAt;
-
+    @Builder
+    public UserHistory(User user, ActionType type) {
+        this.user = user;
+        this.type = type;
+    }
 }

@@ -1,4 +1,2 @@
-package com.sjkim.springbootjpa.repository;
-
-public class UserRepositoryTest {
+package com.sjkim.springbootjpa.repository;public class UserRepositoryTest {
 }
