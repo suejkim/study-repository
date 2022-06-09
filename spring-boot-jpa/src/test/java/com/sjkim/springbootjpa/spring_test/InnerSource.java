@@ -5,11 +5,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 @ToString
 @Getter
 @Setter
 @NoArgsConstructor
-public class InnerSource {
+public class InnerSource implements Serializable {
     private String inName;
 
     public InnerSource(String inName) {
