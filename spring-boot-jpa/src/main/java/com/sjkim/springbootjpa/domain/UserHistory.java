@@ -1,10 +1,12 @@
 package com.sjkim.springbootjpa.domain;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Getter
 @Entity
 @Table
 @NoArgsConstructor
@@ -15,14 +17,16 @@ public class UserHistory extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(targetEntity = User.class,
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            targetEntity = User.class,
             optional = false // not null
 //            , cascade = CascadeType.ALL
     )
     @JoinColumn(name = "user_id",
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "FK_USER", value = ConstraintMode.PROVIDER_DEFAULT)
-    ) // Option
+    )
     private User user;
 
     @Enumerated(value = EnumType.STRING)

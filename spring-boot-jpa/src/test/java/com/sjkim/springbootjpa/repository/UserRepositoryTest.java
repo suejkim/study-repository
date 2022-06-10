@@ -32,5 +32,4 @@ class UserRepositoryTest {
                 .name("NAME")
                 .build();
     }
-
 }

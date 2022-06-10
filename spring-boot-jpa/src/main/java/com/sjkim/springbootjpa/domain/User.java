@@ -1,10 +1,12 @@
 package com.sjkim.springbootjpa.domain;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Getter
 @Entity
 @Table(name = "user", uniqueConstraints = {
         @UniqueConstraint(
