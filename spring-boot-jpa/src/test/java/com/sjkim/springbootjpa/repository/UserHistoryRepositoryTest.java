@@ -51,9 +51,35 @@ class UserHistoryRepositoryTest {
     void findByUserHistory() {
         var userHistories = userHistoryRepository.findAll();
         userHistories.forEach(userHistory -> {
-            log.info("user History {}", userHistory.getType());
+            log.info("user History {} ", userHistory);
+            log.info("user History type {}", userHistory.getType());
             var user = userHistory.getUser();
             log.info("user {}", user.getName());
         });
     } // LAZY, EAGER 상관없이 history (1) 조회 후 user수 (N) 만큼 쿼리 실행
+
+    @Test
+    @DisplayName("N+1 이슈 해결방법 1")
+    void findByDistinctUserHistory() {
+        var userHistories = userHistoryRepository.findByDistinctUserHistory();
+        userHistories.forEach(userHistory -> {
+            log.info("user History {} ", userHistory);
+            log.info("user History type {}", userHistory.getType());
+            var user = userHistory.getUser();
+            log.info("user {}", user.getName());
+        });
+    }
+
+    @Test
+    @DisplayName("N+1 이슈 해결방법 2")
+    void findByIdWithUser() {
+        var userHistoryOptional = userHistoryRepository.findById(1L);
+        if (userHistoryOptional.isPresent()) {
+            var userHistory = userHistoryOptional.get();
+            log.info("user History {} ", userHistory);
+            log.info("user History type {}", userHistory.getType());
+            var user = userHistory.getUser();
+            log.info("user {}", user.getName());
+        }
+    }
 }
