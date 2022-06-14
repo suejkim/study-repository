@@ -1,11 +1,11 @@
-# Spring Data JPA_(1)
+# JPA
 ---
 1. ORM(Object Relational Mapping)
 2. JPA(Java Persistence API)
 3. Spring Data JPA
 4. 영속성 관리
 5. Entity Life Cycle (엔티티 생명주기)
-##### `spring-boot-jpa` project 참고
+##### `jpa-project-example` project 참고
 ---
 
 
@@ -32,7 +32,7 @@ JPA는 자바 애플리케이션과 JDBC 사이에서 동작한다.
 3. JPA의 구현 클래스를 모아둔 것이 Hibernate인데 그 중에 CRUD와 같이 사용빈도가 높고 자주 사용하는 것들을 스프링에서 제공하는 건 Spring Data JPA
 
 ### 4. 영속성 관리
-#### 1. `spring-boot-jpa` project 통해서 알아본 JPA 동작방식
+#### 1. `jpa-project-example` project 통해서 알아본 JPA 동작방식
 - build.gradle
 ```groovy
 plugins {
