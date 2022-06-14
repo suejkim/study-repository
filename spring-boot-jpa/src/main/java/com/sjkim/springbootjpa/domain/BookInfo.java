@@ -1,7 +1,10 @@
 package com.sjkim.springbootjpa.domain;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 
+@Getter
 @Entity
 @Table
 public class BookInfo extends BaseEntity {
