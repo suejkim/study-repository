@@ -18,9 +18,9 @@ public class UserHistory extends BaseEntity {
     private Long id;
 
     @ManyToOne(
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             targetEntity = User.class,
-            optional = false // not null
+            optional = false // not null -> 내부조인
 //            , cascade = CascadeType.ALL
     )
     @JoinColumn(name = "user_id",

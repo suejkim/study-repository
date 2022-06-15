@@ -32,4 +32,16 @@ class UserRepositoryTest {
                 .name("NAME")
                 .build();
     }
+
+    @Test
+    void findByUserForFetchTypeEager() {
+        var userOptional = userRepository.findById(1L);
+        userOptional.ifPresent(user -> {
+            log.info("user {}", user.getName());
+            var userHistories = user.getUserHistories();
+            log.info("user Histories {} ", userHistories);
+        });
+        // fetchType EAGER
+        // -> left outer join
+    }
 }

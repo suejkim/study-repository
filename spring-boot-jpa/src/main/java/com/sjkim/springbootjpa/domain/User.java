@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -40,6 +42,17 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "gender", nullable = false, length = 5)
     private Gender gender;
+
+    @OneToMany(
+            fetch = FetchType.EAGER,
+            targetEntity = UserHistory.class,
+            mappedBy = "user"
+    )
+//    @JoinColumn(name = "user_history_id",
+//            referencedColumnName = "id",
+//            foreignKey = @ForeignKey(name = "FK_USER_HISTORY", value = ConstraintMode.PROVIDER_DEFAULT)
+//    ) // Associations marked as mappedBy must not define database mappings like @JoinTable or @JoinColumn
+    private List<UserHistory> userHistories;
 
     @Builder
     public User(String loginId, String password, String name, String mobile, Gender gender) {
