@@ -47,8 +47,9 @@ class UserHistoryRepositoryTest {
 
     @Test
     @DisplayName("N+1 test")
-    @Transactional // Fetch Type LAZY 설정 때문
-    void findByUserHistoryForFetchTypeLazy() {
+    @Transactional
+        // Fetch Type LAZY 설정 때문
+    void findByAllForFetchTypeLazy() {
         var userHistories = userHistoryRepository.findAll();
         userHistories.forEach(userHistory -> {
             log.info("user History {} ", userHistory);

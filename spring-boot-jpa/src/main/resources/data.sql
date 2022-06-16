@@ -9,3 +9,6 @@ insert into book (created_at, updated_at, comment, publish_at, title) values (no
 
 insert into book_info (created_at, updated_at, sell_count, book_id) values (now(), now(), 3, 1);
 insert into book_info (created_at, updated_at, sell_count, book_id) values (now(), now(), 3, 2);
+
+insert into orders (created_at, updated_at, status, user_id) values (now(), now(), 'REQUEST', 1);
+insert into orders (created_at, updated_at, status, user_id) values (now(), now(), 'REQUEST', 2);
