@@ -43,22 +43,11 @@ public class User extends BaseEntity {
     private Gender gender;
 
     @OneToMany(
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             targetEntity = UserHistory.class,
             mappedBy = "user" // 양방향매핑일 때 사용
     )
-//    @JoinColumn(name = "user_history_id",
-//            referencedColumnName = "id",
-//            foreignKey = @ForeignKey(name = "FK_USER_HISTORY", value = ConstraintMode.PROVIDER_DEFAULT)
-//    ) // Associations marked as mappedBy must not d efine database mappings like @JoinTable or @JoinColumn
     private List<UserHistory> userHistories;
-
-    @OneToMany(
-            fetch = FetchType.LAZY,
-            targetEntity = Order.class,
-            mappedBy = "user"
-    )
-    private List<Order> orders;
 
     @Builder
     public User(String loginId, String password, String name, String mobile, Gender gender) {

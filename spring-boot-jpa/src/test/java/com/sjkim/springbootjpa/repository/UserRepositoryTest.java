@@ -46,14 +46,24 @@ class UserRepositoryTest {
         // -> left outer join
     }
 
+//    @Test
+//    @Transactional
+//    void findByUserForFetchTypeLazy() {
+//        var userOptional = userRepository.findById(1L);
+//        userOptional.ifPresent(user -> {
+//            log.info("user {}", user.getName());
+//            var orders = user.getOrders();
+//            log.info("user Histories {} ", orders);
+//        });
+//    }
+
     @Test
     @Transactional
-    void findByUserForFetchTypeLazy() {
-        var userOptional = userRepository.findById(1L);
-        userOptional.ifPresent(user -> {
-            log.info("user {}", user.getName());
-            var orders = user.getOrders();
-            log.info("user Histories {} ", orders);
+    void findByName() {
+        var users = userRepository.findByName("NAME1");
+        users.forEach(user -> {
+            var orders = user.getUserHistories();
+            log.info("{}", orders);
         });
     }
 }

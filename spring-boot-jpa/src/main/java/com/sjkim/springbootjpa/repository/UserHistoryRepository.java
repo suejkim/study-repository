@@ -1,5 +1,6 @@
 package com.sjkim.springbootjpa.repository;
 
+import com.sjkim.springbootjpa.domain.ActionType;
 import com.sjkim.springbootjpa.domain.UserHistory;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +14,8 @@ public interface UserHistoryRepository extends PagingAndSortingRepository<UserHi
     @Query("select distinct h from UserHistory h join fetch h.user")
     List<UserHistory> findByDistinctUserHistory();
 
-    @EntityGraph(attributePaths = {"user"})
-    Optional<UserHistory> findById(Long id);
+//    @EntityGraph(attributePaths = {"user"})
+//    Optional<UserHistory> findById(Long id);
+
+    List<UserHistory> findByType(ActionType type);
 }

@@ -47,10 +47,12 @@ class UserHistoryRepositoryTest {
 
     @Test
     @DisplayName("N+1 test")
-    @Transactional
+//    @Transactional
         // Fetch Type LAZY 설정 때문
     void findByAllForFetchTypeLazy() {
+        log.info("============================> query");
         var userHistories = userHistoryRepository.findAll();
+        log.info("<============================ query");
         userHistories.forEach(userHistory -> {
             log.info("user History {} ", userHistory);
             log.info("user History type {}", userHistory.getType());
@@ -62,7 +64,9 @@ class UserHistoryRepositoryTest {
     @Test
     @DisplayName("N+1 이슈 해결방법 1")
     void findByDistinctUserHistory() {
+        log.info("============================> query");
         var userHistories = userHistoryRepository.findByDistinctUserHistory();
+        log.info("<============================ query");
         userHistories.forEach(userHistory -> {
             log.info("user History {} ", userHistory);
             log.info("user History type {}", userHistory.getType());
@@ -77,6 +81,7 @@ class UserHistoryRepositoryTest {
         var userHistoryOptional = userHistoryRepository.findById(1L);
         if (userHistoryOptional.isPresent()) {
             var userHistory = userHistoryOptional.get();
+            log.info("------------------");
             log.info("user History {} ", userHistory);
             log.info("user History type {}", userHistory.getType());
             var user = userHistory.getUser();
