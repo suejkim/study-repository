@@ -3,6 +3,9 @@ package com.sjkim.springbootjpa.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -47,6 +50,9 @@ public class User extends BaseEntity {
             targetEntity = UserHistory.class,
             mappedBy = "user" // 양방향매핑일 때 사용
     )
+    // N+1 이슈 해결방법
+//    @BatchSize(size = 2)
+//    @Fetch(value = FetchMode.SUBSELECT)
     private List<UserHistory> userHistories;
 
     @Builder
