@@ -8,7 +8,6 @@ import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @SpringBootTest
@@ -44,26 +43,5 @@ class UserRepositoryTest {
         });
         // fetchType EAGER
         // -> left outer join
-    }
-
-//    @Test
-//    @Transactional
-//    void findByUserForFetchTypeLazy() {
-//        var userOptional = userRepository.findById(1L);
-//        userOptional.ifPresent(user -> {
-//            log.info("user {}", user.getName());
-//            var orders = user.getOrders();
-//            log.info("user Histories {} ", orders);
-//        });
-//    }
-
-    @Test
-    @Transactional
-    void findByName() {
-        var users = userRepository.findByName("NAME1");
-        users.forEach(user -> {
-            var orders = user.getUserHistories();
-            log.info("{}", orders);
-        });
     }
 }

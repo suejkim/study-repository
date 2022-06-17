@@ -5,11 +5,9 @@ import com.sjkim.springbootjpa.domain.Gender;
 import com.sjkim.springbootjpa.domain.User;
 import com.sjkim.springbootjpa.domain.UserHistory;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @SpringBootTest
@@ -43,50 +41,6 @@ class UserHistoryRepositoryTest {
                 .user(user)
                 .type(ActionType.BUY)
                 .build();
-    }
-
-    @Test
-    @DisplayName("N+1 test")
-//    @Transactional
-        // Fetch Type LAZY 설정 때문
-    void findByAllForFetchTypeLazy() {
-        log.info("============================> query");
-        var userHistories = userHistoryRepository.findAll();
-        log.info("<============================ query");
-        userHistories.forEach(userHistory -> {
-            log.info("user History {} ", userHistory);
-            log.info("user History type {}", userHistory.getType());
-            var user = userHistory.getUser();
-            log.info("user {}", user.getName());
-        });
-    } // LAZY, EAGER 상관없이 history (1) 조회 후 user수 (N) 만큼 쿼리 실행
-
-    @Test
-    @DisplayName("N+1 이슈 해결방법 1")
-    void findByDistinctUserHistory() {
-        log.info("============================> query");
-        var userHistories = userHistoryRepository.findByDistinctUserHistory();
-        log.info("<============================ query");
-        userHistories.forEach(userHistory -> {
-            log.info("user History {} ", userHistory);
-            log.info("user History type {}", userHistory.getType());
-            var user = userHistory.getUser();
-            log.info("user {}", user.getName());
-        });
-    }
-
-    @Test
-    @DisplayName("N+1 이슈 해결방법 2")
-    void findByIdWithUser() {
-        var userHistoryOptional = userHistoryRepository.findById(1L);
-        if (userHistoryOptional.isPresent()) {
-            var userHistory = userHistoryOptional.get();
-            log.info("------------------");
-            log.info("user History {} ", userHistory);
-            log.info("user History type {}", userHistory.getType());
-            var user = userHistory.getUser();
-            log.info("user {}", user.getName());
-        }
     }
 
     @Test
