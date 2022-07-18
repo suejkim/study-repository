@@ -17,7 +17,7 @@ public class BoardController {
     @GetMapping("")
     public ResponseEntity getBoardList(@RequestParam(required = false) String title,
                                        @RequestParam(required = false) String content,
-                                       @RequestParam(required = false) String writer) { // @RequestBody로 받도록. 스터디용
+                                       @RequestParam(required = false) String writer) {
         var boards = boardService.getBoardList(title, content, writer);
         return new ResponseEntity<>(boards, HttpStatus.OK);
     }

@@ -2,10 +2,15 @@ package com.sjkim.springbootexample.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sjkim.springbootexample.dto.BoardSaveDto;
+import com.sjkim.springbootexample.persistence.board.BoardRepository;
+import com.sjkim.springbootexample.service.BoardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -17,19 +22,27 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+//@SpringBootTest
+@WebMvcTest(BoardController.class)
 class BoardControllerTest {
 
     @Autowired
     private WebApplicationContext context;
+    @Autowired
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setUp() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-    }
+    @MockBean
+    private BoardService boardService;
+    @MockBean
+    private BoardRepository boardRepository;
+
+
+//    @BeforeEach
+//    void setUp() {
+//        this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+//    }
 
     @Test
     void getBoardList() throws Exception {
