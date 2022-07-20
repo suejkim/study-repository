@@ -53,19 +53,14 @@ public class User extends BaseEntity {
     private List<UserHistory> userHistories;
 
     @Embedded
-    @AttributeOverrides(value = {
-            @AttributeOverride(name = "city", column = @Column(name = "home_city")),
-            @AttributeOverride(name = "zipCode", column = @Column(name = "home_zip_code")),
-            @AttributeOverride(name = "address", column = @Column(name = "home_address"))}
-    )
-    private Address homeAddress;
+    private Address address;
 
     @Embedded
     @AttributeOverrides(value = {
             @AttributeOverride(name = "city", column = @Column(name = "company_city")),
             @AttributeOverride(name = "zipCode", column = @Column(name = "company_zip_code")),
             @AttributeOverride(name = "address", column = @Column(name = "company_address"))}
-    )
+    ) // (컬럼명 중복 ->) Address 매핑정보 재정의
     private Address companyAddress;
 
     @Builder
