@@ -3,9 +3,6 @@ package com.sjkim.springbootjpa.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -54,6 +51,22 @@ public class User extends BaseEntity {
 //    @BatchSize(size = 2)
 //    @Fetch(value = FetchMode.SUBSELECT)
     private List<UserHistory> userHistories;
+
+    @Embedded
+    @AttributeOverrides(value = {
+            @AttributeOverride(name = "city", column = @Column(name = "home_city")),
+            @AttributeOverride(name = "zipCode", column = @Column(name = "home_zip_code")),
+            @AttributeOverride(name = "address", column = @Column(name = "home_address"))}
+    )
+    private Address homeAddress;
+
+    @Embedded
+    @AttributeOverrides(value = {
+            @AttributeOverride(name = "city", column = @Column(name = "company_city")),
+            @AttributeOverride(name = "zipCode", column = @Column(name = "company_zip_code")),
+            @AttributeOverride(name = "address", column = @Column(name = "company_address"))}
+    )
+    private Address companyAddress;
 
     @Builder
     public User(String loginId, String password, String name, String mobile, Gender gender) {
