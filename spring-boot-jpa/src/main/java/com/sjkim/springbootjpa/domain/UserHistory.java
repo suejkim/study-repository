@@ -32,10 +32,36 @@ public class UserHistory extends BaseEntity {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "type", nullable = false, updatable = false)
     private ActionType type;
+    // insertable = false: insert 시 type은 제외됨
+    // Hibernate:
+    // insert
+    //    into
+    //        user_history
+    //        (created_at, updated_at, user_id)
+    //    values
+    //        (?, ?, ?)
+
+    // updatable = false: update 시 type은 제외됨
+    // Hibernate:
+    //    update
+    //        user_history
+    //    set
+    //        created_at=?,
+    //        updated_at=?,
+    //        user_id=?
+    //    where
+    //        id=?
 
     @Builder
     public UserHistory(User user, ActionType type) {
         this.user = user;
         this.type = type;
+    }
+
+    // updatable 테스트용
+    public UserHistory updateUserAndActionType(User user, ActionType type) {
+        this.user = user;
+        this.type = type;
+        return this;
     }
 }
