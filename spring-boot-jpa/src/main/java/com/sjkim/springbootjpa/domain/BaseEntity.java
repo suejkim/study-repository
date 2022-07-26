@@ -16,7 +16,7 @@ public class BaseEntity {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    @PrePersist
+    @PrePersist // 리스너(엔티티에 직접 적용)
     private void prePersist() {
         log.info(">> prePersist");
         this.createdAt = LocalDateTime.now();
@@ -27,5 +27,30 @@ public class BaseEntity {
     private void preUpdate() {
         log.info(">> preUpdate");
         this.updatedAt = new Date();
+    }
+
+    @PostLoad
+    private void postLoad() {
+        log.info(">> postLoad");
+    }
+
+    @PreRemove
+    private void preRemove() {
+        log.info(">> preRemove");
+    }
+
+    @PostPersist
+    private void postPersist() {
+        log.info(">> postPersist");
+    }
+
+    @PostUpdate
+    private void postUpdate() {
+        log.info(">> postUpdate");
+    }
+
+    @PostRemove
+    private void postRemove() {
+        log.info(">> postRemove");
     }
 }

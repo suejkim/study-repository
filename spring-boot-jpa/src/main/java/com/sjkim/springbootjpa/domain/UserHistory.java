@@ -64,4 +64,9 @@ public class UserHistory extends BaseEntity {
         this.type = type;
         return this;
     }
+
+    public UserHistory updateUser(User user) {
+        this.user = user;
+        return this;
+    }
 }
