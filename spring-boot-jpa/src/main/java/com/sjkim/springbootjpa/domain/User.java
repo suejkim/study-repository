@@ -19,6 +19,7 @@ import java.util.List;
                 columnNames = {"login_id"}
         )})
 @NoArgsConstructor
+@EntityListeners(UserEntityListener.class)
 public class User extends BaseEntity {
 
     @Id
@@ -70,5 +71,10 @@ public class User extends BaseEntity {
         this.name = name;
         this.mobile = mobile;
         this.gender = gender;
+    }
+
+    public User updateName(String name) {
+        this.name = name;
+        return this;
     }
 }
