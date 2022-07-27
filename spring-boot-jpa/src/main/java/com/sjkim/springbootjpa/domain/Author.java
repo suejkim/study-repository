@@ -4,6 +4,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -16,7 +19,8 @@ import java.util.List;
 @Entity
 @Table
 @NoArgsConstructor
-@EntityListeners(value = BaseEntityForEntityListeners.class)
+//@EntityListeners(value = BaseEntityForEntityListeners.class) // 커스텀 리스너
+@EntityListeners(value = AuditingEntityListener.class) // Spring에서 제공
 public class Author implements Auditable {
     @Id
     @Column(name = "id")
@@ -33,8 +37,11 @@ public class Author implements Auditable {
     private String comment;
 
     // for @EntityListeners Test
+    @CreatedDate
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @LastModifiedDate
     @Column(name = "updated_at")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date updatedAt;
