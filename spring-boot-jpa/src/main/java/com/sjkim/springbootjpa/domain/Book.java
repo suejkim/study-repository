@@ -1,6 +1,5 @@
 package com.sjkim.springbootjpa.domain;
 
-import com.sjkim.springbootjpa.domain.listener.Author;
 import com.sjkim.springbootjpa.domain.listener.BaseEntity;
 
 import javax.persistence.*;

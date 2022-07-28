@@ -1,28 +1,22 @@
-package com.sjkim.springbootjpa.domain.listener;
+package com.sjkim.springbootjpa.domain;
 
-import com.sjkim.springbootjpa.domain.Book;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import com.sjkim.springbootjpa.domain.listener.BaseEntityForAuditing;
+import com.sjkim.springbootjpa.domain.listener.BaseEntityForEntityListeners;
+import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table
-@NoArgsConstructor
 //@EntityListeners(value = BaseEntityForEntityListeners.class) // 커스텀 리스너
-@EntityListeners(value = AuditingEntityListener.class) // Spring에서 제공
-public class Author implements Auditable {
+//public class Author implements Auditable {
+public class Author extends BaseEntityForAuditing {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,16 +30,6 @@ public class Author implements Auditable {
 
     @Column(name = "comment", columnDefinition = "longtext")
     private String comment;
-
-    // for @EntityListeners Test
-    @CreatedDate
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    @Temporal(value = TemporalType.TIMESTAMP)
-    private Date updatedAt;
 
     @Builder
     public Author(Long id, List<Book> books, String name, String comment) {

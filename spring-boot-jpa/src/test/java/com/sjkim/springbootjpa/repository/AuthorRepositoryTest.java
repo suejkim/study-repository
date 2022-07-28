@@ -1,6 +1,6 @@
 package com.sjkim.springbootjpa.repository;
 
-import com.sjkim.springbootjpa.domain.listener.Author;
+import com.sjkim.springbootjpa.domain.Author;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

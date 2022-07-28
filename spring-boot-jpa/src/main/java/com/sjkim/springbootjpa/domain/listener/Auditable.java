@@ -9,5 +9,4 @@ public interface Auditable {
 
     void setCreatedAt(LocalDateTime createdAt);
     void setUpdatedAt(Date updatedAt);
-
 }
