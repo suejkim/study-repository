@@ -1,5 +1,6 @@
 package com.sjkim.springbootjpa.domain;
 
+import com.sjkim.springbootjpa.domain.listener.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

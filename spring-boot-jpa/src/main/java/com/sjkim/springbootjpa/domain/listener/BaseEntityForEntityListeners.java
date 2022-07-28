@@ -1,4 +1,4 @@
-package com.sjkim.springbootjpa.domain;
+package com.sjkim.springbootjpa.domain.listener;
 
 import lombok.extern.slf4j.Slf4j;
 

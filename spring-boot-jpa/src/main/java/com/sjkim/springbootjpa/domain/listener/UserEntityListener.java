@@ -1,5 +1,7 @@
-package com.sjkim.springbootjpa.domain;
+package com.sjkim.springbootjpa.domain.listener;
 
+import com.sjkim.springbootjpa.domain.User;
+import com.sjkim.springbootjpa.domain.UserUpdateLog;
 import com.sjkim.springbootjpa.repository.UserUpdateLogRepository;
 import com.sjkim.springbootjpa.support.BeanUtils;
 import org.springframework.context.annotation.Lazy;

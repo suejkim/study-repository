@@ -1,5 +1,6 @@
-package com.sjkim.springbootjpa.domain;
+package com.sjkim.springbootjpa.domain.listener;
 
+import com.sjkim.springbootjpa.domain.Book;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
