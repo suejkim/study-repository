@@ -41,30 +41,30 @@
    - Bean간 의존관계가 내부가 아닌 외부 설정파일을 통해 정의
    - 외부 설정 정보에 등록된 Bean 간의 의존관계를 컨테이너가 자동적으로 연결
    - Spring의 IoC container의 역할
-2. 의존성 주입 방법 
-    - Setter Injection (setter 메소드를 이용한 주입)
-   ```java 
-   public class WorkService { 
-       private Worker worker; 
-       public void setWorker(Worker worker){ 
-           this.worker = worker; 
-        } 
-        public void ask() { 
-            System.out.println(worker.getRole()); 
-        } 
-    } 
-    ``` 
-    - Constructor Injection (생성자를 이용한 주입)
-   ```java 
-   public class WorkService { 
-       private Worker worker; 
-       public WorkService(Worker worker) { 
-           this.worker = worker; 
-        } 
-        public void ask() { 
-            System.out.println(worker.getRole()); 
-        } 
-   } 
+2. 의존성 주입 방법
+   - Setter Injection (setter 메소드를 이용한 주입)
+   ```java
+   public class WorkService {
+       private Worker worker;
+       public void setWorker(Worker worker){
+           this.worker = worker;
+        }
+        public void ask() {
+            System.out.println(worker.getRole());
+        }
+    }
+   ```
+   - Constructor Injection (생성자를 이용한 주입)
+   ```java
+   public class WorkService {
+       private Worker worker;
+       public WorkService(Worker worker) {
+           this.worker = worker;
+        }
+        public void ask() {
+            System.out.println(worker.getRole());
+        }
+   }
    ```
    <br>
 
@@ -134,21 +134,22 @@
     @Configuration
     public class BeanConfig {
 
-    @Bean
-    public Worker boss() {
-       return new Boss();
-    }
+        @Bean
+        public Worker boss() {
+            return new Boss();
+        }
 
-    @Bean
-    public Worker employee() {
-       return new Employee();
-    }
+        @Bean
+        public Worker employee() {
+            return new Employee();
+        }
 
-    @Bean
-    public WorkService workService() {
-       WorkService workService = new WorkService();
-       workService.setWorkManager(new Boss());
-       return workService;
+        @Bean
+        public WorkService workService() {
+            WorkService workService = new WorkService();
+            workService.setWorkManager(new Boss());
+            return workService;
+        }
     }
     ```
 
@@ -161,14 +162,64 @@
 
     }
     ```
+
     <br>
+
 #### 5. DI를 통한 Bean 사용
 
 1.  Setter Injection
 2.  Constructor Injection
     - 생성자의 인수가 하나일 때 @Autowired 생략 가능
     - 생성자는 필요한 구성요소가 반드시 있어야 인스턴스가 생성되고, 생성자를 통한 주입 시 Container는 주입하려는 Bean을 먼저 찾으므로 권장됨.
-    - `<constructor-arg ref="boss" index="0"/>`
+    ```java
+    @Service
+    public class AService {
+        private final DService dService;
+
+        public AService(DService dService) {
+            System.out.println("AService constructor");
+            this.dService = dService;
+        }
+    }
+
+
+    @Service
+    public class BService {
+        private final CService cService;
+        private final DService dService;
+
+        public BService(CService cService, DService dService) {
+            System.out.println("BService constructor");
+            this.cService = cService;
+            this.dService = dService;
+        }
+    }
+
+
+    @Service
+    public class CService {
+        public CService() {
+            System.out.println("CService constructor");
+        }
+    }
+
+
+    @Service
+    public class DService {
+        public DService() {
+            System.out.println("DService constructor");
+        }
+    }
+    ```
+    ```text
+    console: DService constructor -> AService constructor -> CService constructor -> BService constructor
+    즉, DService -> AService -> CService -> BService 순으로 로드된다.
+    ``` 
+    - 아래는 xml 외부 설정파일에서의 예시
+    ```xml
+    <constructor-arg ref="boss" index="0"/>
+    ```
+
 3.  field Injection : @Autowired와 함께 사용되며 권장되지 않음. → 옛날 xml 설정 파일인 경우 사용 권장되었음. 필드 이름으로 구분이 쉽게 되었음
 
     ```java
@@ -191,26 +242,30 @@
 4.  @Autowired, @Qualifier
     - Bean 객체가 증가하면서 의존관계를 관리하는 것이 어려워지므로 자동으로 연결해주는 기능 제공
     - @Qualifier는 Bean 충돌 해결
-5.  ApplicationContext에서 getBean()으로 꺼내어 사용 → 우리 프로젝트에서는 cengold-batch-cmd의 경우 사용됨. 
+5.  ApplicationContext에서 getBean()으로 꺼내어 사용 → 우리 프로젝트에서는 cengold-batch-cmd의 경우 사용됨.
+
     - 설정정보가 xml 파일인 경우
-    ``` java 
-    public class XmlCompanyApp { 
-        public static void main(String[] args) { 
-            GenericXmlApplicationContext context = new GenericXmlApplicationContext( "classpath:applicationContext.xml" ); 
-            WorkService workService = context.getBean(WorkService.class); 
-            workService.ask(); context.close(); \
-        } 
-    } 
-    ``` 
+
+    ```java
+    public class XmlCompanyApp {
+        public static void main(String[] args) {
+            GenericXmlApplicationContext context = new GenericXmlApplicationContext( "classpath:applicationContext.xml" );
+            WorkService workService = context.getBean(WorkService.class);
+            workService.ask(); context.close();
+        }
+    }
+    ```
+
     - 설정정보가 java code인 경우
-    ```java 
+
+    ```java
     public class JavaConfigCompanyApp {
-        public static void main(String[] args) { 
-            AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(); 
-            context.register(BeanConfig.class); context.refresh(); // config 외부에서 추가시 꼭 필요 -> 재정립 
-            WorkService workService = context.getBean("workService", WorkService.class); workService.ask(); context.close(); 
-        } 
-    } 
+        public static void main(String[] args) {
+            AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+            context.register(BeanConfig.class); context.refresh(); // config 외부에서 추가시 꼭 필요 -> 재정립
+            WorkService workService = context.getBean("workService", WorkService.class); workService.ask(); context.close();
+        }
+    }
     ```
 
     <img src="./images/di_ioc-container.png" width="40%" alt="ApplicationContext"/>
@@ -228,12 +283,6 @@
 
 ---
 
-> https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZVBleCdZ-vYbO-P8qgCb_WzZM1cDFE6Tg1A&usqp=CAU 
-https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTup2uWo3tU6DEW-MsDguE-MqihShZHEMI0iA&usqp=CAU 
-https://www.programcreek.com/wp-content/uploads/2011/09/framework-vs-library.png?ezimgfmt=ng%3Awebp%2Fngcb12%2Frs%3Adevice%2Frscb12-1 
-https://gmlwjd9405.github.io/2018/11/09/dependency-injection.html 
-https://mossgreen.github.io/Java-Bean-VS-Spring-Bean/ 
-http://wiki.gurubee.net/pages/viewpage.action?pageId=26740787 
-https://mossgreen.github.io/Java-Bean-VS-Spring-Bean/ https://johngrib.github.io/wiki/inversion-of-control/
+> https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZVBleCdZ-vYbO-P8qgCb_WzZM1cDFE6Tg1A&usqp=CAU > https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTup2uWo3tU6DEW-MsDguE-MqihShZHEMI0iA&usqp=CAU > https://www.programcreek.com/wp-content/uploads/2011/09/framework-vs-library.png?ezimgfmt=ng%3Awebp%2Fngcb12%2Frs%3Adevice%2Frscb12-1 > https://gmlwjd9405.github.io/2018/11/09/dependency-injection.html > https://mossgreen.github.io/Java-Bean-VS-Spring-Bean/ > http://wiki.gurubee.net/pages/viewpage.action?pageId=26740787 > https://mossgreen.github.io/Java-Bean-VS-Spring-Bean/ https://johngrib.github.io/wiki/inversion-of-control/
 > 코드로 배우는 스프링 웹 프로젝트
 > Spring 4.0 프로그래밍
