@@ -170,7 +170,7 @@
 1.  Setter Injection
 2.  Constructor Injection
     - 생성자의 인수가 하나일 때 @Autowired 생략 가능
-    - 생성자는 필요한 구성요소가 반드시 있어야 인스턴스가 생성되고, 생성자를 통한 주입 시 Container는 주입하려는 Bean을 먼저 찾으므로 권장됨.
+    - Bean load 되는 순서 확인
     ```java
     @Service
     public class AService {
@@ -214,7 +214,9 @@
     ```text
     console: DService constructor -> AService constructor -> CService constructor -> BService constructor
     즉, DService -> AService -> CService -> BService 순으로 로드된다.
+    : 생성자 인수 먼저 Bean으로 등록이 되어야한다.
     ``` 
+    - 생성자는 필요한 구성요소가 반드시 있어야 인스턴스가 생성되고, 생성자를 통한 주입 시 Container는 주입하려는 Bean을 먼저 찾으므로 권장됨.
     - 아래는 xml 외부 설정파일에서의 예시
     ```xml
     <constructor-arg ref="boss" index="0"/>
@@ -237,6 +239,52 @@
            animal.act();
        }
     }
+    ```
+
+    - Bean load 되는 순서
+    ```java
+    @Service
+    public class WService {
+        @Autowired
+        private ZService zService;
+
+        public WService() {
+            System.out.println(">> WService constructor");
+        }
+    }
+
+
+    @Service
+    public class XService {
+        @Autowired
+        private YService yService;
+        @Autowired
+        private ZService zService;
+
+        public XService() {
+            System.out.println(">> XService constructor");
+        }
+    }
+
+
+    @Service
+    public class YService {
+        public YService() {
+            System.out.println(">> YService constructor");
+        }
+    }
+
+
+    @Service
+    public class ZService {
+        public ZService() {
+            System.out.println(">> ZService constructor");
+        }
+    }
+    ```
+    ``` text
+    WService -> ZService -> XService -> YService 순으로 로드된다.
+    : Constructor Injection과 다르게 주입받고자 하는 객체가 존재하는지 상관없이 필드에 있는 순서대로 Bean으로 등록되는 걸로 보인다.
     ```
 
 4.  @Autowired, @Qualifier
